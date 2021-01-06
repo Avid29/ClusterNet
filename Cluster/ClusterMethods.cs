@@ -9,7 +9,6 @@ namespace ClusterLib
         public static List<Cluster<T, TShape>> MeanShift<T, TShape>(
             IEnumerable<T> points,
             double kernelBandwidth)
-            
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {

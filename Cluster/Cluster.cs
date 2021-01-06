@@ -1,5 +1,4 @@
 ﻿using ClusterLib.Shapes;
-using System;
 using System.Collections.Generic;
 
 namespace ClusterLib

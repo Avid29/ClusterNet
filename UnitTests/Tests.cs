@@ -1,14 +1,14 @@
 ﻿using ClusterLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Numerics;
+using UnitTests.Shapes;
 
-namespace UnitTests.Mean1D
+namespace UnitTests
 {
     [TestClass]
-    public class MeanShift1DTests
+    public class Tests
     {
         [TestMethod]
         public void Flat1DTest1()
@@ -38,34 +38,28 @@ namespace UnitTests.Mean1D
         }
 
         [TestMethod]
-        public void Gaussian1DTest1()
+        public void Flat2DTest1()
         {
-            List<double> points = new List<double>()
+            List<Vector2> points = new List<Vector2>()
             {
-                0,
-                1,
-                8,
-                10,
-                12,
-                22,
-                24,
+                new Vector2(0, 2),
+                new Vector2(1, 1),
+                new Vector2(2, 0),
+                new Vector2(7, 5),
+                new Vector2(5, 7),
+                new Vector2(6, 6),
             };
 
-            List<double> expectedClusters = new List<double>()
+            List<Vector2> expectedClusters = new List<Vector2>()
             {
-                .5d,
-                10d,
-                23d,
+                new Vector2(1, 1),
+                new Vector2(6, 6),
             };
 
-            double window = 5;
-            double bandwidth = (Math.PI * 2);
-            bandwidth = Math.Pow(bandwidth, window / 2);
-
-            var clusters = ClusterMethods.MeanShift<double, GaussianDoubleShape>(points, bandwidth)
+            var clusters = ClusterMethods.MeanShift<Vector2, Flat2DShape>(points, 5)
                 .Select(x => x.Centroid).ToList();
 
-            Assert.IsTrue(expectedClusters.Count == clusters.Count);
+            CollectionAssert.AreEquivalent(expectedClusters, clusters);
         }
     }
 }

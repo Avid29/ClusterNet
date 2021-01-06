@@ -2,7 +2,7 @@
 using ClusterLib.Shapes;
 using System;
 
-namespace UnitTests.Mean1D
+namespace UnitTests.Shapes
 {
     public struct FlatDoubleShape : IPoint<double>
     {
