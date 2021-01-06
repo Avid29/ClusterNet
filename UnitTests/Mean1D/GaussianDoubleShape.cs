@@ -23,7 +23,7 @@ namespace UnitTests.Mean1D
             return Math.Abs(it1 - it2);
         }
 
-        public double WeightDistance(double distance, double window) =>
-            Kernels.GaussianKernel(distance, window);
+        public double WeightDistance(double distance, double kernelBandwidth) =>
+            Kernels.GaussianKernel(distance, kernelBandwidth);
     }
 }

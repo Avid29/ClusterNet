@@ -14,6 +14,6 @@ namespace ClusterLib.Shapes
 
         double FindDistance(T it1, T it2);
 
-        double WeightDistance(double distance, double window);
+        double WeightDistance(double distance, double kernelBandwidth);
     }
 }
