@@ -8,8 +8,7 @@ namespace ClusterLib
     {
         public static List<Cluster<T, TShape>> MeanShift<T, TShape>(
             IEnumerable<T> points,
-            double kernelBandwidth,
-            double convergeTolerance = .001)
+            double kernelBandwidth)
             
             where T : unmanaged
             where TShape : struct, IPoint<T>
@@ -25,7 +24,7 @@ namespace ClusterLib
                 while (changed)
                 {
                     newCluster = Shift(cluster, points, kernelBandwidth);
-                    changed = shape.FindDistance(newCluster.Centroid, cluster.Centroid) > convergeTolerance;
+                    changed = shape.FindDistance(newCluster.Centroid, cluster.Centroid) != 0;
                     cluster = newCluster;
                 }
                 clusters[i] = newCluster;
