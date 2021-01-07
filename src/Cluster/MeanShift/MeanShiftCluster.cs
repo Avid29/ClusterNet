@@ -55,7 +55,7 @@ namespace ClusterLib
         {
             TShape shape = default;
 
-            // Track furthest seen value and its index.
+            // Track nearest seen value and its index.
             double minimumDistance = double.PositiveInfinity;
             int nearestPointIndex = -1;
 
