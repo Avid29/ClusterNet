@@ -1,5 +1,4 @@
-﻿using ClusterLib;
-using ClusterLib.Shapes;
+﻿using ClusterLib.Shapes;
 using System;
 using System.Collections.Generic;
 
@@ -28,11 +27,6 @@ namespace UnitTests.Shapes
         public double FindDistanceSquared(double it1, double it2)
         {
             return Math.Abs(it1 - it2);
-        }
-
-        public double Sum(double it1, double it2)
-        {
-            return it1 + it2;
         }
 
         public double WeightedAverage(IEnumerable<(double, double)> items)

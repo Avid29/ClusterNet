@@ -8,8 +8,6 @@ namespace ClusterLib.Shapes
 
         T WeightedAverage(IEnumerable<(T, double)> items);
 
-        T Sum(T it1, T it2);
-
         double FindDistanceSquared(T it1, T it2);
     }
 }

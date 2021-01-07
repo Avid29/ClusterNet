@@ -1,5 +1,4 @@
-﻿using ClusterLib;
-using ClusterLib.Shapes;
+﻿using ClusterLib.Shapes;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -26,13 +25,6 @@ namespace UnitTests.Shapes
             float x = it1.X - it2.X;
             float y = it1.Y - it2.Y;
             return x * x + y * y;
-        }
-
-        public Vector2 Sum(Vector2 it1, Vector2 it2)
-        {
-            float x = it1.X + it2.X;
-            float y = it1.Y + it2.Y;
-            return new Vector2(x, y);
         }
 
         public Vector2 WeightedAverage(IEnumerable<(Vector2, double)> items)
