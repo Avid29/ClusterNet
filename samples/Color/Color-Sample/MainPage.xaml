@@ -1,0 +1,27 @@
+﻿<Page
+    x:Class="Color_Sample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Color_Sample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <TextBox x:Name="UriTextBox" PlaceholderText="Uri"
+                     Width="400"/>
+            <Button Content="Load" VerticalAlignment="Stretch"
+                    Click="AddBlade"/>
+        </StackPanel>
+        <tkcontrols:BladeView x:Name="ColorsBladeView" Grid.Row="1"/>
+
+
+    </Grid>
+</Page>
