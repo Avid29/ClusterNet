@@ -16,8 +16,8 @@ namespace ClusterLib.KMeans
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
         /// <param name="points">A list of points to cluster.</param>
         /// <param name="clusterCount">The amount of clusters to form.</param>
-        /// <returns>The clusters resulting from the KMeans cluster.</returns>
-        public static List<KMeansCluster<T, TShape>> KMeans<T, TShape>(
+        /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        public static List<(KMeansCluster<T, TShape>, int)> KMeans<T, TShape>(
             IEnumerable<T> points,
             int clusterCount)
             where T : unmanaged
@@ -55,7 +55,7 @@ namespace ClusterLib.KMeans
                 }
             }
 
-            return clusters;
+            return clusters.Select(x => (x, x.Count)).ToList();
         }
 
         /// <summary>

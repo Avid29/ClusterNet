@@ -17,8 +17,8 @@ namespace ClusterLib
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
-        /// <returns>The clusters resulting from the MeanShift cluster.</returns>
-        public static List<MeanShiftCluster<T, TShape>> MeanShift<T, TShape>(
+        /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        public static List<(MeanShiftCluster<T, TShape>, int)> MeanShift<T, TShape>(
             IEnumerable<T> points,
             IKernel kernel)
             where T : unmanaged
@@ -49,21 +49,20 @@ namespace ClusterLib
             }
 
             // Remove duplicate clusters.
-            HashSet<T> clusterSet = new HashSet<T>();
+            Dictionary<T, int> pointDictionary = new Dictionary<T, int>();
             for (int i = 0; i < clusters.Count; i++)
             {
                 var cluster = clusters[i];
-                if (!clusterSet.Contains(cluster.Centroid))
+                if (!pointDictionary.ContainsKey(cluster.Centroid))
                 {
-                    clusterSet.Add(cluster.Centroid);
+                    pointDictionary.Add(cluster.Centroid, 1);
                 } else
                 {
-                    clusters.RemoveAt(i);
-                    i--;
+                    pointDictionary[cluster.Centroid]++;
                 }
             }
 
-            return clusters;
+            return clusters.Select(x => (x, pointDictionary[x.Centroid])).ToList();
         }
 
         /// <summary>

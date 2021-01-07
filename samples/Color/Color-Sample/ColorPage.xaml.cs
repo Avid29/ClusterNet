@@ -52,8 +52,8 @@ namespace Color_Sample
             var rgbColors = ImageParser.GetImageColors(image, 256);
             var hsvColors = rgbColors.Select(x => x.AsHsv());
             GaussianKernel kernel = new GaussianKernel(5);
-            List<MeanShiftCluster<HSVColor, HSVShape>> clusters = MeanShiftMethod.MeanShift<HSVColor, HSVShape>(hsvColors, kernel);
-            return clusters[0].Centroid.AsRgb();
+            List<(MeanShiftCluster<HSVColor, HSVShape>, int)> clusters = MeanShiftMethod.MeanShift<HSVColor, HSVShape>(hsvColors, kernel);
+            return clusters[0].Item1.Centroid.AsRgb();
         }
     }
 }
