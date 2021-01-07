@@ -1,24 +1,15 @@
-﻿using ClusterLib.Shapes;
+﻿using ClusterLib.Abstract;
+using ClusterLib.Shapes;
 using System.Collections.Generic;
 
 namespace ClusterLib
 {
-    public class MeanShiftCluster<T, TShape>
+    public class MeanShiftCluster<T, TShape> : Cluster<T, TShape>
         where T : unmanaged
         where TShape : struct, IPoint<T>
     {
-        private T? _centroid;
         private List<(T, double)> _weightedSubPointList;
         private double _weightSum = 0;
-
-        /// <summary>
-        /// The center of the point.
-        /// </summary>
-        public T Centroid
-        {
-            get => _centroid ?? (T)(_centroid = CalculateCentroid());
-            set => _centroid = value;
-        }
 
         public MeanShiftCluster()
             : base()
@@ -71,7 +62,7 @@ namespace ClusterLib
             return _weightedSubPointList[nearestPointIndex].Item1;
         }
 
-        private T CalculateCentroid()
+        protected override T CalculateCentroid()
         {
             T sum = default;
             TShape shape = default;
