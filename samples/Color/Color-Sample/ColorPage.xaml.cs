@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -32,28 +33,48 @@ namespace Color_Sample
             
             Image.Source = new BitmapImage(new Uri(imageUrl));
 
-            RGBColor? rgbColor = await Task.Run(async () => await UpdateBackgroundColor(imageUrl));
+            List<(Color, int)> colors = await Task.Run(async () => await LoadColors(imageUrl));
 
-            if (!rgbColor.HasValue)
-                return;
+            RowDefinitionCollection rowDefinitions = RootGrid.RowDefinitions;
 
-            Color color = Color.FromArgb(255, rgbColor.Value.R, rgbColor.Value.G, rgbColor.Value.B);
+            int i = 0;
+            foreach (var color in colors)
+            {
+                GridLength gridLength = new GridLength(color.Item2, GridUnitType.Star);
+                rowDefinitions.Add(new RowDefinition() { Height = gridLength });
 
-            RootGrid.Background = new SolidColorBrush(color);
+                Grid bgGrid = new Grid();
+                bgGrid.Background = new SolidColorBrush(color.Item1);
+
+                Grid.SetRow(bgGrid, i);
+
+                RootGrid.Children.Add(bgGrid);
+                i++;
+            }
+
+            Grid.SetRowSpan(Image, i+1);
         }
 
-        private async Task<RGBColor?> UpdateBackgroundColor(string url)
+        private async Task<List<(Color, int)>> LoadColors(string url)
         {
             var image = await ImageParser.GetImage(url);
 
             if (image is null)
                 return null;
 
-            var rgbColors = ImageParser.GetImageColors(image, 256);
+            var rgbColors = ImageParser.GetImageColors(image, 64);
             var hsvColors = rgbColors.Select(x => x.AsHsv());
-            GaussianKernel kernel = new GaussianKernel(5);
+            GaussianKernel kernel = new GaussianKernel(.05);
             List<(MeanShiftCluster<HSVColor, HSVShape>, int)> clusters = MeanShiftMethod.MeanShift<HSVColor, HSVShape>(hsvColors, kernel);
-            return clusters[0].Item1.Centroid.AsRgb();
+            
+            List<(Color, int)> weightedColors = clusters.Select(x =>
+            {
+                var rgbColor = x.Item1.GetNearestToCenter().AsRgb();
+                Color color = Color.FromArgb(255, rgbColor.R, rgbColor.G, rgbColor.B);
+                return (color, x.Item2);
+            }).ToList();
+
+            return weightedColors;
         }
     }
 }

@@ -10,6 +10,6 @@
     d:DesignWidth="400">
 
     <Grid x:Name="RootGrid">
-        <Image x:Name="Image" Width="128" Height="128"/>
+        <Image x:Name="Image" Width="128" Height="128" Canvas.ZIndex="1"/>
     </Grid>
 </UserControl>
