@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Cluster\ClusterLib.csproj" />
-    <ProjectReference Include="..\Cluster\ClusterLib.csproj" />
   </ItemGroup>
 
 </Project>
