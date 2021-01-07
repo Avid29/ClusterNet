@@ -55,7 +55,10 @@ namespace ClusterLib.KMeans
                 }
             }
 
-            return clusters.Select(x => (x, x.Count)).ToList();
+            return clusters
+                .Select(x => (x, x.Count))
+                .OrderByDescending(x => x.Item2)
+                .ToList();
         }
 
         /// <summary>

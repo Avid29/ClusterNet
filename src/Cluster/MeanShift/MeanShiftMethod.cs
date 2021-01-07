@@ -59,10 +59,15 @@ namespace ClusterLib
                 } else
                 {
                     pointDictionary[cluster.Centroid]++;
+                    clusters.Remove(cluster);
+                    i--;
                 }
             }
 
-            return clusters.Select(x => (x, pointDictionary[x.Centroid])).ToList();
+            return clusters
+                .Select(x => (x, pointDictionary[x.Centroid]))
+                .OrderByDescending(x => x.Item2)
+                .ToList();
         }
 
         /// <summary>
