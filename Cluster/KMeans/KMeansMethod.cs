@@ -6,11 +6,11 @@ namespace ClusterLib.KMeans
 {
     public static class KMeansMethod
     {
-        public static MeanShiftCluster<T, TShape> KMeans<T, TShape>(IEnumerable<T> points, int clusterCount)
+        public static List<KMeansCluster<T, TShape>> KMeans<T, TShape>(IEnumerable<T> points, int clusterCount)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
-            List<MeanShiftCluster<T, TShape>> clusters = Split<T, TShape>(points, clusterCount);
+            List<KMeansCluster<T, TShape>> clusters = Split<T, TShape>(points, clusterCount);
 
             bool changed = true;
             while (changed)
@@ -18,18 +18,58 @@ namespace ClusterLib.KMeans
                 changed = false;
                 foreach (var cluster in clusters)
                 {
+                    for (int pointIndex = 0; pointIndex < cluster.Count; pointIndex++)
+                    {
+                        T point = cluster[pointIndex];
 
+                        int nearestCluster = FindNearestCluster(clusters, point);
+                        if (nearestCluster != clusters.IndexOf(cluster))
+                        {
+                            if (cluster.Count > 1)
+                            {
+                                T removedPoint = cluster.RemoveAt(pointIndex);
+                                clusters[nearestCluster].Add(removedPoint);
+                                changed = true;
+                            }
+                        }
+                    }
                 }
             }
 
-            return null;
+            return clusters;
         }
 
-        private static List<MeanShiftCluster<T, TShape>> Split<T, TShape>(IEnumerable<T> points, int clusterCount)
+        private static int FindNearestCluster<T, TShape>(List<KMeansCluster<T, TShape>> clusters, T point)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
-            List<MeanShiftCluster<T, TShape>> clusters = new List<MeanShiftCluster<T, TShape>>();
+            TShape shape = default;
+            double minimumDistance = 0.0;
+            int nearestClusterIndex = -1;
+
+            for (int k = 0; k < clusters.Count; k++)
+            {
+                double distance = shape.FindDistanceSquared(point, clusters[k].Centroid);
+                if (k == 0)
+                {
+                    minimumDistance = distance;
+                    nearestClusterIndex = 0;
+                }
+                else if (minimumDistance > distance)
+                {
+                    minimumDistance = distance;
+                    nearestClusterIndex = k;
+                }
+            }
+
+            return (nearestClusterIndex);
+        }
+
+        private static List<KMeansCluster<T, TShape>> Split<T, TShape>(IEnumerable<T> points, int clusterCount)
+            where T : unmanaged
+            where TShape : struct, IPoint<T>
+        {
+            List<KMeansCluster<T, TShape>> clusters = new List<KMeansCluster<T, TShape>>();
             int pointCount = points.Count();
             int subSize = pointCount / clusterCount;
 
@@ -37,7 +77,7 @@ namespace ClusterLib.KMeans
             IEnumerator<T> enumerator = points.GetEnumerator();
             for (int i = 0; i < clusterCount; i++)
             {
-                MeanShiftCluster<T, TShape> currentList = new MeanShiftCluster<T, TShape>();
+                KMeansCluster<T, TShape> currentList = new KMeansCluster<T, TShape>();
                 for (int j = 0; j < subSize && totalCount < pointCount; j++)
                 {
                     currentList.Add(enumerator.Current);

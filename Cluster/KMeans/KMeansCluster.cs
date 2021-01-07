@@ -8,11 +8,32 @@ namespace ClusterLib.KMeans
         where T : unmanaged
         where TShape : struct, IPoint<T>
     {
-        private HashSet<T> _subPointSet;
+        private List<T> _subPointSet;
 
         public KMeansCluster()
         {
-            _subPointSet = new HashSet<T>();
+            _subPointSet = new List<T>();
+        }
+
+        public int Count => _subPointSet.Count;
+
+        public T this[int i]
+        {
+            get => _subPointSet[i];
+            set => _subPointSet[i] = value;
+        }
+
+        public void Add(T item)
+        {
+            _subPointSet.Add(item);
+            _centroid = null;
+        }
+
+        public T RemoveAt(int index)
+        {
+            T removed = _subPointSet[index];
+            _subPointSet.RemoveAt(index);
+            return removed;
         }
 
         protected override T CalculateCentroid()
