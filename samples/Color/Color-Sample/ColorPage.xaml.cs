@@ -5,6 +5,7 @@ using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Controls;
@@ -36,11 +37,7 @@ namespace Color_Sample
             if (!rgbColor.HasValue)
                 return;
 
-            Color color = Color.FromArgb(
-                255,
-                (byte)rgbColor.Value.R,
-                (byte)rgbColor.Value.G,
-                (byte)rgbColor.Value.B);
+            Color color = Color.FromArgb(255, rgbColor.Value.R, rgbColor.Value.G, rgbColor.Value.B);
 
             RootGrid.Background = new SolidColorBrush(color);
         }
@@ -52,10 +49,11 @@ namespace Color_Sample
             if (image is null)
                 return null;
 
-            var rgbColors = ImageParser.GetImageColors(image, 128);
-            FlatKernel kernel = new FlatKernel(5);
-            List<MeanShiftCluster<RGBColor, RGBShape>> clusters = MeanShiftMethod.MeanShift<RGBColor, RGBShape>(rgbColors, kernel);
-            return clusters[0].Centroid;
+            var rgbColors = ImageParser.GetImageColors(image, 256);
+            var hsvColors = rgbColors.Select(x => x.AsHsv());
+            GaussianKernel kernel = new GaussianKernel(5);
+            List<MeanShiftCluster<HSVColor, HSVShape>> clusters = MeanShiftMethod.MeanShift<HSVColor, HSVShape>(hsvColors, kernel);
+            return clusters[0].Centroid.AsRgb();
         }
     }
 }
