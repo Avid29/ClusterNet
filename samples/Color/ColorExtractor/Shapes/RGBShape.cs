@@ -44,16 +44,17 @@ namespace ColorExtractor.Shapes
             double totalWeight = 0;
             foreach (var item in items)
             {
-                sumR += item.Item1.R * (float)item.Item2;
-                sumG += item.Item1.G * (float)item.Item2;
-                sumB += item.Item1.B * (float)item.Item2;
+                sumR += item.Item1.R * item.Item2;
+                sumG += item.Item1.G * item.Item2;
+                sumB += item.Item1.B * item.Item2;
                 totalWeight += item.Item2;
             }
+
             RGBColor color = new RGBColor()
             {
-                R = (byte)(sumR / (float)totalWeight),
-                G = (byte)(sumG / (float)totalWeight),
-                B = (byte)(sumB / (float)totalWeight),
+                R = (byte)(sumR / totalWeight),
+                G = (byte)(sumG / totalWeight),
+                B = (byte)(sumB / totalWeight),
             };
             return color;
         }
