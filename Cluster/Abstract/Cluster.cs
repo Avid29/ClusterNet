@@ -11,7 +11,6 @@ namespace ClusterLib.Abstract
         public T Centroid
         {
             get => _centroid ?? (T)(_centroid = CalculateCentroid());
-            set => _centroid = value;
         }
 
         protected abstract T CalculateCentroid();

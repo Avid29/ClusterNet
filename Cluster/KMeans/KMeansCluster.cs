@@ -17,14 +17,8 @@ namespace ClusterLib.KMeans
 
         protected override T CalculateCentroid()
         {
-            T sum = default;
             TShape shape = default;
-
-            foreach (T item in _subPointSet)
-                sum = shape.Sum(sum, item);
-
-            sum = shape.Divide(sum, _subPointSet.Count);
-            return sum;
+            return shape.Average(_subPointSet);
         }
     }
 }

@@ -9,7 +9,6 @@ namespace ClusterLib
         where TShape : struct, IPoint<T>
     {
         private List<(T, double)> _weightedSubPointList;
-        private double _weightSum = 0;
 
         public MeanShiftCluster()
             : base()
@@ -28,7 +27,6 @@ namespace ClusterLib
         internal void Add(T p, double weight = 1)
         {
             _weightedSubPointList.Add((p, weight));
-            _weightSum += weight;
             _centroid = null;
         }
 
@@ -64,14 +62,8 @@ namespace ClusterLib
 
         protected override T CalculateCentroid()
         {
-            T sum = default;
             TShape shape = default;
-
-            foreach ((T, double) item in _weightedSubPointList)
-                sum = shape.Sum(sum, item.Item1, item.Item2);
-
-            sum = shape.Divide(sum, _weightSum);
-            return sum;
+            return shape.WeightedAverage(_weightedSubPointList);
         }
     }
 }
