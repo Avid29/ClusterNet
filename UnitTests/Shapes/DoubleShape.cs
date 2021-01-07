@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace UnitTests.Shapes
 {
-    public struct GaussianDoubleShape : IPoint<double>
+    public struct DoubleShape : IPoint<double>
     {
         public double Average(IEnumerable<double> items)
         {
@@ -32,11 +32,8 @@ namespace UnitTests.Shapes
 
         public double Sum(double it1, double it2)
         {
-            return it1 + it2; 
+            return it1 + it2;
         }
-
-        public double WeightDistance(double distance, double kernelBandwidth) =>
-            Kernels.GaussianKernel(distance, kernelBandwidth);
 
         public double WeightedAverage(IEnumerable<(double, double)> items)
         {

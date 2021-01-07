@@ -1,4 +1,5 @@
-﻿using ClusterLib.Shapes;
+﻿using ClusterLib.Kernels;
+using ClusterLib.Shapes;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace ClusterLib
     {
         public static List<MeanShiftCluster<T, TShape>> MeanShift<T, TShape>(
             IEnumerable<T> points,
-            double kernelBandwidth)
+            IKernel kernel)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
@@ -22,7 +23,7 @@ namespace ClusterLib
                 bool changed = true;
                 while (changed)
                 {
-                    newCluster = Shift(cluster, points, kernelBandwidth);
+                    newCluster = Shift(cluster, points, kernel);
                     changed = shape.FindDistanceSquared(newCluster.Centroid, cluster.Centroid) != 0;
                     cluster = newCluster;
                 }
@@ -46,7 +47,10 @@ namespace ClusterLib
             return clusters;
         }
 
-        private static MeanShiftCluster<T, TShape> Shift<T, TShape>(MeanShiftCluster<T, TShape> p, IEnumerable<T> points, double window)
+        private static MeanShiftCluster<T, TShape> Shift<T, TShape>(
+            MeanShiftCluster<T, TShape> p,
+            IEnumerable<T> points,
+            IKernel kernel)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
@@ -57,7 +61,7 @@ namespace ClusterLib
             foreach (T point in points)
             {
                 double distance = shape.FindDistanceSquared(p.Centroid, point);
-                double weight = shape.WeightDistance(distance, window);
+                double weight = kernel.WeightDistance(distance);
                 newCluster.Add(point, weight);
             }
 

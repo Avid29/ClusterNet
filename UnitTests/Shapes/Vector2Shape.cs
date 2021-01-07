@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace UnitTests.Shapes
 {
-    public struct Flat2DShape : IPoint<Vector2>
+    public struct Vector2Shape : IPoint<Vector2>
     {
         public Vector2 Average(IEnumerable<Vector2> items)
         {
@@ -34,9 +34,6 @@ namespace UnitTests.Shapes
             float y = it1.Y + it2.Y;
             return new Vector2(x, y);
         }
-
-        public double WeightDistance(double distance, double kernelBandwidth) =>
-            Kernels.FlatKernel(distance, kernelBandwidth);
 
         public Vector2 WeightedAverage(IEnumerable<(Vector2, double)> items)
         {
