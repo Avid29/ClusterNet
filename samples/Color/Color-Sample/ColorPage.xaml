@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid>
+    <Grid x:Name="RootGrid">
         <Image x:Name="Image" Width="128" Height="128"/>
     </Grid>
 </UserControl>

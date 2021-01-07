@@ -163,6 +163,19 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>6.1.1</Version>
     </PackageReference>
+    <PackageReference Include="SixLabors.ImageSharp">
+      <Version>1.0.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Cluster\ClusterLib.csproj">
+      <Project>{3318ad69-6610-4404-8a3b-818a7c99592d}</Project>
+      <Name>ClusterLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ColorExtractor\ColorExtractor.csproj">
+      <Project>{78892b64-c3be-411c-a4f5-6e26dc920705}</Project>
+      <Name>ColorExtractor</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
