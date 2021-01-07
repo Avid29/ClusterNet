@@ -25,7 +25,7 @@ namespace UnitTests.Shapes
             return it;
         }
 
-        public double FindDistance(double it1, double it2)
+        public double FindDistanceSquared(double it1, double it2)
         {
             return Math.Abs(it1 - it2);
         }
@@ -40,7 +40,14 @@ namespace UnitTests.Shapes
 
         public double WeightedAverage(IEnumerable<(double, double)> items)
         {
-            throw new NotImplementedException();
+            double sum = 0;
+            double totalWeight = 0;
+            foreach (var item in items)
+            {
+                sum += item.Item1 * item.Item2;
+                totalWeight += item.Item2;
+            }
+            return sum / totalWeight;
         }
     }
 }

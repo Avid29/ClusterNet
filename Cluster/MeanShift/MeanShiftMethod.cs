@@ -23,7 +23,7 @@ namespace ClusterLib
                 while (changed)
                 {
                     newCluster = Shift(cluster, points, kernelBandwidth);
-                    changed = shape.FindDistance(newCluster.Centroid, cluster.Centroid) != 0;
+                    changed = shape.FindDistanceSquared(newCluster.Centroid, cluster.Centroid) != 0;
                     cluster = newCluster;
                 }
                 clusters[i] = newCluster;
@@ -56,7 +56,7 @@ namespace ClusterLib
 
             foreach (T point in points)
             {
-                double distance = shape.FindDistance(p.Centroid, point);
+                double distance = shape.FindDistanceSquared(p.Centroid, point);
                 double weight = shape.WeightDistance(distance, window);
                 newCluster.Add(point, weight);
             }

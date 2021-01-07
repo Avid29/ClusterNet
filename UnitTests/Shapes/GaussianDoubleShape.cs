@@ -25,7 +25,7 @@ namespace UnitTests.Shapes
             return it;
         }
 
-        public double FindDistance(double it1, double it2)
+        public double FindDistanceSquared(double it1, double it2)
         {
             return Math.Abs(it1 - it2);
         }
@@ -44,7 +44,7 @@ namespace UnitTests.Shapes
             double totalWeight = 0;
             foreach (var item in items)
             {
-                sum += item.Item1;
+                sum += item.Item1 * item.Item2;
                 totalWeight += item.Item2;
             }
             return sum / totalWeight;

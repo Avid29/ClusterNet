@@ -1,17 +1,19 @@
 ﻿using ClusterLib;
 using ClusterLib.Shapes;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text;
 
 namespace UnitTests.Shapes
 {
-    public struct Flat2DShape : IPoint<Vector2>
+    public struct Gaussian2DShape : IPoint<Vector2>
     {
         public Vector2 Average(IEnumerable<Vector2> items)
         {
             Vector2 sumVector = new Vector2(0);
             int count = 0;
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 sumVector += item;
                 count++;
@@ -36,7 +38,7 @@ namespace UnitTests.Shapes
         }
 
         public double WeightDistance(double distance, double kernelBandwidth) =>
-            Kernels.FlatKernel(distance, kernelBandwidth);
+            Kernels.GaussianKernel(distance, kernelBandwidth);
 
         public Vector2 WeightedAverage(IEnumerable<(Vector2, double)> items)
         {

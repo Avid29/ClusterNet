@@ -61,5 +61,22 @@ namespace UnitTests
 
             CollectionAssert.AreEquivalent(expectedClusters, clusters);
         }
+
+        [TestMethod]
+        public void Gaussian2DTest1()
+        {
+            List<Vector2> points = new List<Vector2>()
+            {
+                new Vector2(0, 2),
+                new Vector2(1, 1),
+                new Vector2(2, 0),
+                new Vector2(7, 5),
+                new Vector2(5, 7),
+                new Vector2(6, 6),
+            };
+
+            var clusters = MeanShiftMethod.MeanShift<Vector2, Gaussian2DShape>(points, 5)
+                .Select(x => x.Centroid).ToList();
+        }
     }
 }

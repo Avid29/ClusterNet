@@ -40,7 +40,7 @@ namespace ClusterLib
             for (int i = 0; i < _weightedSubPointList.Count; i++)
             {
                 T p = _weightedSubPointList[i].Item1;
-                double distance = shape.FindDistance(p, Centroid);
+                double distance = shape.FindDistanceSquared(p, Centroid);
 
                 if (i == 0)
                 {
