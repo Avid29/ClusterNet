@@ -1,16 +1,24 @@
 ﻿using ClusterLib;
 using ClusterLib.Shapes;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace UnitTests.Shapes
 {
     public struct Flat2DShape : IPoint<Vector2>
     {
-        public Vector2 Divide(Vector2 it, double count)
+        public Vector2 Average(IEnumerable<Vector2> items)
         {
-            it.X /= (float)count;
-            it.Y /= (float)count;
-            return it;
+            Vector2 sumVector = new Vector2(0);
+            int count = 0;
+            foreach(var item in items)
+            {
+                sumVector += item;
+                count++;
+            }
+            sumVector.X /= count;
+            sumVector.Y /= count;
+            return sumVector;
         }
 
         public double FindDistance(Vector2 it1, Vector2 it2)
@@ -20,14 +28,28 @@ namespace UnitTests.Shapes
             return x * x + y * y;
         }
 
-        public Vector2 Sum(Vector2 it1, Vector2 it2, double weight = 1)
+        public Vector2 Sum(Vector2 it1, Vector2 it2)
         {
-            float x = it1.X + (it2.X * (float)weight);
-            float y = it1.Y + (it2.Y * (float)weight);
+            float x = it1.X + it2.X;
+            float y = it1.Y + it2.Y;
             return new Vector2(x, y);
         }
 
         public double WeightDistance(double distance, double kernelBandwidth) =>
             Kernels.FlatKernel(distance, kernelBandwidth);
+
+        public Vector2 WeightedAverage(IEnumerable<(Vector2, double)> items)
+        {
+            Vector2 sumVector = new Vector2(0);
+            double totalWeight = 0;
+            foreach (var item in items)
+            {
+                sumVector += item.Item1;
+                totalWeight += item.Item2;
+            }
+            sumVector.X /= (float)totalWeight;
+            sumVector.Y /= (float)totalWeight;
+            return sumVector;
+        }
     }
 }

@@ -8,9 +8,11 @@ namespace ClusterLib.Shapes
 {
     public interface IPoint<T>
     {
-        T Sum(T it1, T it2, double weight = 1);
+        T Average(IEnumerable<T> items);
 
-        T Divide(T it, double count);
+        T WeightedAverage(IEnumerable<(T, double)> items);
+
+        T Sum(T it1, T it2);
 
         double FindDistance(T it1, T it2);
 

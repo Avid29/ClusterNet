@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace ClusterLib
 {
-    public class ClusterMethods
+    public class MeanShiftMethod
     {
-        public static List<Cluster<T, TShape>> MeanShift<T, TShape>(
+        public static List<MeanShiftCluster<T, TShape>> MeanShift<T, TShape>(
             IEnumerable<T> points,
             double kernelBandwidth)
             where T : unmanaged
@@ -14,11 +14,11 @@ namespace ClusterLib
         {
             TShape shape = default;
 
-            List<Cluster<T, TShape>> clusters = points.Select(x => new Cluster<T, TShape>(x)).ToList();
+            List<MeanShiftCluster<T, TShape>> clusters = points.Select(x => new MeanShiftCluster<T, TShape>(x)).ToList();
             for (int i = 0; i < clusters.Count; i++)
             {
-                Cluster<T, TShape> cluster = clusters[i];
-                Cluster<T, TShape> newCluster = default;
+                MeanShiftCluster<T, TShape> cluster = clusters[i];
+                MeanShiftCluster<T, TShape> newCluster = default;
                 bool changed = true;
                 while (changed)
                 {
@@ -46,13 +46,13 @@ namespace ClusterLib
             return clusters;
         }
 
-        private static Cluster<T, TShape> Shift<T, TShape>(Cluster<T, TShape> p, IEnumerable<T> points, double window)
+        private static MeanShiftCluster<T, TShape> Shift<T, TShape>(MeanShiftCluster<T, TShape> p, IEnumerable<T> points, double window)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
             TShape shape = default;
 
-            Cluster<T, TShape> newCluster = new Cluster<T, TShape>();
+            MeanShiftCluster<T, TShape> newCluster = new MeanShiftCluster<T, TShape>();
 
             foreach (T point in points)
             {
