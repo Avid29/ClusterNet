@@ -12,7 +12,7 @@ namespace ColorExtractor.Shapes
         {
             int sumH, count;
             sumH = count = 0;
-            float sumS, sumV;
+            double sumS, sumV;
             sumS = sumV = 0;
 
             foreach (var item in items)
@@ -25,9 +25,9 @@ namespace ColorExtractor.Shapes
 
             HSVColor color = new HSVColor()
             {
-                H = (byte)(sumH / count),
-                S = (byte)(sumS / count),
-                V = (byte)(sumV / count),
+                H = (int)(sumH / count),
+                S = (float)(sumS / count),
+                V = (float)(sumV / count),
             };
 
             return color;
@@ -41,8 +41,8 @@ namespace ColorExtractor.Shapes
             float satDiff = Math.Abs(it1.S - it2.S);
             float valDiff = Math.Abs(it1.V - it2.V);
 
+            hueDiff = hueDiff * satDiff;
             hueDiff *= 2;
-            hueDiff = hueDiff / satDiff;
             return hueDiff * hueDiff + satDiff * satDiff + valDiff * valDiff;
         }
 
@@ -53,16 +53,16 @@ namespace ColorExtractor.Shapes
             double totalWeight = 0;
             foreach (var item in items)
             {
-                sumH += item.Item1.H * (float)item.Item2;
-                sumS += item.Item1.S * (float)item.Item2;
-                sumV += item.Item1.V * (float)item.Item2;
+                sumH += item.Item1.H * item.Item2;
+                sumS += item.Item1.S * item.Item2;
+                sumV += item.Item1.V * item.Item2;
                 totalWeight += item.Item2;
             }
             HSVColor color = new HSVColor()
             {
-                H = (byte)(sumH / (float)totalWeight),
-                S = (byte)(sumS / (float)totalWeight),
-                V = (byte)(sumV / (float)totalWeight),
+                H = (int)(sumH / totalWeight),
+                S = (float)(sumS / totalWeight),
+                V = (float)(sumV / totalWeight),
             };
             return color;
         }
