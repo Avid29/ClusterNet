@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClusterLib
 {
-    public class Cluster<T, TShape>
+    public class MeanShiftCluster<T, TShape>
         where T : unmanaged
         where TShape : struct, IPoint<T>
     {
@@ -20,21 +20,21 @@ namespace ClusterLib
             set => _centroid = value;
         }
 
-        public Cluster()
+        public MeanShiftCluster()
             : base()
         {
             _centroid = null;
             _weightedSubPointList = new List<(T, double)>();
         }
 
-        public Cluster(T point)
+        public MeanShiftCluster(T point)
         {
             _centroid = point;
             _weightedSubPointList = new List<(T, double)>();
             _weightedSubPointList.Add((point, 1));
         }
 
-        internal void Add(T p, double weight)
+        internal void Add(T p, double weight = 1)
         {
             _weightedSubPointList.Add((p, weight));
             _weightSum += weight;

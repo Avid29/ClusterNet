@@ -31,7 +31,7 @@ namespace UnitTests
                 23d,
             };
 
-            var clusters = ClusterMethods.MeanShift<double, FlatDoubleShape>(points, 5)
+            var clusters = MeanShiftMethod.MeanShift<double, FlatDoubleShape>(points, 5)
                 .Select(x => x.Centroid).ToList();
 
             CollectionAssert.AreEquivalent(expectedClusters, clusters);
@@ -56,7 +56,7 @@ namespace UnitTests
                 new Vector2(6, 6),
             };
 
-            var clusters = ClusterMethods.MeanShift<Vector2, Flat2DShape>(points, 5)
+            var clusters = MeanShiftMethod.MeanShift<Vector2, Flat2DShape>(points, 5)
                 .Select(x => x.Centroid).ToList();
 
             CollectionAssert.AreEquivalent(expectedClusters, clusters);
