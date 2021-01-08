@@ -1,5 +1,6 @@
 ﻿using ClusterLib.Shapes;
 using ColorExtractor.ColorSpaces;
+using System;
 using System.Collections.Generic;
 
 namespace ColorExtractor.Shapes
@@ -52,9 +53,9 @@ namespace ColorExtractor.Shapes
 
             RGBColor color = new RGBColor()
             {
-                R = (byte)(sumR / totalWeight),
-                G = (byte)(sumG / totalWeight),
-                B = (byte)(sumB / totalWeight),
+                R = (byte)Math.Round(sumR / totalWeight),
+                G = (byte)Math.Round(sumG / totalWeight),
+                B = (byte)Math.Round(sumB / totalWeight),
             };
             return color;
         }
