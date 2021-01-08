@@ -27,7 +27,7 @@ namespace Color_Sample
             this.Loaded += ColorPage_Loaded;
         }
 
-        private async void ColorPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void ColorPage_Loaded(object sender, RoutedEventArgs e)
         {
             this.Loaded -= ColorPage_Loaded;
             
@@ -62,9 +62,9 @@ namespace Color_Sample
             if (image is null)
                 return null;
 
-            var rgbColors = ImageParser.GetImageColors(image, 128);
-            GaussianKernel kernel = new GaussianKernel(25);
-            List<(MeanShiftCluster<RGBColor, RGBShape>, int)> clusters = MeanShiftMethod.MeanShift<RGBColor, RGBShape>(rgbColors, kernel);
+            var rgbColors = ImageParser.GetImageColors(image, 1920);
+            GaussianKernel kernel = new GaussianKernel(20);
+            List<(MeanShiftCluster<RGBColor, RGBShape>, int)> clusters = MeanShiftMethod.MeanShift<RGBColor, RGBShape>(rgbColors, kernel, 960);
             
             List<(Color, int)> weightedColors = clusters.Select(x =>
             {

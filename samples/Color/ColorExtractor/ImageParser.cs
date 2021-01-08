@@ -29,14 +29,16 @@ namespace ColorExtractor
 
         public static List<RGBColor> GetImageColors(
             Image<Argb32> image,
-            int quality = 4)
+            int quality = 1920)
         {
             List<RGBColor> colors = new List<RGBColor>();
+
+            int nth = (image.Width * image.Height) / quality;
 
             for (int rows = 0; rows < image.Height; rows++)
             {
                 Span<Argb32> rowPixels = image.GetPixelRowSpan(rows);
-                for (int i = 0; i < rowPixels.Length; i += quality)
+                for (int i = 0; i < rowPixels.Length; i += nth)
                 {
                     byte b = rowPixels[i].B;
                     byte g = rowPixels[i].G;
