@@ -9,9 +9,10 @@ namespace ColorExtractor.Shapes
     {
         public RGBColor Average(IEnumerable<RGBColor> items)
         {
-            int sumR, sumG, sumB, count;
-            sumR = sumG = sumB = count = 0;
-            foreach(var item in items)
+            float sumR, sumG, sumB;
+            sumR = sumG = sumB = 0;
+            int count = 0;
+            foreach (var item in items)
             {
                 sumR += item.R;
                 sumG += item.G;
@@ -21,9 +22,9 @@ namespace ColorExtractor.Shapes
 
             RGBColor color = new RGBColor()
             {
-                R = (byte)(sumR / count),
-                G = (byte)(sumG / count),
-                B = (byte)(sumB / count),
+                R = (float)(sumR / count),
+                G = (float)(sumG / count),
+                B = (float)(sumB / count),
             };
 
             return color;
@@ -31,9 +32,9 @@ namespace ColorExtractor.Shapes
 
         public double FindDistanceSquared(RGBColor it1, RGBColor it2)
         {
-            int r = it1.R - it2.R;
-            int g = it1.G - it2.G;
-            int b = it1.B - it2.B;
+            float r = it1.R - it2.R;
+            float g = it1.G - it2.G;
+            float b = it1.B - it2.B;
 
             return r * r + g * g + b * b;
         }
@@ -53,9 +54,9 @@ namespace ColorExtractor.Shapes
 
             RGBColor color = new RGBColor()
             {
-                R = (byte)Math.Round(sumR / totalWeight),
-                G = (byte)Math.Round(sumG / totalWeight),
-                B = (byte)Math.Round(sumB / totalWeight),
+                R = (float)(sumR / totalWeight),
+                G = (float)(sumG / totalWeight),
+                B = (float)(sumB / totalWeight),
             };
             return color;
         }

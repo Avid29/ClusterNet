@@ -63,13 +63,16 @@ namespace Color_Sample
                 return null;
 
             var rgbColors = ImageParser.GetImageColors(image, 1920);
-            GaussianKernel kernel = new GaussianKernel(20);
-            List<(MeanShiftCluster<RGBColor, RGBShape>, int)> clusters = MeanShiftMethod.MeanShift<RGBColor, RGBShape>(rgbColors, kernel, 960);
+            GaussianKernel kernel = new GaussianKernel(.15);
+            List<(MeanShiftCluster<RGBColor, RGBShape>, int)> clusters = MeanShiftMethod.MeanShift<RGBColor, RGBShape>(rgbColors, kernel, 480);
             
             List<(Color, int)> weightedColors = clusters.Select(x =>
             {
                 var rgbColor = x.Item1.GetNearestToCenter();
-                Color color = Color.FromArgb(255, rgbColor.R, rgbColor.G, rgbColor.B);
+                Color color = Color.FromArgb(255,
+                    (byte)(rgbColor.R * 255),
+                    (byte)(rgbColor.G * 255),
+                    (byte)(rgbColor.B * 255));
                 return (color, x.Item2);
             }).ToList();
 

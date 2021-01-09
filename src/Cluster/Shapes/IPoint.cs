@@ -7,6 +7,9 @@ namespace ClusterLib.Shapes
     /// A Shape for the Point in a <see cref="Cluster{T, TShape}"/>.
     /// </summary>
     /// <typeparam name="T">The type being wrapped by the implementation.</typeparam>
+    /// <remarks>
+    /// It is highly recommended to use floats for your data.
+    /// </remarks>
     public interface IPoint<T>
     {
         /// <summary>

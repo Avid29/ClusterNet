@@ -19,14 +19,14 @@ namespace ColorExtractor.ColorSpaces
 
         public static int GetHue(this RGBColor color)
         {
-            double delta = GetDelta(color);
+            float delta = GetDelta(color);
 
             if (delta == 0)
                 return 0;
 
-            double r = (double)color.R / 255;
-            double g = (double)color.G / 255;
-            double b = (double)color.B / 255;
+            float r = color.R;
+            float g = color.G;
+            float b = color.B;
 
             switch (GetCMaxChannel(color))
             {
@@ -58,25 +58,25 @@ namespace ColorExtractor.ColorSpaces
         }
         internal static float GetCMin(this RGBColor color)
         {
-            return (float)GetRawCMin(color) / 255;
+            return GetRawCMin(color);
         }
         private static float GetDelta(this RGBColor color)
         {
             return GetValue(color) - GetCMin(color);
         }
-        private static int GetRawCMax(this RGBColor color)
+        private static float GetRawCMax(this RGBColor color)
         {
-            int max = Math.Max(color.R, color.G);
+            float max = Math.Max(color.R, color.G);
             return Math.Max(max, color.B);
         }
-        private static int GetRawCMin(this RGBColor color)
+        private static float GetRawCMin(this RGBColor color)
         {
-            int min = Math.Min(color.R, color.G);
+            float min = Math.Min(color.R, color.G);
             return Math.Min(min, color.B);
         }
         private static RGBChannel GetCMaxChannel(this RGBColor color)
         {
-            int maxValue = GetRawCMax(color);
+            float maxValue = GetRawCMax(color);
             if (maxValue == color.R)
                 return RGBChannel.R;
             if (maxValue == color.G)

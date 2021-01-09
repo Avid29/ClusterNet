@@ -40,10 +40,10 @@ namespace ColorExtractor
                 Span<Argb32> rowPixels = image.GetPixelRowSpan(rows);
                 for (int i = 0; i < rowPixels.Length; i += nth)
                 {
-                    byte b = rowPixels[i].B;
-                    byte g = rowPixels[i].G;
-                    byte r = rowPixels[i].R;
-                    byte a = rowPixels[i].A;
+                    float b = rowPixels[i].B / 255f;
+                    float g = rowPixels[i].G / 255f;
+                    float r = rowPixels[i].R / 255f;
+                    //float a = rowPixels[i].A / 255;
 
                     RGBColor color = new RGBColor(r, g, b);
 
