@@ -17,22 +17,27 @@ namespace ClusterLib
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
-        /// <param name="initialClusters">How many of the points to shift into place.</param>
+        /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
         public static List<(MeanShiftCluster<T, TShape>, int)> MeanShift<T, TShape>(
             IEnumerable<T> points,
             IKernel kernel,
-            int initialClusters = -1)
+            int initialClusters = 0)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
             TShape shape = default;
 
             int n;
-            if (initialClusters == -1)
+            if (initialClusters == 0)
                 n = 1;
             else
                 n = points.Count() / initialClusters;
+
+            // N will be 0 if initialClusters is greater than the point count.
+            // N can't be 0
+            if (n == 0)
+                n = 1;
             
             // Create a cluster for each point.
             List<MeanShiftCluster<T, TShape>> clusters = points
