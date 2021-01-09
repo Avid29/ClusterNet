@@ -15,13 +15,15 @@ namespace ClusterLib.Kernels
         /// <param name="bandwidth">The bandwidth of the <see cref="GaussianKernel"/>.</param>
         public GaussianKernel(double bandwidth)
         {
-            _bandwidthSquared = bandwidth * bandwidth;
+            // * -2, to precompute the * -.5 in WeightDistance
+            _bandwidthSquared = bandwidth * bandwidth * -2;
         }
 
         /// <inheritdoc/>
         public double WeightDistance(double distanceSquared)
         {
-            return Math.Pow(Math.E, -.5 * distanceSquared / _bandwidthSquared);
+            //return Math.Pow(Math.E, -.5 * distanceSquared / _bandwidthSquared);
+            return Math.Exp(distanceSquared / _bandwidthSquared);
         }
     }
 }
