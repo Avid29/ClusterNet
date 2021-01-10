@@ -7,7 +7,7 @@ namespace ColorExtractor.Shapes
 {
     public struct RGBShape : IPoint<RGBColor>
     {
-        public RGBColor Average(IEnumerable<RGBColor> items)
+        public RGBColor Average(RGBColor[] items)
         {
             float sumR, sumG, sumB;
             sumR = sumG = sumB = 0;
@@ -39,7 +39,7 @@ namespace ColorExtractor.Shapes
             return r * r + g * g + b * b;
         }
 
-        public RGBColor WeightedAverage(IEnumerable<(RGBColor, double)> items)
+        public RGBColor WeightedAverage((RGBColor, double)[] items)
         {
             double sumR, sumG, sumB;
             sumR = sumG = sumB = 0;

@@ -44,24 +44,24 @@ namespace ClusterLib
                 n = 1;
 
             // Create a cluster for each point.
-            MeanShiftCluster<T, TShape>[] clusters = new MeanShiftCluster<T, TShape>[points.Length / n];
+            T[] clusters = new T[points.Length / n];
             for (int i = 0; i < clusters.Length; i++)
             {
-                clusters[i] =(new MeanShiftCluster<T, TShape>(points[i * n]));
+                clusters[i] = points[i * n];
             }
             
             // Shift each cluster until it's at its convergence point.
             for (int i = 0; i < clusters.Length; i++)
             {
-                MeanShiftCluster<T, TShape> cluster = clusters[i];
-                MeanShiftCluster<T, TShape> newCluster = default;
+                T cluster = clusters[i];
+                T newCluster = default;
                 bool changed = true;
 
                 // Shift the cluster until it does not shift.
                 while (changed)
                 {
-                    newCluster = Shift(cluster, points, kernel);
-                    changed = shape.FindDistanceSquared(newCluster.Centroid, cluster.Centroid) != 0;
+                    newCluster = Shift<T, TShape, TKernel>(cluster, points, kernel);
+                    changed = shape.FindDistanceSquared(newCluster, cluster) != 0;
                     cluster = newCluster;
                 }
 
@@ -69,7 +69,7 @@ namespace ClusterLib
                 clusters[i] = newCluster;
             }
 
-            return PostProcess(clusters);
+            return PostProcess<T, TShape>(clusters);
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace ClusterLib
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <returns>The new cluster from the cluster being shifted.</returns>
-        private static MeanShiftCluster<T, TShape> Shift<T, TShape, TKernel>(
-            MeanShiftCluster<T, TShape> p,
+        private static T Shift<T, TShape, TKernel>(
+            T p,
             ReadOnlySpan<T> points,
             TKernel kernel)
             where T : unmanaged, IEquatable<T>
@@ -94,15 +94,17 @@ namespace ClusterLib
 
 
             // Create cluster based on distance of points from the current cluster's centroid
-            MeanShiftCluster<T, TShape> newCluster = new MeanShiftCluster<T, TShape>();
-            foreach (T point in points)
+            (T, double)[] _weightedSubPointList = new (T, double)[points.Length];
+
+            for (int i = 0; i < points.Length; i++)
             {
-                double distance = shape.FindDistanceSquared(p.Centroid, point);
+                T point = points[i];
+                double distance = shape.FindDistanceSquared(p, point);
                 double weight = kernel.WeightDistance(distance);
-                newCluster.Add(point, weight);
+                _weightedSubPointList[i] = (point, weight);
             }
 
-            return newCluster;
+            return shape.WeightedAverage(_weightedSubPointList);
         }
 
         /// <summary>
@@ -113,7 +115,7 @@ namespace ClusterLib
         /// <param name="clusters">The clusters to merge and sort.</param>
         /// <returns>A merged sorted list of clusters.</returns>
         private static (T, int)[] PostProcess<T, TShape>(
-            MeanShiftCluster<T, TShape>[] clusters)
+            T[] clusters)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
         {
@@ -123,7 +125,7 @@ namespace ClusterLib
             DictionarySlim<T, int> mergedCentroidsMap = new DictionarySlim<T, int>();
             foreach (var cluster in clusters)
             {
-                mergedCentroidsMap.GetOrAddValueRef(cluster.Centroid)++;
+                mergedCentroidsMap.GetOrAddValueRef(cluster)++;
             }
 
             int fullyUnqiueClusterCount = mergedCentroidsMap.Count;

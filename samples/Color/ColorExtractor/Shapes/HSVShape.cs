@@ -8,7 +8,7 @@ namespace ColorExtractor.Shapes
 {
     public struct HSVShape : IPoint<HSVColor>
     {
-        public HSVColor Average(IEnumerable<HSVColor> items)
+        public HSVColor Average(HSVColor[] items)
         {
             int sumH, count;
             sumH = count = 0;
@@ -46,7 +46,7 @@ namespace ColorExtractor.Shapes
             return hueDiff * hueDiff + satDiff * satDiff + valDiff * valDiff;
         }
 
-        public HSVColor WeightedAverage(IEnumerable<(HSVColor, double)> items)
+        public HSVColor WeightedAverage((HSVColor, double)[] items)
         {
             double sumH, sumS, sumV;
             sumH = sumS = sumV = 0;

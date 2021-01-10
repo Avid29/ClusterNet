@@ -17,7 +17,7 @@ namespace ClusterLib.Shapes
         /// </summary>
         /// <param name="items">The list of points to average.</param>
         /// <returns>The average of all items in the enumerable.</returns>
-        T Average(IEnumerable<T> items);
+        T Average(T[] items);
 
         /// <summary>
         /// Gets the distance between <paramref name="it1"/> and <paramref name="it2"/>.
@@ -32,6 +32,6 @@ namespace ClusterLib.Shapes
         /// </summary>
         /// <param name="items">A weighted list of points.</param>
         /// <returns>The weighted center of the points.</returns>
-        T WeightedAverage(IEnumerable<(T, double)> items);
+        T WeightedAverage((T, double)[] items);
     }
 }

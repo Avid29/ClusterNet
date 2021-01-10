@@ -94,7 +94,7 @@ namespace ClusterLib.KMeans
         protected override T CalculateCentroid()
         {
             TShape shape = default;
-            return shape.Average(_subPointSet);
+            return shape.Average(_subPointSet.ToArray());
         }
     }
 }

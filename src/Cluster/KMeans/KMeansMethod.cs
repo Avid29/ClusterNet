@@ -12,6 +12,11 @@ namespace ClusterLib.KMeans
         /// <summary>
         /// Runs KMeans cluster on a list of <typeparamref name="T"/> points.
         /// </summary>
+        /// <remarks>
+        /// This is not a wonderful implementation of KMeans.
+        /// Many componenets shared between MeanShift and KMeans have been modified
+        /// to only benefit MeanShift. Optimization will be required if this method were to actually be used.
+        /// </remarks>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
         /// <param name="points">A list of points to cluster.</param>
