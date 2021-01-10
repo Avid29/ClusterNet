@@ -4,6 +4,7 @@ using ClusterLib.Kernels;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
+using System;
 using System.Collections.Generic;
 
 namespace Benchmarks.MeanShift.Colors
@@ -11,7 +12,7 @@ namespace Benchmarks.MeanShift.Colors
     [MemoryDiagnoser]
     public class MeanShiftRGBBenchmarks
     {
-        private List<RGBColor> colors;
+        private RGBColor[] colors;
         private Dictionary<string, string> nameToImage;
 
         [Params(

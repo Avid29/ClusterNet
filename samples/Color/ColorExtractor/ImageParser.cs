@@ -27,27 +27,32 @@ namespace ColorExtractor
             return response.GetResponseStream();
         }
 
-        public static List<RGBColor> GetImageColors(
+        public static RGBColor[] GetImageColors(
             Image<Argb32> image,
             int quality = 1920)
         {
-            List<RGBColor> colors = new List<RGBColor>();
+            int nth = image.Width * image.Height / quality;
 
-            int nth = (image.Width * image.Height) / quality;
+            int pixelsPerRow = image.Width / nth;
 
-            for (int rows = 0; rows < image.Height; rows++)
+            RGBColor[] colors = new RGBColor[image.Height * pixelsPerRow];
+
+
+            int pos = 0;
+            for (int row = 0; row < image.Height; row++)
             {
-                Span<Argb32> rowPixels = image.GetPixelRowSpan(rows);
-                for (int i = 0; i < rowPixels.Length; i += nth)
+                Span<Argb32> rowPixels = image.GetPixelRowSpan(row);
+                for (int i = 0; i < pixelsPerRow; i++)
                 {
-                    float b = rowPixels[i].B / 255f;
-                    float g = rowPixels[i].G / 255f;
-                    float r = rowPixels[i].R / 255f;
+                    float b = rowPixels[i * nth].B / 255f;
+                    float g = rowPixels[i * nth].G / 255f;
+                    float r = rowPixels[i * nth].R / 255f;
                     //float a = rowPixels[i].A / 255;
 
                     RGBColor color = new RGBColor(r, g, b);
 
-                    colors.Add(color);
+                    colors[pos] = color;
+                    pos++;
                 }
             }
 

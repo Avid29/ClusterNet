@@ -31,8 +31,7 @@ namespace UnitTests
                 23d,
             };
 
-            var clusters = KMeansMethod.KMeans<double, DoubleShape>(points, 3)
-                .Select(x => x.Centroid).ToList();
+            KMeansMethod.KMeans<double, DoubleShape>(points, 3);
         }
 
         [TestMethod]
@@ -54,8 +53,7 @@ namespace UnitTests
                 new Vector2(6, 6),
             };
 
-            var clusters = KMeansMethod.KMeans<Vector2, Vector2Shape>(points, 2)
-                .Select(x => x.Centroid).ToList();
+            KMeansMethod.KMeans<Vector2, Vector2Shape>(points, 2);
         }
     }
 }

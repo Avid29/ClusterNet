@@ -10,7 +10,7 @@ namespace Benchmarks.KMeans.Colors
     [MemoryDiagnoser]
     public class KMeansRGBBenchmarks
     {
-        private List<RGBColor> colors;
+        private RGBColor[] colors;
 
         [Params(64, 128, 256, 512)]
         public int Quality;

@@ -1,5 +1,6 @@
 ﻿using ClusterLib.Kernels;
 using ClusterLib.Shapes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,8 +20,8 @@ namespace ClusterLib
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
-        public static List<(MeanShiftCluster<T, TShape>, int)> MeanShift<T, TShape>(
-            IEnumerable<T> points,
+        public static (MeanShiftCluster<T, TShape>, int)[] MeanShift<T, TShape>(
+            ReadOnlySpan<T> points,
             IKernel kernel,
             int initialClusters = 0)
             where T : unmanaged
@@ -32,21 +33,22 @@ namespace ClusterLib
             if (initialClusters == 0)
                 n = 1;
             else
-                n = points.Count() / initialClusters;
+                n = points.Length / initialClusters;
 
             // N will be 0 if initialClusters is greater than the point count.
             // N can't be 0
             if (n == 0)
                 n = 1;
-            
+
             // Create a cluster for each point.
-            List<MeanShiftCluster<T, TShape>> clusters = points
-                .Where((x, d) => d % n == 0)
-                .Select(x => new MeanShiftCluster<T, TShape>(x))
-                .ToList();
+            MeanShiftCluster<T, TShape>[] clusters = new MeanShiftCluster<T, TShape>[points.Length / n];
+            for (int i = 0; i < clusters.Length; i++)
+            {
+                clusters[i] =(new MeanShiftCluster<T, TShape>(points[i * n]));
+            }
             
             // Shift each cluster until it's at its convergence point.
-            for (int i = 0; i < clusters.Count; i++)
+            for (int i = 0; i < clusters.Length; i++)
             {
                 MeanShiftCluster<T, TShape> cluster = clusters[i];
                 MeanShiftCluster<T, TShape> newCluster = default;
@@ -66,7 +68,7 @@ namespace ClusterLib
 
             // Remove duplicate clusters.
             Dictionary<T, int> pointDictionary = new Dictionary<T, int>();
-            for (int i = 0; i < clusters.Count; i++)
+            for (int i = 0; i < clusters.Length; i++)
             {
                 var cluster = clusters[i];
                 if (!pointDictionary.ContainsKey(cluster.Centroid))
@@ -75,15 +77,23 @@ namespace ClusterLib
                 } else
                 {
                     pointDictionary[cluster.Centroid]++;
-                    clusters.Remove(cluster);
-                    i--;
+                    clusters[i] = null;
                 }
             }
 
-            return clusters
-                .Select(x => (x, pointDictionary[x.Centroid]))
-                .OrderByDescending(x => x.Item2)
-                .ToList();
+            (MeanShiftCluster<T, TShape>, int)[] finalWeightedClusters =
+                new (MeanShiftCluster<T, TShape>, int)[pointDictionary.Count];
+            for (int i = 0, pos = 0; pos < pointDictionary.Count; i++)
+            {
+                MeanShiftCluster<T, TShape> cluster = clusters[i];
+                if (cluster != null)
+                {
+                    finalWeightedClusters[pos] = (cluster, pointDictionary[cluster.Centroid]);
+                    pos++;
+                }
+            }
+
+            return finalWeightedClusters;
         }
 
         /// <summary>
@@ -97,7 +107,7 @@ namespace ClusterLib
         /// <returns>The new cluster from the cluster being shifted.</returns>
         private static MeanShiftCluster<T, TShape> Shift<T, TShape>(
             MeanShiftCluster<T, TShape> p,
-            IEnumerable<T> points,
+            ReadOnlySpan<T> points,
             IKernel kernel)
             where T : unmanaged
             where TShape : struct, IPoint<T>
