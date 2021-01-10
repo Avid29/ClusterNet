@@ -133,6 +133,7 @@ namespace ClusterLib
                 // This entry has been merged, skip it
                 if (entry.Value == 0)
                 {
+                    i++;
                     continue;
                 }
 
@@ -140,7 +141,7 @@ namespace ClusterLib
                 foreach (var otherEntry in mergedCentroidsMap)
                 {
                     // The comparison has already been made, or they are the same item.
-                    if (j <= i)
+                    if (j <= i )
                     {
                         j++;
                         continue;
