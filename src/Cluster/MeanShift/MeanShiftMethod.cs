@@ -32,6 +32,9 @@ namespace ClusterLib
         {
             TShape shape = default;
 
+            // Define this here, and reuse it on every iteration of Shift
+            (T, double)[] weightedSubPointList = new (T, double)[points.Length];
+
             int n;
             if (initialClusters == 0)
                 n = 1;
@@ -60,7 +63,7 @@ namespace ClusterLib
                 // Shift the cluster until it does not shift.
                 while (changed)
                 {
-                    newCluster = Shift<T, TShape, TKernel>(cluster, points, kernel);
+                    newCluster = Shift<T, TShape, TKernel>(cluster, points, kernel, weightedSubPointList);
                     changed = shape.FindDistanceSquared(newCluster, cluster) != 0;
                     cluster = newCluster;
                 }
@@ -85,26 +88,24 @@ namespace ClusterLib
         private static T Shift<T, TShape, TKernel>(
             T p,
             ReadOnlySpan<T> points,
-            TKernel kernel)
+            TKernel kernel,
+            (T, double)[] weightedSubPointList)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
             TShape shape = default;
 
-
             // Create cluster based on distance of points from the current cluster's centroid
-            (T, double)[] _weightedSubPointList = new (T, double)[points.Length];
-
             for (int i = 0; i < points.Length; i++)
             {
                 T point = points[i];
                 double distance = shape.FindDistanceSquared(p, point);
                 double weight = kernel.WeightDistance(distance);
-                _weightedSubPointList[i] = (point, weight);
+                weightedSubPointList[i] = (point, weight);
             }
 
-            return shape.WeightedAverage(_weightedSubPointList);
+            return shape.WeightedAverage(weightedSubPointList);
         }
 
         /// <summary>
