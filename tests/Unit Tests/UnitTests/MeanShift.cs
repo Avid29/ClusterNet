@@ -27,7 +27,7 @@ namespace UnitTests
             };
 
             FlatKernel kernel = new FlatKernel(5);
-            MeanShiftMethod.MeanShift<double, DoubleShape>(points, kernel);
+            MeanShiftMethod.MeanShift<double, DoubleShape, FlatKernel>(points, kernel);
         }
 
         [TestMethod]
@@ -44,7 +44,7 @@ namespace UnitTests
             };
 
             FlatKernel kernel = new FlatKernel(5);
-            MeanShiftMethod.MeanShift<Vector2, Vector2Shape>(points, kernel);
+            MeanShiftMethod.MeanShift<Vector2, Vector2Shape, FlatKernel>(points, kernel);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace UnitTests
             };
 
             GaussianKernel kernel = new GaussianKernel(5);
-            MeanShiftMethod.MeanShift<Vector2, Vector2Shape>(points, kernel);
+            MeanShiftMethod.MeanShift<Vector2, Vector2Shape, GaussianKernel>(points, kernel);
         }
     }
 }

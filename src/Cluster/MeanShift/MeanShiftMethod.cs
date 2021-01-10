@@ -1,5 +1,6 @@
 ﻿using ClusterLib.Kernels;
 using ClusterLib.Shapes;
+using Microsoft.Collections.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,11 @@ namespace ClusterLib
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
-        public static (MeanShiftCluster<T, TShape>, int)[] MeanShift<T, TShape, TKernel>(
+        public static (T, int)[] MeanShift<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,
             int initialClusters = 0)
-            where T : unmanaged
+            where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
@@ -68,42 +69,7 @@ namespace ClusterLib
                 clusters[i] = newCluster;
             }
 
-            // Remove duplicate clusters.
-            Dictionary<T, int> pointDictionary = new Dictionary<T, int>();
-            for (int i = 0; i < clusters.Length; i++)
-            {
-                var cluster = clusters[i];
-                if (!pointDictionary.ContainsKey(cluster.Centroid))
-                {
-                    pointDictionary.Add(cluster.Centroid, 1);
-                }
-                else
-                {
-                    pointDictionary[cluster.Centroid]++;
-                    clusters[i] = null;
-                }
-            }
-
-            (MeanShiftCluster<T, TShape>, int)[] finalWeightedClusters =
-                new (MeanShiftCluster<T, TShape>, int)[pointDictionary.Count];
-            for (int i = 0, pos = 0; pos < pointDictionary.Count; i++)
-            {
-                MeanShiftCluster<T, TShape> cluster = clusters[i];
-                if (cluster != null)
-                {
-                    finalWeightedClusters[pos] = (cluster, pointDictionary[cluster.Centroid]);
-                    pos++;
-                }
-            }
-
-            Array.Sort(finalWeightedClusters,
-                delegate ((MeanShiftCluster<T, TShape>, int) clus1,
-                (MeanShiftCluster<T, TShape>, int) clus2)
-                {
-                    return clus2.Item2.CompareTo(clus1.Item2);
-                });
-
-            return finalWeightedClusters;
+            return PostProcess(clusters);
         }
 
         /// <summary>
@@ -120,7 +86,7 @@ namespace ClusterLib
             MeanShiftCluster<T, TShape> p,
             ReadOnlySpan<T> points,
             TKernel kernel)
-            where T : unmanaged
+            where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
@@ -137,6 +103,80 @@ namespace ClusterLib
             }
 
             return newCluster;
+        }
+
+        /// <summary>
+        /// Merges really similar clusters, then sorts them by size.
+        /// </summary>
+        /// <typeparam name="T">The type of points to cluster.</typeparam>
+        /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
+        /// <param name="clusters">The clusters to merge and sort.</param>
+        /// <returns>A merged sorted list of clusters.</returns>
+        private static (T, int)[] PostProcess<T, TShape>(
+            MeanShiftCluster<T, TShape>[] clusters)
+            where T : unmanaged, IEquatable<T>
+            where TShape : struct, IPoint<T>
+        {
+            TShape shape = default;
+
+            // Remove explict duplicate values.
+            DictionarySlim<T, int> mergedCentroidsMap = new DictionarySlim<T, int>();
+            foreach (var cluster in clusters)
+            {
+                mergedCentroidsMap.GetOrAddValueRef(cluster.Centroid)++;
+            }
+
+            int fullyUnqiueClusterCount = mergedCentroidsMap.Count;
+            int i = 0;
+            foreach (var entry in mergedCentroidsMap)
+            {
+                // This entry has been merged, skip it
+                if (entry.Value == 0)
+                {
+                    continue;
+                }
+
+                int j = 0;
+                foreach (var otherEntry in mergedCentroidsMap)
+                {
+                    // The comparison has already been made, or they are the same item.
+                    if (j <= i)
+                    {
+                        j++;
+                        continue;
+                    }
+
+                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < .1)
+                    {
+                        ref int otherValue = ref mergedCentroidsMap.GetOrAddValueRef(otherEntry.Key);
+                        mergedCentroidsMap.GetOrAddValueRef(entry.Key) += otherValue;
+                        otherValue = 0;
+                        fullyUnqiueClusterCount--;
+                    }
+                    j++;
+                }
+                i++;
+            }
+
+            (T, int)[] mergedCentroids = new (T, int)[fullyUnqiueClusterCount];
+            i = 0; // Reuse i as an iter again.
+            foreach (var entry in mergedCentroidsMap)
+            {
+                if (entry.Value != 0)
+                {
+                    mergedCentroids[i] = (entry.Key, entry.Value);
+                    i++;
+                }
+            }
+
+            Array.Sort(mergedCentroids,
+                delegate ((T, int) clus1,
+                (T, int) clus2)
+                {
+                    return clus2.Item2.CompareTo(clus1.Item2);
+                });
+
+            return mergedCentroids;
         }
     }
 }

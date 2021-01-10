@@ -1,6 +1,8 @@
-﻿namespace ColorExtractor.ColorSpaces
+﻿using System;
+
+namespace ColorExtractor.ColorSpaces
 {
-    public struct RGBColor
+    public struct RGBColor : IEquatable<RGBColor>
     {
         public RGBColor(float r, float g, float b)
         {
@@ -14,5 +16,12 @@
         public float G { get; set; }
 
         public float B { get; set; }
+
+        public bool Equals(RGBColor other)
+        {
+            return R == other.R &&
+                   G == other.G &&
+                   B == other.B;
+        }
     }
 }
