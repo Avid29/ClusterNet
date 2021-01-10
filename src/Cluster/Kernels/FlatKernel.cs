@@ -3,7 +3,7 @@
     /// <summary>
     /// A Kernel with a flat cutoff at its window size.
     /// </summary>
-    public class FlatKernel : IKernel
+    public struct FlatKernel : IKernel
     {
         private double _windowSquared;
 

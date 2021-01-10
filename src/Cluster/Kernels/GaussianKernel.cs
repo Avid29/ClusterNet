@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace ClusterLib.Kernels
 {
     /// <summary>
     /// A Kernel with a gaussian cutoff.
     /// </summary>
-    public class GaussianKernel : IKernel
+    public struct GaussianKernel : IKernel
     {
         private double _bandwidthSquared;
 
@@ -20,6 +21,7 @@ namespace ClusterLib.Kernels
         }
 
         /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double WeightDistance(double distanceSquared)
         {
             //return Math.Pow(Math.E, -.5 * distanceSquared / _bandwidthSquared);

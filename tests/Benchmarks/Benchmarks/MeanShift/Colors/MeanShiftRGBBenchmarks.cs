@@ -74,7 +74,7 @@ namespace Benchmarks.MeanShift.Colors
         public void Gaussian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            MeanShiftMethod.MeanShift<RGBColor, RGBShape>(colors, kernel, Quality);
+            MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
     }
 }

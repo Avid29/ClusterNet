@@ -16,16 +16,18 @@ namespace ClusterLib
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
+        /// <typeparam name="TKernel">The type of kernel to use on the cluster.</typeparam>
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
-        public static (MeanShiftCluster<T, TShape>, int)[] MeanShift<T, TShape>(
+        public static (MeanShiftCluster<T, TShape>, int)[] MeanShift<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
-            IKernel kernel,
+            TKernel kernel,
             int initialClusters = 0)
             where T : unmanaged
             where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
         {
             TShape shape = default;
 
@@ -74,7 +76,8 @@ namespace ClusterLib
                 if (!pointDictionary.ContainsKey(cluster.Centroid))
                 {
                     pointDictionary.Add(cluster.Centroid, 1);
-                } else
+                }
+                else
                 {
                     pointDictionary[cluster.Centroid]++;
                     clusters[i] = null;
@@ -93,6 +96,13 @@ namespace ClusterLib
                 }
             }
 
+            Array.Sort(finalWeightedClusters,
+                delegate ((MeanShiftCluster<T, TShape>, int) clus1,
+                (MeanShiftCluster<T, TShape>, int) clus2)
+                {
+                    return clus2.Item2.CompareTo(clus1.Item2);
+                });
+
             return finalWeightedClusters;
         }
 
@@ -101,16 +111,18 @@ namespace ClusterLib
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
+        /// <typeparam name="TKernel">The type of kernel to use on the cluster.</typeparam>
         /// <param name="p">The cluster to shift.</param>
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <returns>The new cluster from the cluster being shifted.</returns>
-        private static MeanShiftCluster<T, TShape> Shift<T, TShape>(
+        private static MeanShiftCluster<T, TShape> Shift<T, TShape, TKernel>(
             MeanShiftCluster<T, TShape> p,
             ReadOnlySpan<T> points,
-            IKernel kernel)
+            TKernel kernel)
             where T : unmanaged
             where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
         {
             TShape shape = default;
 
