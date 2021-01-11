@@ -2,8 +2,7 @@
 using ClusterLib.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClusterLib
 {
@@ -22,7 +21,7 @@ namespace ClusterLib
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
-        public static (T, int)[] MeanShift<T, TShape, TKernel>(
+        public static unsafe (T, int)[] MeanShift<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,
             int initialClusters = 0)
@@ -31,9 +30,6 @@ namespace ClusterLib
             where TKernel : struct, IKernel
         {
             TShape shape = default;
-
-            // Define this here, and reuse it on every iteration of Shift
-            (T, double)[] weightedSubPointList = new (T, double)[points.Length];
 
             int n;
             if (initialClusters == 0)
@@ -52,24 +48,31 @@ namespace ClusterLib
             {
                 clusters[i] = points[i * n];
             }
-            
-            // Shift each cluster until it's at its convergence point.
-            for (int i = 0; i < clusters.Length; i++)
+
+            fixed (T* p0 = points)
             {
-                T cluster = clusters[i];
-                T newCluster = default;
-                bool changed = true;
-
-                // Shift the cluster until it does not shift.
-                while (changed)
+                T* p = p0;
+                int pointCount = points.Length;
+                // Shift each cluster until it's at its convergence point.
+                Parallel.For(0, clusters.Length, (i, state) =>
                 {
-                    newCluster = Shift<T, TShape, TKernel>(cluster, points, kernel, weightedSubPointList);
-                    changed = shape.FindDistanceSquared(newCluster, cluster) != 0;
-                    cluster = newCluster;
-                }
+                    // Define this here, and reuse it on every iteration of Shift on this thread.
+                    (T, double)[] weightedSubPointList = new (T, double)[pointCount];
 
-                // Replace original cluster with shifted cluster.
-                clusters[i] = newCluster;
+                    T cluster = clusters[i];
+                    T newCluster = default;
+                    bool changed = true;
+
+                    // Shift the cluster until it does not shift.
+                    while (changed)
+                    {
+                        newCluster = Shift<T, TShape, TKernel>(cluster, p, pointCount, kernel, weightedSubPointList);
+                        changed = shape.FindDistanceSquared(newCluster, cluster) != 0;
+                        cluster = newCluster;
+                    }
+
+                    clusters[i] = cluster;
+                });
             }
 
             return PostProcess<T, TShape>(clusters);
@@ -85,9 +88,10 @@ namespace ClusterLib
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <returns>The new cluster from the cluster being shifted.</returns>
-        private static T Shift<T, TShape, TKernel>(
+        private static unsafe T Shift<T, TShape, TKernel>(
             T p,
-            ReadOnlySpan<T> points,
+            T* points,
+            int pointCount,
             TKernel kernel,
             (T, double)[] weightedSubPointList)
             where T : unmanaged, IEquatable<T>
@@ -97,7 +101,7 @@ namespace ClusterLib
             TShape shape = default;
 
             // Create cluster based on distance of points from the current cluster's centroid
-            for (int i = 0; i < points.Length; i++)
+            for (int i = 0; i < pointCount; i++)
             {
                 T point = points[i];
                 double distance = shape.FindDistanceSquared(p, point);

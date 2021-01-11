@@ -6,7 +6,7 @@ namespace UnitTests.Shapes
 {
     public struct Vector2Shape : IPoint<Vector2>
     {
-        public Vector2 Average(IEnumerable<Vector2> items)
+        public Vector2 Average(Vector2[] items)
         {
             Vector2 sumVector = new Vector2(0);
             int count = 0;
@@ -27,7 +27,7 @@ namespace UnitTests.Shapes
             return x * x + y * y;
         }
 
-        public Vector2 WeightedAverage(IEnumerable<(Vector2, double)> items)
+        public Vector2 WeightedAverage((Vector2, double)[] items)
         {
             Vector2 sumVector = new Vector2(0);
             double totalWeight = 0;

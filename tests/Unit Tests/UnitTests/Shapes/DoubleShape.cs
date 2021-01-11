@@ -6,7 +6,7 @@ namespace UnitTests.Shapes
 {
     public struct DoubleShape : IPoint<double>
     {
-        public double Average(IEnumerable<double> items)
+        public double Average(double[] items)
         {
             double sum = 0;
             int count = 0;
@@ -29,7 +29,7 @@ namespace UnitTests.Shapes
             return Math.Abs(it1 - it2);
         }
 
-        public double WeightedAverage(IEnumerable<(double, double)> items)
+        public double WeightedAverage((double, double)[] items)
         {
             double sum = 0;
             double totalWeight = 0;
