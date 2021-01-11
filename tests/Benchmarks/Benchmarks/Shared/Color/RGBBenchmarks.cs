@@ -2,6 +2,7 @@
 using ClusterLib;
 using ClusterLib.Kernels;
 using ClusterLib.KMeans;
+using ClusterLib.MeanShift;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
@@ -79,6 +80,13 @@ namespace Benchmarks.Shared.Color
         {
             GaussianKernel kernel = new GaussianKernel(.15);
             MeanShiftMethod.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+        }
+
+        [Benchmark]
+        public void WeightedMeanShiftGaussianSingle()
+        {
+            GaussianKernel kernel = new GaussianKernel(.15);
+            WeightedMeanShiftMethod.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
     }
 }
