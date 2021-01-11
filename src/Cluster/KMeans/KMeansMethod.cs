@@ -1,6 +1,5 @@
 ﻿using ClusterLib.Shapes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ClusterLib.KMeans
@@ -30,7 +29,7 @@ namespace ClusterLib.KMeans
             where TShape : struct, IPoint<T>
         {
             // Split to arbitrary clusters
-            List<KMeansCluster<T, TShape>> clusters = Split<T, TShape>(points, clusterCount);
+            KMeansCluster<T, TShape>[] clusters = Split<T, TShape>(points, clusterCount);
 
             // Run no items change cluster on iteration.
             bool changed = true;
@@ -39,21 +38,22 @@ namespace ClusterLib.KMeans
                 changed = false;
 
                 // For each point in each cluster
-                foreach (var cluster in clusters)
+                for (int i = 0; i < clusters.Length; i++)
                 {
+                    KMeansCluster<T, TShape> cluster = clusters[i];
                     for (int pointIndex = 0; pointIndex < cluster.Count; pointIndex++)
                     {
                         T point = cluster[pointIndex];
 
                         // Find the nearest cluster and move the item to it.
-                        int nearestCluster = FindNearestCluster(point, clusters);
-                        if (nearestCluster != clusters.IndexOf(cluster))
+                        int nearestClusterIndex = FindNearestClusterIndex(point, clusters);
+                        if (nearestClusterIndex != i)
                         {
                             // A cluster can't be made empty. Leave the item in place if the cluster would be empty
                             if (cluster.Count > 1)
                             {
                                 T removedPoint = cluster.RemoveAt(pointIndex);
-                                clusters[nearestCluster].Add(removedPoint);
+                                clusters[nearestClusterIndex].Add(removedPoint);
                                 changed = true;
                             }
                         }
@@ -61,10 +61,21 @@ namespace ClusterLib.KMeans
                 }
             }
 
-            return clusters
-                .Select(x => (x.Centroid, x.Count))
-                .OrderByDescending(x => x.Item2)
-                .ToArray();
+            (T, int)[] weightedColors = new (T, int)[clusters.Length];
+            for (int i = 0; i < clusters.Length; i++)
+            {
+                var cluster = clusters[i];
+                weightedColors[i] = (cluster.Centroid, cluster.Count);
+            }
+
+            Array.Sort(weightedColors,
+                delegate ((T, int) clus1,
+                (T, int) clus2)
+                {
+                    return clus2.Item2.CompareTo(clus1.Item2);
+                });
+
+            return weightedColors;
         }
 
         /// <summary>
@@ -75,9 +86,9 @@ namespace ClusterLib.KMeans
         /// <param name="clusters">The list of clusters.</param>
         /// <param name="point">The point to find a nearest cluster for.</param>
         /// <returns>The index in <paramref name="clusters"/> of the nearest cluster to <paramref name="point"/>.</returns>
-        private static int FindNearestCluster<T, TShape>(
+        private static int FindNearestClusterIndex<T, TShape>(
             T point,
-            List<KMeansCluster<T, TShape>> clusters)
+            KMeansCluster<T, TShape>[] clusters)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
@@ -87,7 +98,7 @@ namespace ClusterLib.KMeans
             double minimumDistance = double.PositiveInfinity;
             int nearestClusterIndex = -1;
 
-            for (int k = 0; k < clusters.Count; k++)
+            for (int k = 0; k < clusters.Length; k++)
             {
                 double distance = shape.FindDistanceSquared(point, clusters[k].Centroid);
 
@@ -111,13 +122,13 @@ namespace ClusterLib.KMeans
         /// <param name="points">The list of points to place into clusters.</param>
         /// <param name="clusterCount">The amount of clusters to create.</param>
         /// <returns>A list of arbitrary clusters of size <paramref name="clusterCount"/> made out of the points in <paramref name="points"/>.</returns>
-        private static List<KMeansCluster<T, TShape>> Split<T, TShape>(
+        private static KMeansCluster<T, TShape>[] Split<T, TShape>(
             ReadOnlySpan<T> points,
             int clusterCount)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
-            List<KMeansCluster<T, TShape>> clusters = new List<KMeansCluster<T, TShape>>();
+            KMeansCluster<T, TShape>[] clusters = new KMeansCluster<T, TShape>[clusterCount];
             int subSize = points.Length / clusterCount;
 
             int iterationPos = 0;
@@ -132,8 +143,10 @@ namespace ClusterLib.KMeans
                     currentCluster.Add(points[iterationPos]);
                     iterationPos++;
                 }
-                clusters.Add(currentCluster);
+
+                clusters[i] = currentCluster;
             }
+
             return clusters;
         }
     }
