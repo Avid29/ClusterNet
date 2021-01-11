@@ -23,7 +23,7 @@ namespace ClusterLib.KMeans
         /// <param name="points">A list of points to cluster.</param>
         /// <param name="clusterCount">The amount of clusters to form.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
-        public static List<(KMeansCluster<T, TShape>, int)> KMeans<T, TShape>(
+        public static (T, int)[] KMeans<T, TShape>(
             ReadOnlySpan<T> points,
             int clusterCount)
             where T : unmanaged
@@ -46,7 +46,7 @@ namespace ClusterLib.KMeans
                         T point = cluster[pointIndex];
 
                         // Find the nearest cluster and move the item to it.
-                        int nearestCluster = FindNearestCluster(clusters, point);
+                        int nearestCluster = FindNearestCluster(point, clusters);
                         if (nearestCluster != clusters.IndexOf(cluster))
                         {
                             // A cluster can't be made empty. Leave the item in place if the cluster would be empty
@@ -62,9 +62,9 @@ namespace ClusterLib.KMeans
             }
 
             return clusters
-                .Select(x => (x, x.Count))
+                .Select(x => (x.Centroid, x.Count))
                 .OrderByDescending(x => x.Item2)
-                .ToList();
+                .ToArray();
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace ClusterLib.KMeans
         /// <param name="point">The point to find a nearest cluster for.</param>
         /// <returns>The index in <paramref name="clusters"/> of the nearest cluster to <paramref name="point"/>.</returns>
         private static int FindNearestCluster<T, TShape>(
-            List<KMeansCluster<T, TShape>> clusters,
-            T point)
+            T point,
+            List<KMeansCluster<T, TShape>> clusters)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {

@@ -65,11 +65,11 @@ namespace Color_Sample
 
             RGBColor[] rgbColors = ImageParser.GetImageColors(image, 1920);
             GaussianKernel kernel = new GaussianKernel(.15);
-            List<(KMeansCluster<RGBColor, RGBShape>, int)> clusters = KMeansMethod.KMeans<RGBColor, RGBShape>(rgbColors, 5);
+            (RGBColor, int)[] clusters = KMeansMethod.KMeans<RGBColor, RGBShape>(rgbColors, 5);
             
             List<(Color, int)> weightedColors = clusters.Select(x =>
             {
-                var rgbColor = x.Item1.Centroid;
+                var rgbColor = x.Item1;
                 Color color = Color.FromArgb(255,
                     (byte)(rgbColor.R * 255),
                     (byte)(rgbColor.G * 255),
