@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Running;
 using Benchmarks.KMeans.Colors;
 using Benchmarks.MeanShift.Colors;
+using Benchmarks.Shared.Color;
 
 namespace Benchmarks
 {
@@ -9,8 +10,7 @@ namespace Benchmarks
     {
         static void Main(string[] args)
         {
-            //BenchmarkRunner.Run<KMeansRGBBenchmarks>();
-            BenchmarkRunner.Run<MeanShiftRGBBenchmarks>();
+            BenchmarkRunner.Run<RGBBenchmarks>();
         }
     }
 }

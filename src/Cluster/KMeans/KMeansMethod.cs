@@ -1,4 +1,5 @@
 ﻿using ClusterLib.Shapes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +24,7 @@ namespace ClusterLib.KMeans
         /// <param name="clusterCount">The amount of clusters to form.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
         public static List<(KMeansCluster<T, TShape>, int)> KMeans<T, TShape>(
-            IEnumerable<T> points,
+            ReadOnlySpan<T> points,
             int clusterCount)
             where T : unmanaged
             where TShape : struct, IPoint<T>
@@ -111,28 +112,25 @@ namespace ClusterLib.KMeans
         /// <param name="clusterCount">The amount of clusters to create.</param>
         /// <returns>A list of arbitrary clusters of size <paramref name="clusterCount"/> made out of the points in <paramref name="points"/>.</returns>
         private static List<KMeansCluster<T, TShape>> Split<T, TShape>(
-            IEnumerable<T> points,
+            ReadOnlySpan<T> points,
             int clusterCount)
             where T : unmanaged
             where TShape : struct, IPoint<T>
         {
             List<KMeansCluster<T, TShape>> clusters = new List<KMeansCluster<T, TShape>>();
-            int pointCount = points.Count();
-            int subSize = pointCount / clusterCount;
+            int subSize = points.Length / clusterCount;
 
             int iterationPos = 0;
-            IEnumerator<T> enumerator = points.GetEnumerator();
             for (int i = 0; i < clusterCount; i++)
             {
                 KMeansCluster<T, TShape> currentCluster = new KMeansCluster<T, TShape>();
 
                 // Until the cluster is full or the enumerator is out of elements.
-                for (int j = 0; j < subSize && iterationPos < pointCount; j++)
+                for (int j = 0; j < subSize && iterationPos < points.Length; j++)
                 {
                     // Add element to current cluster and advance iteration.
-                    currentCluster.Add(enumerator.Current);
+                    currentCluster.Add(points[iterationPos]);
                     iterationPos++;
-                    enumerator.MoveNext();
                 }
                 clusters.Add(currentCluster);
             }

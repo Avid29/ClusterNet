@@ -1,16 +1,18 @@
 ﻿using BenchmarkDotNet.Attributes;
 using ClusterLib;
 using ClusterLib.Kernels;
+using ClusterLib.KMeans;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Benchmarks.MeanShift.Colors
+namespace Benchmarks.Shared.Color
 {
     [MemoryDiagnoser]
-    public class MeanShiftRGBBenchmarks
+    public class RGBBenchmarks
     {
         private RGBColor[] colors;
         private Dictionary<string, string> nameToImage;
@@ -31,10 +33,6 @@ namespace Benchmarks.MeanShift.Colors
 
         [Params(480)]
         public int Quality;
-
-        //[Params(.05, .1, .2, .5)]
-        [Params(.15)]
-        public double Bandwidth;
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -63,24 +61,23 @@ namespace Benchmarks.MeanShift.Colors
             colors = ImageParser.GetImageColors(image, Quality);
         }
 
-        //[Benchmark]
-        //public void Flat()
-        //{
-        //    FlatKernel kernel = new FlatKernel(Bandwidth);
-        //    MeanShiftMethod.MeanShift<RGBColor, RGBShape>(colors, kernel);
-        //}
+        [Benchmark]
+        public void KMeans()
+        {
+            KMeansMethod.KMeans<RGBColor, RGBShape>(colors, 5);
+        }
 
         [Benchmark]
-        public void GaussianSingle()
+        public void MeanShiftGaussianSingle()
         {
-            GaussianKernel kernel = new GaussianKernel(Bandwidth);
+            GaussianKernel kernel = new GaussianKernel(.15);
             MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
 
         [Benchmark]
-        public void GaussianMulti()
+        public void MeanShiftGaussianMulti()
         {
-            GaussianKernel kernel = new GaussianKernel(Bandwidth);
+            GaussianKernel kernel = new GaussianKernel(.15);
             MeanShiftMethod.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
     }
