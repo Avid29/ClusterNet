@@ -2,6 +2,7 @@
 using ClusterLib.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
+using System.Threading.Tasks;
 
 namespace ClusterLib.MeanShift
 {
@@ -30,6 +31,29 @@ namespace ClusterLib.MeanShift
             return WeightedMeanShift<T, TShape, TKernel>(weightedPoints, kernel, initialClusters);
         }
 
+        public static unsafe (T, int)[] WeightedMeanShiftMultiThreaded<T, TShape, TKernel>(
+            ReadOnlySpan<T> points,
+            TKernel kernel,
+            int initialClusters = 0)
+            where T : unmanaged, IEquatable<T>
+            where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
+        {
+            DictionarySlim<T, int> mergedPointsMap = new DictionarySlim<T, int>();
+            foreach (var point in points)
+                mergedPointsMap.GetOrAddValueRef(point)++;
+
+            (T, int)[] weightedPoints = new (T, int)[mergedPointsMap.Count];
+            int pos = 0;
+            foreach (var entry in mergedPointsMap)
+            {
+                weightedPoints[pos] = (entry.Key, entry.Value);
+                pos++;
+            }
+
+            return WeightedMeanShiftMultiThreaded<T, TShape, TKernel>(weightedPoints, kernel, initialClusters);
+        }
+
         public static unsafe (T, int)[] WeightedMeanShift<T, TShape, TKernel>(
             ReadOnlySpan<(T, int)> weightedPoints,
             TKernel kernel,
@@ -50,6 +74,37 @@ namespace ClusterLib.MeanShift
                     (T, int) cluster = clusters[i];
                     clusters[i] = MeanShiftPoint<T, TShape, TKernel>(cluster, p, weightedPoints.Length, kernel, weightedSubPointList);
                 }
+            }
+
+            return PostProcess<T, TShape>(clusters);
+        }
+
+        public static unsafe (T, int)[] WeightedMeanShiftMultiThreaded<T, TShape, TKernel>(
+            ReadOnlySpan<(T, int)> weightedPoints,
+            TKernel kernel,
+            int initialClusters = 0)
+            where T : unmanaged, IEquatable<T>
+            where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
+        {
+            (T, int)[] clusters = SetupClusters(weightedPoints, initialClusters);
+
+            // Define this here, and reuse it on every iteration of Shift.
+            (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
+
+            fixed ((T, int)* p0 = weightedPoints)
+            {
+                (T, int)* p = p0;
+                int pointCount = weightedPoints.Length;
+
+                // Shift each cluster until it's at its convergence point.
+                Parallel.For(0, clusters.Length, (i, state) =>
+                {
+                    // Define this here, and reuse it on every iteration of Shift on this thread.
+                    (T, double)[] weightedSubPointList = new (T, double)[pointCount];
+                    (T, int) cluster = clusters[i];
+                    clusters[i] = MeanShiftPoint<T, TShape, TKernel>(cluster, p, pointCount, kernel, weightedSubPointList);
+                });
             }
 
             return PostProcess<T, TShape>(clusters);
