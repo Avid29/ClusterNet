@@ -36,7 +36,7 @@ namespace ClusterNet
 
             fixed (T* p = points)
             {
-                for (int i = 0; i < points.Length; i++)
+                for (int i = 0; i < clusters.Length; i++)
                 {
                     T cluster = clusters[i];
                     clusters[i] = MeanShiftPoint<T, TShape, TKernel>(cluster, p, points.Length, kernel, weightedSubPointList);

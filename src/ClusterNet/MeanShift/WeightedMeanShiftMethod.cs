@@ -69,7 +69,7 @@ namespace ClusterNet.MeanShift
 
             fixed ((T, int)* p = weightedPoints)
             {
-                for (int i = 0; i < weightedPoints.Length; i++)
+                for (int i = 0; i < clusters.Length; i++)
                 {
                     (T, int) cluster = clusters[i];
                     clusters[i] = MeanShiftPoint<T, TShape, TKernel>(cluster, p, weightedPoints.Length, kernel, weightedSubPointList);
