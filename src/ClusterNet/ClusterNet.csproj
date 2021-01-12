@@ -5,6 +5,10 @@
     <AssemblyName>CluterNet</AssemblyName>
     <RootNamespace>ClusterNet</RootNamespace>
 	<LangVersion>8.0</LangVersion>
+	<Authors>Adam Dernis</Authors>
+	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	<Version>0.0.1-alpha</Version>
+	<Description>A library for optimized cluster algorithms in .net standard</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
