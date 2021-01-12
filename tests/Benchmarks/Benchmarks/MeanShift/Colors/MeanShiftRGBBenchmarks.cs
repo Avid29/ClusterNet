@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
-using ClusterLib;
-using ClusterLib.Kernels;
+using ClusterNet;
+using ClusterNet.Kernels;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;

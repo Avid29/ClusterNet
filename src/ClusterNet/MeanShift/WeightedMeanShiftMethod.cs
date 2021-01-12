@@ -1,10 +1,10 @@
-﻿using ClusterLib.Kernels;
-using ClusterLib.Shapes;
+﻿using ClusterNet.Kernels;
+using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
 using System.Threading.Tasks;
 
-namespace ClusterLib.MeanShift
+namespace ClusterNet.MeanShift
 {
     public static class WeightedMeanShiftMethod
     {

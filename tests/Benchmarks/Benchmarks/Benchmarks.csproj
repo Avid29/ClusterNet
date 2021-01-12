@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\samples\Color\ColorExtractor\ColorExtractor.csproj" />
-    <ProjectReference Include="..\..\..\src\Cluster\ClusterLib.csproj" />
+    <ProjectReference Include="..\..\..\src\ClusterNet\ClusterNet.csproj" />
   </ItemGroup>
 
 </Project>

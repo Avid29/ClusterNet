@@ -1,8 +1,8 @@
-﻿using ClusterLib.Abstract;
-using ClusterLib.Shapes;
+﻿using ClusterNet.Abstract;
+using ClusterNet.Shapes;
 using System.Collections.Generic;
 
-namespace ClusterLib.KMeans
+namespace ClusterNet.KMeans
 {
     /// <summary>
     /// A <see cref="Cluster{T, TShape}"/> implementation for the KMeans algorithm.

@@ -1,8 +1,8 @@
-﻿using ClusterLib.Shapes;
+﻿using ClusterNet.Shapes;
 using System;
 using System.Linq;
 
-namespace ClusterLib.KMeans
+namespace ClusterNet.KMeans
 {
     /// <summary>
     /// A class containing methods related to the KMeans algorithm.

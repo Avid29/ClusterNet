@@ -1,5 +1,5 @@
-﻿using ClusterLib;
-using ClusterLib.Kernels;
+﻿using ClusterNet;
+using ClusterNet.Kernels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

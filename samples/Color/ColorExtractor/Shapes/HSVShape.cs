@@ -1,4 +1,4 @@
-﻿using ClusterLib.Shapes;
+﻿using ClusterNet.Shapes;
 using ColorExtractor.ColorSpaces;
 using System;
 using System.Collections.Generic;

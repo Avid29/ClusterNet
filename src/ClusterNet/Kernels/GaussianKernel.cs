@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace ClusterLib.Kernels
+namespace ClusterNet.Kernels
 {
     /// <summary>
     /// A Kernel with a gaussian cutoff.

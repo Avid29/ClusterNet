@@ -1,7 +1,7 @@
-﻿using ClusterLib.Abstract;
+﻿using ClusterNet.Abstract;
 using System.Collections.Generic;
 
-namespace ClusterLib.Shapes
+namespace ClusterNet.Shapes
 {
     /// <summary>
     /// A Shape for the Point in a <see cref="Cluster{T, TShape}"/>.

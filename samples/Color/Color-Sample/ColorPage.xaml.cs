@@ -1,6 +1,6 @@
-﻿using ClusterLib;
-using ClusterLib.Kernels;
-using ClusterLib.KMeans;
+﻿using ClusterNet;
+using ClusterNet.Kernels;
+using ClusterNet.KMeans;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;

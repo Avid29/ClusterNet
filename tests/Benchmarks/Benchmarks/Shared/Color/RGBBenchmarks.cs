@@ -1,8 +1,8 @@
 ﻿using BenchmarkDotNet.Attributes;
-using ClusterLib;
-using ClusterLib.Kernels;
-using ClusterLib.KMeans;
-using ClusterLib.MeanShift;
+using ClusterNet;
+using ClusterNet.Kernels;
+using ClusterNet.KMeans;
+using ClusterNet.MeanShift;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;

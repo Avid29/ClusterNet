@@ -1,4 +1,4 @@
-﻿namespace ClusterLib.Kernels
+﻿namespace ClusterNet.Kernels
 {
     /// <summary>
     /// A Kernel with a flat cutoff at its window size.

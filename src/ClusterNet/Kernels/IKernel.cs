@@ -1,4 +1,4 @@
-﻿namespace ClusterLib.Kernels
+﻿namespace ClusterNet.Kernels
 {
     /// <summary>
     /// An interface for a Kernel distribution.

@@ -168,10 +168,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Cluster\ClusterLib.csproj">
-      <Project>{3318ad69-6610-4404-8a3b-818a7c99592d}</Project>
-      <Name>ClusterLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ColorExtractor\ColorExtractor.csproj">
       <Project>{78892b64-c3be-411c-a4f5-6e26dc920705}</Project>
       <Name>ColorExtractor</Name>

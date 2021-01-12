@@ -1,6 +1,6 @@
-﻿using ClusterLib.Shapes;
+﻿using ClusterNet.Shapes;
 
-namespace ClusterLib.Abstract
+namespace ClusterNet.Abstract
 {
     /// <summary>
     /// The base class to represent a Cluster in each implemented algorithm.

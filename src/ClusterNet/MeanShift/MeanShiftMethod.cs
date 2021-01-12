@@ -1,10 +1,10 @@
-﻿using ClusterLib.Kernels;
-using ClusterLib.Shapes;
+﻿using ClusterNet.Kernels;
+using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
 using System.Threading.Tasks;
 
-namespace ClusterLib
+namespace ClusterNet
 {
     /// <summary>
     /// A class containing methods related to the MeanShift algorithm.

@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
-using ClusterLib.KMeans;
+using ClusterNet.KMeans;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
