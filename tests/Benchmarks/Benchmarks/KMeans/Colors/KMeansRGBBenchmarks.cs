@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using ClusterNet.KMeans;
+using ClusterNet.Methods;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
@@ -35,7 +36,7 @@ namespace Benchmarks.KMeans.Colors
         [Benchmark]
         public void Run()
         {
-            KMeansMethod.KMeans<RGBColor, RGBShape>(colors, Clusters);
+            ClusterAlgorithms.KMeans<RGBColor, RGBShape>(colors, Clusters);
         }
     }
 }

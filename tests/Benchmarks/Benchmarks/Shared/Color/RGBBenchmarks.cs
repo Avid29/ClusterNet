@@ -3,6 +3,7 @@ using ClusterNet;
 using ClusterNet.Kernels;
 using ClusterNet.KMeans;
 using ClusterNet.MeanShift;
+using ClusterNet.Methods;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
@@ -63,35 +64,35 @@ namespace Benchmarks.Shared.Color
         [Benchmark]
         public void KMeans()
         {
-            KMeansMethod.KMeans<RGBColor, RGBShape>(colors, 5);
+            ClusterAlgorithms.KMeans<RGBColor, RGBShape>(colors, 5);
         }
 
         [Benchmark]
         public void MeanShiftGaussianSingle()
         {
             GaussianKernel kernel = new GaussianKernel(.15);
-            MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void MeanShiftGaussianMulti()
         {
             GaussianKernel kernel = new GaussianKernel(.15);
-            MeanShiftMethod.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void WeightedMeanShiftGaussianSingle()
         {
             GaussianKernel kernel = new GaussianKernel(.15);
-            WeightedMeanShiftMethod.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void WeightedMeanShiftGaussianMulti()
         {
             GaussianKernel kernel = new GaussianKernel(.15);
-            WeightedMeanShiftMethod.WeightedMeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.WeightedMeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
     }
 }

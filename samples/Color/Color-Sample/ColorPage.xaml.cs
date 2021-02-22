@@ -1,6 +1,5 @@
-﻿using ClusterNet;
-using ClusterNet.Kernels;
-using ClusterNet.KMeans;
+﻿using ClusterNet.Kernels;
+using ClusterNet.Methods;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
@@ -65,8 +64,8 @@ namespace Color_Sample
 
             RGBColor[] rgbColors = ImageParser.GetImageColors(image, 1920);
             GaussianKernel kernel = new GaussianKernel(.15);
-            (RGBColor, int)[] clusters = MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(rgbColors, kernel, 480);
-            
+            (RGBColor, int)[] clusters = ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(rgbColors, kernel, 480);
+
             List<(Color, int)> weightedColors = clusters.Select(x =>
             {
                 var rgbColor = x.Item1;

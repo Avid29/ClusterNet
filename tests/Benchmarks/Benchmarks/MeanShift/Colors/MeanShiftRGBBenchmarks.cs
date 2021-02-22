@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using ClusterNet.Kernels;
-using ClusterNet.MeanShift;
+using ClusterNet.Methods;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
@@ -74,14 +74,14 @@ namespace Benchmarks.MeanShift.Colors
         public void GaussianSingle()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void GaussianMulti()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            MeanShiftMethod.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
     }
 }

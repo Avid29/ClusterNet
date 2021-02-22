@@ -3,7 +3,7 @@
 namespace ClusterNet.Abstract
 {
     /// <summary>
-    /// The base class to represent a Cluster in each implemented algorithm.
+    /// The base class to represent a Cluster in an implemented algorithm.
     /// </summary>
     /// <typeparam name="T">The type of data in the cluster.</typeparam>
     /// <typeparam name="TShape">A shape to describe to provide comparison methods for <see cref="T"/>.</typeparam>
