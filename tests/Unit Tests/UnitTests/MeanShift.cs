@@ -1,5 +1,6 @@
 ﻿using ClusterNet;
 using ClusterNet.Kernels;
+using ClusterNet.Methods;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace UnitTests
             };
 
             FlatKernel kernel = new FlatKernel(5);
-            MeanShiftMethod.MeanShift<double, DoubleShape, FlatKernel>(points, kernel);
+            ClusterAlgorithms.MeanShift<double, DoubleShape, FlatKernel>(points, kernel);
         }
 
         [TestMethod]
@@ -44,7 +45,7 @@ namespace UnitTests
             };
 
             FlatKernel kernel = new FlatKernel(5);
-            MeanShiftMethod.MeanShift<Vector2, Vector2Shape, FlatKernel>(points, kernel);
+            ClusterAlgorithms.MeanShift<Vector2, Vector2Shape, FlatKernel>(points, kernel);
         }
 
         [TestMethod]
@@ -61,7 +62,7 @@ namespace UnitTests
             };
 
             GaussianKernel kernel = new GaussianKernel(5);
-            MeanShiftMethod.MeanShift<Vector2, Vector2Shape, GaussianKernel>(points, kernel);
+            ClusterAlgorithms.MeanShift<Vector2, Vector2Shape, GaussianKernel>(points, kernel);
         }
     }
 }

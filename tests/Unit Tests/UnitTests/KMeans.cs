@@ -1,7 +1,6 @@
-﻿using ClusterNet.KMeans;
+﻿using ClusterNet.Methods;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using UnitTests.Shapes;
 
@@ -13,7 +12,7 @@ namespace UnitTests
         [TestMethod]
         public void DoubleTest1()
         {
-            List<double> points = new List<double>()
+            double[] points = new double[]
             {
                 0,
                 1,
@@ -24,20 +23,20 @@ namespace UnitTests
                 24,
             };
 
-            List<double> expectedClusters = new List<double>()
-            {
-                .5d,
-                10d,
-                23d,
-            };
+            //double[] expectedClusters = new double[]
+            //{
+            //    .5d,
+            //    10d,
+            //    23d,
+            //};
 
-            KMeansMethod.KMeans<double, DoubleShape>(points, 3);
+            ClusterAlgorithms.KMeans<double, DoubleShape>( points, 3);
         }
 
         [TestMethod]
         public void Vector2Test1()
         {
-            List<Vector2> points = new List<Vector2>()
+            Vector2[] points = new Vector2[]
             {
                 new Vector2(0, 2),
                 new Vector2(1, 1),
@@ -47,13 +46,13 @@ namespace UnitTests
                 new Vector2(6, 6),
             };
 
-            List<Vector2> expectedClusters = new List<Vector2>()
-            {
-                new Vector2(1, 1),
-                new Vector2(6, 6),
-            };
+            //Vector2[] expectedClusters = new Vector2[]
+            //{
+            //    new Vector2(1, 1),
+            //    new Vector2(6, 6),
+            //};
 
-            KMeansMethod.KMeans<Vector2, Vector2Shape>(points, 2);
+            ClusterAlgorithms.KMeans<Vector2, Vector2Shape>(points, 2);
         }
     }
 }
