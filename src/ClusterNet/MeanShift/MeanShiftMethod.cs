@@ -4,7 +4,7 @@ using Microsoft.Collections.Extensions;
 using System;
 using System.Threading.Tasks;
 
-namespace ClusterNet
+namespace ClusterNet.MeanShift
 {
     /// <summary>
     /// A class containing methods related to the MeanShift algorithm.

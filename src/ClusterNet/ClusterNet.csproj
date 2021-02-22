@@ -2,13 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>CluterNet</AssemblyName>
+    <AssemblyName>ClusterNet</AssemblyName>
     <RootNamespace>ClusterNet</RootNamespace>
 	<LangVersion>8.0</LangVersion>
 	<Authors>Adam Dernis</Authors>
 	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	<Version>0.0.2-alpha</Version>
 	<Description>A library for optimized cluster algorithms in .net standard</Description>
+	<PackageId>ClusterNet</PackageId>
+	<Product>ClusterNet</Product>
+	<RepositoryUrl>https://github.com/Avid29/ClusterNet</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
