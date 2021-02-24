@@ -31,32 +31,34 @@ namespace ClusterNet.MeanShift
         {
             /// Means shift operates by shifting each point towards the nearest local maxima.
             /// This is achieved by having every other original point in the field effect it's position based on a weight of distance.
-            /// 
+            ///
             /// Clusters at 1, 4, 4.5 and 5. Overlayed
-            ///1             *                             *    *   *            
-            ///5/6         *   *                         *   **   **   *          
-            ///4/6        *     *                       *    **   **    *         
-            ///3/6       *       *                     *    *  * *  *    *        
-            ///2/6     *           *                 *    *    * *    *    *      
-            ///1/6 *                   *         *    *    *         *    *    *  
+            ///1             *                             *    *    *
+            ///5/6         *   *                         *   **   **   *
+            ///4/6       *       *                     *    *  * *  *    *
+            ///3/6     *           *                 *    *    * *    *    *
+            ///2/6   *               *             *    *    *     *    *    *
+            ///1/6 *                   *         *    *    *         *    *    *
             ///    0 - - - - 1 - - - - 2 - - - - 3 - - - - 4 - - - - 5 - - - - 6
             /// 
             /// Clusters at 1, 4, 4.5 and 5. Summed
-            ///13/6   
-            ///2                                                *         
-            ///11/6                                           *   *   
-            ///10/6                                         *       *
+            ///15/6                                              
+            ///14/6                                               
+            ///13/6                                             *  
+            ///2                                              *   *       
+            ///11/6                                         *       * 
+            ///10/6                                        *         *
             ///9/6                                         *         *              
-            ///8/6                                         *         *             
-            ///7/6                                        *           *
-            ///1             *                           *             *         
-            ///5/6         *   *                         *             *          
-            ///4          *     *                       *               *         
-            ///3         *       *                     *                 *        
-            ///2       *           *                 *                     *      
+            ///8/6                                        *           *            
+            ///7/6                                       *             *
+            ///1             *                          *               *
+            ///5/6         *   *                       *                 *
+            ///4         *       *                    *                   *
+            ///3       *           *                 *                     *  
+            ///2     *               *             *                         *  
             ///1   *                   *         *                             *  
             ///    0 - - - - 1 - - - - 2 - - - - 3 - - - - 4 - - - - 5 - - - - 6
-            ///
+            
 
 
             T[] clusters = PrePost.SetupClusters(points, initialClusters);
