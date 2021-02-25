@@ -6,6 +6,7 @@
     public struct FlatKernel : IKernel
     {
         private double _windowSquared;
+        private double _window;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FlatKernel"/> class.
@@ -13,7 +14,22 @@
         /// <param name="window">The window size of the Kernel.</param>
         public FlatKernel(double window)
         {
-            _windowSquared = window * window;
+            // These will be set in WindowSize
+            _window = 0;
+            _windowSquared = 0;
+
+            WindowSize = window;
+        }
+
+        /// <inheritdoc/>
+        public double WindowSize
+        {
+            get => _window;
+            set
+            {
+                _window = value;
+                _windowSquared = value * value;
+            }
         }
 
         /// <inheritdoc/>

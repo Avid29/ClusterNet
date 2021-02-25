@@ -1,4 +1,5 @@
-﻿using ClusterNet.Shapes;
+﻿using ClusterNet.Kernels;
+using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
 
@@ -11,7 +12,7 @@ namespace ClusterNet.MeanShift
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <param name="points">The full list of points to apply MeanShift with.</param>
-        /// <param name="initialClusters">The amount of points to use as clusters.</param>
+        /// <param name="initialClusters">The amount of points to use as clusters. 0 for all.</param>
         /// <returns>An array of <typeparamref name="T"/>s to be clustered.</returns>
         public static T[] SetupClusters<T>(
             ReadOnlySpan<T> points,
@@ -60,10 +61,12 @@ namespace ClusterNet.MeanShift
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
         /// <param name="clusters">The clusters to merge and sort.</param>
         /// <returns>A merged sorted list of clusters.</returns>
-        public static (T, int)[] PostProcess<T, TShape>(
-            T[] clusters)
+        public static (T, int)[] PostProcess<T, TShape, TKernel>(
+            T[] clusters,
+            TKernel kernel)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
         {
             TShape shape = default;
 
@@ -74,6 +77,9 @@ namespace ClusterNet.MeanShift
                 mergedCentroidsMap.GetOrAddValueRef(cluster)++;
             }
 
+            // Sometimes clusters can be very similar due to the nature of discrete computation.
+            // This is inaccurate, merge clusters with in too similar of a range.
+            // TODO: Investigate better convergence to elimate this.
             int fullyUnqiueClusterCount = mergedCentroidsMap.Count;
             int i = 0;
             foreach (var entry in mergedCentroidsMap)
@@ -95,7 +101,8 @@ namespace ClusterNet.MeanShift
                         continue;
                     }
 
-                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < .1)
+                    // Merge clusters if they're with in the kernel's WindowSize
+                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < kernel.WindowSize)
                     {
                         ref int otherValue = ref mergedCentroidsMap.GetOrAddValueRef(otherEntry.Key);
                         mergedCentroidsMap.GetOrAddValueRef(entry.Key) += otherValue;
@@ -135,10 +142,12 @@ namespace ClusterNet.MeanShift
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
         /// <param name="clusters">The clusters to merge and sort.</param>
         /// <returns>A merged sorted list of clusters.</returns>
-        public static (T, int)[] PostProcess<T, TShape>(
-            (T, int)[] clusters)
+        public static (T, int)[] PostProcess<T, TShape, TKernel>(
+            (T, int)[] clusters,
+            TKernel kernel)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
         {
             TShape shape = default;
 
@@ -170,7 +179,7 @@ namespace ClusterNet.MeanShift
                         continue;
                     }
 
-                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < .1)
+                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < kernel.WindowSize)
                     {
                         ref int otherValue = ref mergedCentroidsMap.GetOrAddValueRef(otherEntry.Key);
                         mergedCentroidsMap.GetOrAddValueRef(entry.Key) += otherValue;

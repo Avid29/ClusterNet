@@ -121,7 +121,7 @@ namespace ClusterNet.MeanShift
                 }
             }
 
-            return PrePost.PostProcess<T, TShape>(clusters);
+            return PrePost.PostProcess<T, TShape, TKernel>(clusters, kernel);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace ClusterNet.MeanShift
                 });
             }
 
-            return PrePost.PostProcess<T, TShape>(clusters);
+            return PrePost.PostProcess<T, TShape, TKernel>(clusters, kernel);
         }
     }
 }

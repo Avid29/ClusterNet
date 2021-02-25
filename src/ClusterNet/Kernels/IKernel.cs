@@ -15,6 +15,11 @@
     public interface IKernel
     {
         /// <summary>
+        /// The windows size of the kernel.
+        /// </summary>
+        double WindowSize { get; set; }
+
+        /// <summary>
         /// Gets the weighted relevence of a point at sqrt(<paramref name="distanceSquared"/>) away.
         /// </summary>
         /// <param name="distanceSquared">The distance^2 of the point to be weighted.</param>
