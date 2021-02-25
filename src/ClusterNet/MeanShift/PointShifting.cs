@@ -45,7 +45,7 @@ namespace ClusterNet.MeanShift
         }
 
         /// <summary>
-        /// Shifts a cluster towards its convergence point.
+        /// Shifts a cluster towards its convergence point. If the cluster is at its convergence point it doesn't move.
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>

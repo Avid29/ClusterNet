@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace ClusterNet.MeanShift
 {
+    /// Weighted MeanShift merges duplicates and weighs each point to begin.
+    /// This cuts time by reducing distance calculations for duplicate points.
+    /// Instead any given point is guarenteed to be calculated once, then the kernel weighted 
+    /// distance can be multiplied by the point's weight to get the actual weight of a point.
+
     /// <summary>
-    /// A class containing root implementations of clustering algorithms.
+    /// A class containing root implementations of Weighted MeanShift algorithms.
     /// </summary>
     internal class RunWeighted
     {
