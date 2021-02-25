@@ -42,6 +42,7 @@ namespace ClusterNet.MeanShift
     ///           ·                             ·    ·    ·
     /// 
     /// The clusters would be 1 and 4.5, because those are all the local maximas.
+    /// The clusters weighted would be (1, 1) and (4.5, 3) because 1 point went to the local max at 1 and 3 points went to the local max at 3.
     /// 
     /// 
     /// Programmatically, these clusters are found by continually shifting each cluster towards their convergence point.
