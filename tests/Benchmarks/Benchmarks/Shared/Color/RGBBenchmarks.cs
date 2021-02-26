@@ -58,7 +58,7 @@ namespace Benchmarks.Shared.Color
             if (image is null)
                 return;
 
-            colors = ImageParser.GetImageColors(image, Quality);
+            colors = ImageParser.GetImageColors(image, PixelCount);
         }
 
         [Benchmark]
