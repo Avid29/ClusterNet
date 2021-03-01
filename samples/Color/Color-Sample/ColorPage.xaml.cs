@@ -64,7 +64,7 @@ namespace Color_Sample
 
             RGBColor[] rgbColors = ImageParser.GetImageColors(image, 1920);
             GaussianKernel kernel = new GaussianKernel(.15);
-            (RGBColor, int)[] clusters = ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(rgbColors, kernel, 480);
+            (RGBColor, int)[] clusters = ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(rgbColors, kernel, 480);
 
             List<(Color, int)> weightedColors = clusters.Select(x =>
             {
