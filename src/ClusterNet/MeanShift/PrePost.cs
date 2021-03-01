@@ -31,7 +31,7 @@ namespace ClusterNet.MeanShift
                 n = 1;
 
             // Create a cluster for each point.
-            T[] clusters = new T[points.Length / n];
+            T[] clusters = new T[initialClusters];
             for (int i = 0; i < clusters.Length; i++)
             {
                 clusters[i] = points[i * n];
