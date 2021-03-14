@@ -1,13 +1,18 @@
 ﻿using ClusterNet.Shapes;
 using ColorExtractor.ColorSpaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace ColorExtractor.Shapes
 {
     public struct HSVShape : IPoint<HSVColor>
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool AreEqual(HSVColor it1, HSVColor it2)
+        {
+            return FindDistanceSquared(it1, it2) == 0;
+        }
+
         public HSVColor Average(HSVColor[] items)
         {
             int sumH, count;

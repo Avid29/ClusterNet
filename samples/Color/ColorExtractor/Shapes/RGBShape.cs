@@ -1,12 +1,20 @@
 ﻿using ClusterNet.Shapes;
 using ColorExtractor.ColorSpaces;
-using System;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace ColorExtractor.Shapes
 {
     public struct RGBShape : IPoint<RGBColor>
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool AreEqual(RGBColor it1, RGBColor it2)
+        {
+            return 
+                it1.R == it2.R &&
+                it1.G == it2.G &&
+                it1.B == it2.B;
+        }
+
         public RGBColor Average(RGBColor[] items)
         {
             float sumR, sumG, sumB;

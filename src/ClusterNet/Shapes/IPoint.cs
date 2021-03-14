@@ -1,5 +1,4 @@
 ﻿using ClusterNet.Abstract;
-using System.Collections.Generic;
 
 namespace ClusterNet.Shapes
 {
@@ -33,5 +32,13 @@ namespace ClusterNet.Shapes
         /// <param name="items">A weighted list of points.</param>
         /// <returns>The weighted center of the points.</returns>
         T WeightedAverage((T, double)[] items);
+
+        /// <summary>
+        /// Checks equality of two items.
+        /// </summary>
+        /// <param name="it1">The item to compare.</param>
+        /// <param name="it2">The item to compare it to.</param>
+        /// <returns>Whether or not the items are equal.</returns>
+        bool AreEqual(T it1, T it2);
     }
 }

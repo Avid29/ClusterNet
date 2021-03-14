@@ -37,7 +37,7 @@ namespace ClusterNet.MeanShift
             while (changed)
             {
                 newCluster = Shift<T, TShape, TKernel>(cluster, points, pointCount, kernel, weightedSubPointList);
-                changed = shape.FindDistanceSquared(newCluster, cluster) != 0;
+                changed = shape.AreEqual(newCluster, cluster);
                 cluster = newCluster;
             }
 
