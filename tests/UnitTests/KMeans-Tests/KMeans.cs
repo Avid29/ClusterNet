@@ -13,7 +13,7 @@ namespace Tests.KMeans
         {
             ClusterAlgorithms.KMeans<double, DoubleShape>(
                 DoubleTests.DoubleTest1.Input,
-                DoubleTests.DoubleTest1.ExpectedClusterCount);
+                DoubleTests.DoubleTest1.K);
         }
 
         [TestMethod]
@@ -21,7 +21,7 @@ namespace Tests.KMeans
         {
             ClusterAlgorithms.KMeans<Vector2, Vector2Shape>(
                 Vector2Tests.Vector2Test1.Input,
-                Vector2Tests.Vector2Test1.ExpectedClusterCount);
+                Vector2Tests.Vector2Test1.K);
         }
     }
 }

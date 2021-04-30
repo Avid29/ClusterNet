@@ -12,29 +12,33 @@ namespace Tests.MeanShift
         [TestMethod]
         public void DoubleTest1Flat()
         {
-            FlatKernel kernel = new FlatKernel(DoubleTests.DoubleTest1.Bandwidth);
-            ClusterAlgorithms.MeanShift<double, DoubleShape, FlatKernel>(DoubleTests.DoubleTest1.Input, kernel);
+            var test = DoubleTests.DoubleTest1;
+            FlatKernel kernel = new FlatKernel(test.Bandwidth);
+            ClusterAlgorithms.MeanShift<double, DoubleShape, FlatKernel>(test.Input, kernel);
         }
 
         [TestMethod]
         public void Vector2Test1Flat()
         {
-            FlatKernel kernel = new FlatKernel(Vector2Tests.Vector2Test1.Bandwidth);
-            ClusterAlgorithms.MeanShift<Vector2, Vector2Shape, FlatKernel>(Vector2Tests.Vector2Test1.Input, kernel);
+            var test = Vector2Tests.Vector2Test1;
+            FlatKernel kernel = new FlatKernel(test.Bandwidth);
+            ClusterAlgorithms.MeanShift<Vector2, Vector2Shape, FlatKernel>(test.Input, kernel);
         }
 
         [TestMethod]
         public void DoubleTest1Gaussian()
         {
-            GaussianKernel kernel = new GaussianKernel(DoubleTests.DoubleTest1.Bandwidth);
-            ClusterAlgorithms.MeanShift<double, DoubleShape, GaussianKernel>(DoubleTests.DoubleTest1.Input, kernel);
+            var test = DoubleTests.DoubleTest1;
+            GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
+            ClusterAlgorithms.MeanShift<double, DoubleShape, GaussianKernel>(test.Input, kernel);
         }
 
         [TestMethod]
         public void Vector2Test1Gaussian()
         {
-            GaussianKernel kernel = new GaussianKernel(Vector2Tests.Vector2Test1.Bandwidth);
-            ClusterAlgorithms.MeanShift<Vector2, Vector2Shape, GaussianKernel>(Vector2Tests.Vector2Test1.Input, kernel);
+            var test = Vector2Tests.Vector2Test1;
+            GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
+            ClusterAlgorithms.MeanShift<Vector2, Vector2Shape, GaussianKernel>(test.Input, kernel);
         }
     }
 }

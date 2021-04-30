@@ -6,13 +6,13 @@
         {
             Input = input;
             Bandwidth = bandwidth;
-            ExpectedClusterCount = clusters;
+            K = clusters;
         }
 
         public T[] Input { get; }
 
         public double Bandwidth { get; }
 
-        public int ExpectedClusterCount { get; }
+        public int K { get; }
     }
 }
