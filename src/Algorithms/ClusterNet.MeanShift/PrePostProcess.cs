@@ -33,7 +33,10 @@ namespace ClusterNet.MeanShift
             // N will be 0 if initialClusters is greater than the point count.
             // N can't be 0
             if (n == 0)
+            {
                 n = 1;
+                initialClusters = points.Length;
+            }
 
             // Create a cluster for each point.
             T[] clusters = new T[initialClusters];
