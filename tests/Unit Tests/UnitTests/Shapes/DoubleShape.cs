@@ -6,6 +6,11 @@ namespace UnitTests.Shapes
 {
     public struct DoubleShape : IPoint<double>
     {
+        public bool AreEqual(double it1, double it2)
+        {
+            return it1 == it2;
+        }
+
         public double Average(double[] items)
         {
             double sum = 0;

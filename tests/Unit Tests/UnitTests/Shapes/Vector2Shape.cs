@@ -6,6 +6,11 @@ namespace UnitTests.Shapes
 {
     public struct Vector2Shape : IPoint<Vector2>
     {
+        public bool AreEqual(Vector2 it1, Vector2 it2)
+        {
+            return it1 == it2;
+        }
+
         public Vector2 Average(Vector2[] items)
         {
             Vector2 sumVector = new Vector2(0);
