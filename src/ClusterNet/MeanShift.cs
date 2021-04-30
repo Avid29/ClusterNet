@@ -4,7 +4,7 @@ using ClusterNet.Shapes;
 using System;
 using System.Runtime.CompilerServices;
 
-namespace ClusterNet.Methods
+namespace ClusterNet
 {
     /// <summary>
     /// A class containing all the exposed clustering algorithms.

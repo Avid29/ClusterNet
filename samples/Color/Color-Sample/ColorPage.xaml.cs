@@ -1,5 +1,5 @@
-﻿using ClusterNet.Kernels;
-using ClusterNet.Methods;
+﻿using ClusterNet;
+using ClusterNet.Kernels;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;

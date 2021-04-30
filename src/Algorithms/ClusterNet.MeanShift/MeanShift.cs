@@ -49,7 +49,6 @@ namespace ClusterNet.MeanShift
     /// Each shift is performed by finding the cluster's distance from each point then weighting its effect on the cluster.
     /// These weights are then used to find a weighted average, the result of each is the new cluster position.
 
-
     /// <summary>
     /// A class containing root implementations of MeanShift algorithms.
     /// </summary>
@@ -77,7 +76,7 @@ namespace ClusterNet.MeanShift
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
-            T[] clusters = PrePost.SetupClusters(points, initialClusters);
+            T[] clusters = PrePostProcess.SetupClusters(points, initialClusters);
 
             // Define this here, and reuse it on every iteration of Shift.
             (T, double)[] weightedSubPointList = new (T, double)[points.Length];
@@ -91,7 +90,7 @@ namespace ClusterNet.MeanShift
                 }
             }
 
-            return PrePost.PostProcess<T, TShape, TKernel>(clusters, kernel);
+            return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
         }
 
         /// <summary>
@@ -120,7 +119,7 @@ namespace ClusterNet.MeanShift
             /// Each cluster is calculated seperate from the others, so this requires minimal changes.
             /// Once each cluster has converged, the same PostProcess combinations can be run.
             
-            T[] clusters = PrePost.SetupClusters(points, initialClusters);
+            T[] clusters = PrePostProcess.SetupClusters(points, initialClusters);
 
             fixed (T* p0 = points)
             {
@@ -140,7 +139,7 @@ namespace ClusterNet.MeanShift
                 });
             }
 
-            return PrePost.PostProcess<T, TShape, TKernel>(clusters, kernel);
+            return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
         }
     }
 }

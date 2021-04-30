@@ -1,5 +1,4 @@
 ﻿using ClusterNet.Kernels;
-using ClusterNet.MeanShift;
 using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
@@ -107,7 +106,7 @@ namespace ClusterNet.MeanShift
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
-            (T, int)[] clusters = PrePost.SetupClusters(weightedPoints, initialClusters);
+            (T, int)[] clusters = PrePostProcess.SetupClusters(weightedPoints, initialClusters);
 
             // Define this here, and reuse it on every iteration of Shift.
             (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
@@ -121,7 +120,7 @@ namespace ClusterNet.MeanShift
                 }
             }
 
-            return PrePost.PostProcess<T, TShape, TKernel>(clusters, kernel);
+            return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
         }
 
         /// <summary>
@@ -142,7 +141,7 @@ namespace ClusterNet.MeanShift
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
-            (T, int)[] clusters = PrePost.SetupClusters(weightedPoints, initialClusters);
+            (T, int)[] clusters = PrePostProcess.SetupClusters(weightedPoints, initialClusters);
 
             // Define this here, and reuse it on every iteration of Shift.
             (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
@@ -162,7 +161,7 @@ namespace ClusterNet.MeanShift
                 });
             }
 
-            return PrePost.PostProcess<T, TShape, TKernel>(clusters, kernel);
+            return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
         }
     }
 }

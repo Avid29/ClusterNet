@@ -1,10 +1,8 @@
 ﻿using BenchmarkDotNet.Attributes;
-using ClusterNet.KMeans;
-using ClusterNet.Methods;
+using ClusterNet;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
-using System.Collections.Generic;
 
 namespace Benchmarks.KMeans.Colors
 {

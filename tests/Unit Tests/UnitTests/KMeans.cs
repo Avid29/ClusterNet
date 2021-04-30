@@ -1,4 +1,4 @@
-﻿using ClusterNet.Methods;
+﻿using ClusterNet;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Numerics;

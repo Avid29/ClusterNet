@@ -3,7 +3,7 @@ using ClusterNet.Shapes;
 using System;
 using System.Runtime.CompilerServices;
 
-namespace ClusterNet.Methods
+namespace ClusterNet
 {
     public static partial class ClusterAlgorithms
     {

@@ -5,7 +5,7 @@ using System;
 
 namespace ClusterNet.MeanShift
 {
-    internal static class PrePost
+    internal static class PrePostProcess
     {
         /// <summary>
         /// Sets up the cluster array to be shifted.
@@ -140,7 +140,7 @@ namespace ClusterNet.MeanShift
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
-        /// <param name="clusters">The clusters to merge and sort.</param>
+        /// <param name="clusters">The weighted clusters to merge and sort.</param>
         /// <returns>A merged sorted list of clusters.</returns>
         public static (T, int)[] PostProcess<T, TShape, TKernel>(
             (T, int)[] clusters,
