@@ -21,9 +21,14 @@ namespace ClusterNet.MeanShift
         {
             int n;
             if (initialClusters == 0)
+            {
+                initialClusters = points.Length;
                 n = 1;
+            }
             else
+            {
                 n = points.Length / initialClusters;
+            }
 
             // N will be 0 if initialClusters is greater than the point count.
             // N can't be 0
