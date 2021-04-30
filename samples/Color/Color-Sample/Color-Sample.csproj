@@ -168,6 +168,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\ClusterNet.Common\ClusterNet.Common.csproj">
+      <Project>{3977c546-7773-4d53-988e-4910c5f82626}</Project>
+      <Name>ClusterNet.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\src\ClusterNet\ClusterNet.csproj">
       <Project>{7559edbc-b239-4b2a-bc62-75b0704db4f1}</Project>
       <Name>ClusterNet</Name>

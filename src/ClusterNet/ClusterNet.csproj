@@ -27,4 +27,10 @@
     <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Algorithms\ClusterNet.KMeans\ClusterNet.KMeans.csproj" />
+    <ProjectReference Include="..\Algorithms\ClusterNet.MeanShift\ClusterNet.MeanShift.csproj" />
+    <ProjectReference Include="..\ClusterNet.Common\ClusterNet.Common.csproj" />
+  </ItemGroup>
+
 </Project>
