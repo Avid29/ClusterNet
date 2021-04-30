@@ -59,7 +59,7 @@ namespace Benchmarks.KMeans.Colors
         }
 
         [Benchmark]
-        public void Run()
+        public void KMeans()
         {
             ClusterAlgorithms.KMeans<RGBColor, RGBShape>(colors, Clusters);
         }
