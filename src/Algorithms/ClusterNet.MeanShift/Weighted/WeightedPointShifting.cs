@@ -36,7 +36,7 @@ namespace ClusterNet.MeanShift
             while (changed)
             {
                 newCluster = Shift<T, TShape, TKernel>(cluster, points, pointCount, kernel, weightedSubPointList);
-                changed = shape.AreEqual(newCluster.Item1, cluster.Item1);
+                changed = !shape.AreEqual(newCluster.Item1, cluster.Item1);
                 cluster = newCluster;
             }
 
