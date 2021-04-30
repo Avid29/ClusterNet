@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Algorithms\ClusterNet.KMeans\ClusterNet.KMeans.csproj" />
     <ProjectReference Include="..\Algorithms\ClusterNet.MeanShift\ClusterNet.MeanShift.csproj" />
     <ProjectReference Include="..\ClusterNet.Common\ClusterNet.Common.csproj" />
   </ItemGroup>
