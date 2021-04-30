@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Tests_Shared.Tests
+namespace Tests
 {
     public static class Vector2Tests
     {
@@ -13,6 +13,6 @@ namespace Tests_Shared.Tests
                 new Vector2(7, 5),
                 new Vector2(5, 7),
                 new Vector2(6, 6),
-            }, 5);
+            }, 5, 2);
     }
 }

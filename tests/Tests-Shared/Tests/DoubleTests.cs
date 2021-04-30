@@ -1,4 +1,4 @@
-﻿namespace Tests_Shared.Tests
+﻿namespace Tests
 {
     public static class DoubleTests
     {
@@ -12,6 +12,6 @@
                 12,
                 22,
                 24,
-            }, 5);
+            }, 5, 3);
     }
 }

@@ -3,9 +3,8 @@ using ClusterNet.Kernels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 using Tests.Shapes;
-using Tests_Shared.Tests;
 
-namespace UnitTests
+namespace Tests.MeanShift
 {
     [TestClass]
     public class MeanShift
@@ -22,6 +21,13 @@ namespace UnitTests
         {
             FlatKernel kernel = new FlatKernel(Vector2Tests.Vector2Test1.Bandwidth);
             ClusterAlgorithms.MeanShift<Vector2, Vector2Shape, FlatKernel>(Vector2Tests.Vector2Test1.Input, kernel);
+        }
+
+        [TestMethod]
+        public void DoubleTest1Gaussian()
+        {
+            GaussianKernel kernel = new GaussianKernel(DoubleTests.DoubleTest1.Bandwidth);
+            ClusterAlgorithms.MeanShift<double, DoubleShape, GaussianKernel>(DoubleTests.DoubleTest1.Input, kernel);
         }
 
         [TestMethod]
