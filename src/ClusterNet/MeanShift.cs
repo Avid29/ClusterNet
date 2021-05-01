@@ -37,6 +37,20 @@ namespace ClusterNet
             return Run.MeanShiftMultiThreaded<T, TShape, TKernel>(points, kernel, initialClusters);
         }
 
+        /// <inheritdoc cref="Run.MeanShiftFixedMultiThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int, int){T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe (T, int)[] MeanShiftFixedMultiThreaded<T, TShape, TKernel>(
+            ReadOnlySpan<T> points,
+            TKernel kernel,
+            int initialClusters = 0,
+            int threadCount = 0)
+            where T : unmanaged, IEquatable<T>
+            where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
+        {
+            return Run.MeanShiftFixedMultiThreaded<T, TShape, TKernel>(points, kernel, initialClusters, threadCount);
+        }
+
         /// <inheritdoc cref="RunWeighted.WeightedMeanShift{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (T, int)[] WeightedMeanShift<T, TShape, TKernel>(
