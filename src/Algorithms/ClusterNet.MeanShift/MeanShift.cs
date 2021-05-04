@@ -143,12 +143,11 @@ namespace ClusterNet.MeanShift
             return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
         }
 
-
         /// <summary>
-        /// Runs MeanShift cluster on a list of <typeparamref name="T"/> points. Runs in parallel.
+        /// Runs MeanShift cluster on a list of <typeparamref name="T"/> points. Runs in parallel over n threads.
         /// </summary>
         /// <remarks>
-        /// It is usually wise to use <see cref="Methods.ClusterAlgorithms.WeightedMeanShiftMultiThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/> instead.
+        /// It is usually wise to use <see cref="Methods.ClusterAlgorithms.WeightedMeanShiftFixedThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/> instead.
         /// Weighted MeanShift greatly reduces computation time when dealing with duplicate points.
         /// </remarks>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
@@ -157,9 +156,9 @@ namespace ClusterNet.MeanShift
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
-        /// <param name="threadCount">How many threads to use. 0 means <see cref="Environment.ProcessorCount"/>.</param>
+        /// <param name="threadCount">Number of threads to open. <see cref="Environment.ProcessorCount"/> if 0.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
-        public static unsafe (T, int)[] MeanShiftFixedMultiThreaded<T, TShape, TKernel>(
+        public static unsafe (T, int)[] MeanShiftFixedThreaded<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,
             int initialClusters = 0,
@@ -183,6 +182,7 @@ namespace ClusterNet.MeanShift
             {
                 T* p = p0;
                 int pointCount = points.Length;
+                int clusterCount = clusters.Length;
 
                 // Shift each cluster until it's at its convergence point.
 
@@ -202,6 +202,12 @@ namespace ClusterNet.MeanShift
                         {
                             int activeCluster = 0;
 
+                            // Return if no work is remaining
+                            if (convergedClusters >= clusterCount)
+                            {
+                                return;
+                            }
+
                             // Lock while getting current cluster point
                             lock (mutex)
                             {
@@ -209,14 +215,8 @@ namespace ClusterNet.MeanShift
                                 convergedClusters++;
                             }
 
-                            // Return if no work is remaining
-                            if (activeCluster >= pointCount)
-                            {
-                                return;
-                            }
-
                             T cluster = clusters[activeCluster];
-                            clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel>(cluster, p, pointCount, kernel, weightedSubPointList);
+                            clusters[activeCluster] = PointShifting.MeanShiftPoint<T, TShape, TKernel>(cluster, p, pointCount, kernel, weightedSubPointList);
                         }
                     });
                     threads[i].Start();
