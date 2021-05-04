@@ -2,6 +2,7 @@
 using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClusterNet.MeanShift
@@ -89,6 +90,44 @@ namespace ClusterNet.MeanShift
         }
 
         /// <summary>
+        /// Runs MeanShift a weighted cluster on a list of <typeparamref name="T"/> points. Runs in parallel on n threads.
+        /// </summary>
+        /// <remarks>
+        /// Runs weighted clusters by combining equivilent positions at the start.
+        /// </remarks>
+        /// <typeparam name="T">The type of points to cluster.</typeparam>
+        /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
+        /// <typeparam name="TKernel">The type of kernel to use on the cluster.</typeparam>
+        /// <param name="points">The list of points to cluster.</param>
+        /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
+        /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
+        /// <param name="threadCount">Number of threads to open. <see cref="Environment.ProcessorCount"/> if 0.</param>
+        /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        public static unsafe (T, int)[] WeightedMeanShiftFixedThreaded<T, TShape, TKernel>(
+            ReadOnlySpan<T> points,
+            TKernel kernel,
+            int initialClusters = 0,
+            int threadCount = 0)
+            where T : unmanaged, IEquatable<T>
+            where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
+        {
+            DictionarySlim<T, int> mergedPointsMap = new DictionarySlim<T, int>();
+            foreach (var point in points)
+                mergedPointsMap.GetOrAddValueRef(point)++;
+
+            (T, int)[] weightedPoints = new (T, int)[mergedPointsMap.Count];
+            int pos = 0;
+            foreach (var entry in mergedPointsMap)
+            {
+                weightedPoints[pos] = (entry.Key, entry.Value);
+                pos++;
+            }
+
+            return WeightedMeanShiftFixedThreaded<T, TShape, TKernel>(weightedPoints, kernel, initialClusters, threadCount);
+        }
+
+        /// <summary>
         /// Runs MeanShift a weighted cluster on a list of <typeparamref name="T"/> and <see cref="int"/> tuples.
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
@@ -159,6 +198,91 @@ namespace ClusterNet.MeanShift
                     (T, int) cluster = clusters[i];
                     clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel>(cluster, p, pointCount, kernel, weightedSubPointList);
                 });
+            }
+
+            return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
+        }
+
+        /// <summary>
+        /// Runs MeanShift a weighted cluster on a list of <typeparamref name="T"/> and <see cref="int"/> tuples. Runs in parallel on n threads.
+        /// </summary>
+        /// <typeparam name="T">The type of points to cluster.</typeparam>
+        /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
+        /// <typeparam name="TKernel">The type of kernel to use on the cluster.</typeparam>
+        /// <param name="weightedPoints">The weighed list of points to cluster.</param>
+        /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
+        /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
+        /// <param name="threadCount">Number of threads to open. <see cref="Environment.ProcessorCount"/> if 0.</param>
+        /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        public static unsafe (T, int)[] WeightedMeanShiftFixedThreaded<T, TShape, TKernel>(
+            ReadOnlySpan<(T, int)> weightedPoints,
+            TKernel kernel,
+            int initialClusters = 0,
+            int threadCount = 0)
+            where T : unmanaged, IEquatable<T>
+            where TShape : struct, IPoint<T>
+            where TKernel : struct, IKernel
+        {
+            if (threadCount == 0)
+            {
+                threadCount = Environment.ProcessorCount;
+            }
+
+            (T, int)[] clusters = PrePostProcess.SetupClusters(weightedPoints, initialClusters);
+
+            // Define this here, and reuse it on every iteration of Shift.
+            (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
+
+            fixed ((T, int) * p0 = weightedPoints)
+            {
+                (T, int) * p = p0;
+                int pointCount = weightedPoints.Length;
+                int clusterCount = clusters.Length;
+
+                // Shift each cluster until it's at its convergence point.
+
+                // Create n threads and have each cluster until finished
+                Thread[] threads = new Thread[threadCount];
+                object mutex = new object();
+                int convergedClusters = 0;
+                int i;
+
+                for (i = 0; i < threadCount; i++)
+                {
+                    threads[i] = new Thread(() =>
+                    {
+                        // Define this here, and reuse it on every iteration of Shift on this thread.
+                        (T, double)[] weightedSubPointList = new (T, double)[pointCount];
+
+                        while (true)
+                        {
+                            int activeCluster = 0;
+
+                            // Return if no work is remaining
+                            if (convergedClusters >= clusterCount)
+                            {
+                                return;
+                            }
+
+                            // Lock while getting current cluster point
+                            lock (mutex)
+                            {
+                                activeCluster = convergedClusters;
+                                convergedClusters++;
+                            }
+
+                            (T, int) cluster = clusters[activeCluster];
+                            clusters[activeCluster] = PointShifting.MeanShiftPoint<T, TShape, TKernel>(cluster, p, pointCount, kernel, weightedSubPointList);
+                        }
+                    });
+                    threads[i].Start();
+                }
+
+                // Join all the threads
+                for (i = 0; i < threadCount; i++)
+                {
+                    threads[i].Join();
+                }
             }
 
             return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);

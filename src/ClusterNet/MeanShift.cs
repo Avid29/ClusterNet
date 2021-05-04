@@ -37,56 +37,18 @@ namespace ClusterNet
             return Run.MeanShiftMultiThreaded<T, TShape, TKernel>(points, kernel, initialClusters);
         }
 
-        /// <inheritdoc cref="RunWeighted.WeightedMeanShift{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/>
+        /// <inheritdoc cref="Run.MeanShiftFixedThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int, int){T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (T, int)[] WeightedMeanShift<T, TShape, TKernel>(
+        public static unsafe (T, int)[] MeanShiftFixedThreaded<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,
-            int initialClusters = 0)
+            int initialClusters = 0,
+            int threadCount = 0)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
-            return RunWeighted.WeightedMeanShift<T, TShape, TKernel>(points, kernel, initialClusters);
-        }
-
-        /// <inheritdoc cref="RunWeighted.WeightedMeanShiftMultiThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (T, int)[] WeightedMeanShiftMultiThreaded<T, TShape, TKernel>(
-            ReadOnlySpan<T> points,
-            TKernel kernel,
-            int initialClusters = 0)
-            where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
-            where TKernel : struct, IKernel
-        {
-            return RunWeighted.WeightedMeanShiftMultiThreaded<T, TShape, TKernel>(points, kernel, initialClusters);
-        }
-
-        /// <inheritdoc cref="RunWeighted.WeightedMeanShiftMultiThreaded{T, TShape, TKernel}(ReadOnlySpan{(T, int)}, TKernel, int)"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (T, int)[] WeightedMeanShift<T, TShape, TKernel>(
-            ReadOnlySpan<(T, int)> weightedPoints,
-            TKernel kernel,
-            int initialClusters = 0)
-            where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
-            where TKernel : struct, IKernel
-        {
-            return RunWeighted.WeightedMeanShift<T, TShape, TKernel>(weightedPoints, kernel, initialClusters);
-        }
-
-        /// <inheritdoc cref="RunWeighted.WeightedMeanShiftMultiThreaded{T, TShape, TKernel}(ReadOnlySpan{(T, int)}, TKernel, int)/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (T, int)[] WeightedMeanShiftMultiThreaded<T, TShape, TKernel>(
-            ReadOnlySpan<(T, int)> weightedPoints,
-            TKernel kernel,
-            int initialClusters = 0)
-            where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
-            where TKernel : struct, IKernel
-        {
-            return RunWeighted.WeightedMeanShiftMultiThreaded<T, TShape, TKernel>(weightedPoints, kernel, initialClusters);
+            return Run.MeanShiftFixedThreaded<T, TShape, TKernel>(points, kernel, initialClusters, threadCount);
         }
     }
 }
