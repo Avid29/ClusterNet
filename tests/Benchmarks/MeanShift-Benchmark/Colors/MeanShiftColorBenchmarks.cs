@@ -94,5 +94,12 @@ namespace Benchmarks.MeanShift.Colors
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
             ClusterAlgorithms.MeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
         }
+
+        [Benchmark]
+        public void WeightedMeanShiftFixedThreadedGuassian()
+        {
+            GaussianKernel kernel = new GaussianKernel(Bandwidth);
+            ClusterAlgorithms.WeightedMeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+        }
     }
 }
