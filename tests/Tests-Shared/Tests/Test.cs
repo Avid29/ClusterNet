@@ -9,7 +9,7 @@
             K = clusters;
         }
 
-        public T[] Input { get; }
+        public virtual T[] Input { get; }
 
         public double Bandwidth { get; }
 

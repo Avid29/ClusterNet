@@ -122,6 +122,7 @@ namespace ClusterNet.MeanShift
                 i++;
             }
 
+            // TODO: Investigate issues allowing fullyUnqiueClusterCount to be negative
             (T, int)[] mergedCentroids = new (T, int)[fullyUnqiueClusterCount];
             i = 0; // Reuse i as an iter again.
             foreach (var entry in mergedCentroidsMap)

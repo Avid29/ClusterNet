@@ -1,8 +1,11 @@
 ﻿using ClusterNet;
 using ClusterNet.Kernels;
+using ColorExtractor.ColorSpaces;
+using ColorExtractor.Shapes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 using Tests.Shapes;
+using Tests.Tests.Image;
 
 namespace Tests.MeanShift
 {
@@ -10,7 +13,7 @@ namespace Tests.MeanShift
     public class MeanShift
     {
         [TestMethod]
-        public void DoubleTest1Flat()
+        public void Double_Test1_Flat()
         {
             var test = DoubleTests.DoubleTest1;
             FlatKernel kernel = new FlatKernel(test.Bandwidth);
@@ -18,7 +21,7 @@ namespace Tests.MeanShift
         }
 
         [TestMethod]
-        public void Vector2Test1Flat()
+        public void Vector2_Test1_Flat()
         {
             var test = Vector2Tests.Vector2Test1;
             FlatKernel kernel = new FlatKernel(test.Bandwidth);
@@ -26,7 +29,7 @@ namespace Tests.MeanShift
         }
 
         [TestMethod]
-        public void DoubleTest1Gaussian()
+        public void Double_Test1_Gaussian()
         {
             var test = DoubleTests.DoubleTest1;
             GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
@@ -34,11 +37,27 @@ namespace Tests.MeanShift
         }
 
         [TestMethod]
-        public void Vector2Test1Gaussian()
+        public void Vector2_Test1_Gaussian()
         {
             var test = Vector2Tests.Vector2Test1;
             GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
             ClusterAlgorithms.MeanShift<Vector2, Vector2Shape, GaussianKernel>(test.Input, kernel);
+        }
+
+        [TestMethod]
+        public void Image_Minecraft_Gaussian()
+        {
+            var test = ImageTests.ImageTest_Minecraft;
+            GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
+            ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(test.Input, kernel);
+        }
+
+        [TestMethod]
+        public void Image_IsThisIt_Gaussian()
+        {
+            var test = ImageTests.ImageTest_IsThisIt;
+            GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
+            ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(test.Input, kernel);
         }
     }
 }
