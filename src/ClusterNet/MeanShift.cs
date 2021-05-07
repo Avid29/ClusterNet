@@ -1,4 +1,6 @@
-﻿using ClusterNet.Kernels;
+﻿// Adam Dernis © 2021
+
+using ClusterNet.Kernels;
 using ClusterNet.MeanShift;
 using ClusterNet.Shapes;
 using System;
@@ -37,7 +39,7 @@ namespace ClusterNet
             return Run.MeanShiftMultiThreaded<T, TShape, TKernel>(points, kernel, initialClusters);
         }
 
-        /// <inheritdoc cref="Run.MeanShiftFixedThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int, int){T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/>
+        /// <inheritdoc cref="Run.MeanShiftFixedThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int, int)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (T, int)[] MeanShiftFixedThreaded<T, TShape, TKernel>(
             ReadOnlySpan<T> points,

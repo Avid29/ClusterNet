@@ -7,6 +7,7 @@
 	<LangVersion>8.0</LangVersion>
 	<Authors>Adam Dernis</Authors>
 	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<Version>0.0.2-alpha</Version>
 	<Description>A library for optimized cluster algorithms in .net standard</Description>
 	<PackageId>ClusterNet</PackageId>
