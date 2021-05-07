@@ -1,10 +1,13 @@
-﻿using ClusterNet.Shapes;
+﻿// Adam Dernis © 2021
+
+using ClusterNet.Shapes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClusterNet.KMeans
 {
+    /// <summary>
+    /// A class containing the root operations for KMeans.
+    /// </summary>
     internal class Run
     {
         /// <summary>
@@ -66,9 +69,11 @@ namespace ClusterNet.KMeans
                 weightedColors[i] = (cluster.Centroid, cluster.Count);
             }
 
-            Array.Sort(weightedColors,
-                delegate ((T, int) clus1,
-                (T, int) clus2)
+            Array.Sort(
+                weightedColors,
+                delegate (
+                    (T, int) clus1,
+                    (T, int) clus2)
                 {
                     return clus2.Item2.CompareTo(clus1.Item2);
                 });
@@ -81,8 +86,8 @@ namespace ClusterNet.KMeans
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
-        /// <param name="clusters">The list of clusters.</param>
         /// <param name="point">The point to find a nearest cluster for.</param>
+        /// <param name="clusters">The list of clusters.</param>
         /// <returns>The index in <paramref name="clusters"/> of the nearest cluster to <paramref name="point"/>.</returns>
         private static int FindNearestClusterIndex<T, TShape>(
             T point,

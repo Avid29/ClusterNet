@@ -1,16 +1,21 @@
-﻿using ClusterNet.Kernels;
+﻿// Adam Dernis © 2021
+
+using ClusterNet.Kernels;
 using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+// Warning disabled for tuple pointers.
+#pragma warning disable SA1009 // Closing parenthesis should be spaced correctly
+
 namespace ClusterNet.MeanShift
 {
-    /// Weighted MeanShift merges duplicates and weighs each point to begin.
-    /// This cuts time by reducing distance calculations for duplicate points.
-    /// Instead any given point is guarenteed to be calculated once, then the kernel weighted 
-    /// distance can be multiplied by the point's weight to get the actual weight of a point.
+    // Weighted MeanShift merges duplicates and weighs each point to begin.
+    // This cuts time by reducing distance calculations for duplicate points.
+    // Instead any given point is guarenteed to be calculated once, then the kernel weighted
+    // distance can be multiplied by the point's weight to get the actual weight of a point.
 
     /// <summary>
     /// A class containing root implementations of Weighted MeanShift algorithms.
@@ -40,7 +45,9 @@ namespace ClusterNet.MeanShift
         {
             DictionarySlim<T, int> mergedPointsMap = new DictionarySlim<T, int>();
             foreach (var point in points)
+            {
                 mergedPointsMap.GetOrAddValueRef(point)++;
+            }
 
             (T, int)[] weightedPoints = new (T, int)[mergedPointsMap.Count];
             int pos = 0;
@@ -76,7 +83,9 @@ namespace ClusterNet.MeanShift
         {
             DictionarySlim<T, int> mergedPointsMap = new DictionarySlim<T, int>();
             foreach (var point in points)
+            {
                 mergedPointsMap.GetOrAddValueRef(point)++;
+            }
 
             (T, int)[] weightedPoints = new (T, int)[mergedPointsMap.Count];
             int pos = 0;
@@ -114,7 +123,9 @@ namespace ClusterNet.MeanShift
         {
             DictionarySlim<T, int> mergedPointsMap = new DictionarySlim<T, int>();
             foreach (var point in points)
+            {
                 mergedPointsMap.GetOrAddValueRef(point)++;
+            }
 
             (T, int)[] weightedPoints = new (T, int)[mergedPointsMap.Count];
             int pos = 0;
@@ -150,7 +161,7 @@ namespace ClusterNet.MeanShift
             // Define this here, and reuse it on every iteration of Shift.
             (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
 
-            fixed ((T, int) * p = weightedPoints)
+            fixed ((T, int)* p = weightedPoints)
             {
                 for (int i = 0; i < clusters.Length; i++)
                 {
@@ -185,9 +196,9 @@ namespace ClusterNet.MeanShift
             // Define this here, and reuse it on every iteration of Shift.
             (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
 
-            fixed ((T, int) * p0 = weightedPoints)
+            fixed ((T, int)* p0 = weightedPoints)
             {
-                (T, int) * p = p0;
+                (T, int)* p = p0;
                 int pointCount = weightedPoints.Length;
 
                 // Shift each cluster until it's at its convergence point.
@@ -233,9 +244,9 @@ namespace ClusterNet.MeanShift
             // Define this here, and reuse it on every iteration of Shift.
             (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
 
-            fixed ((T, int) * p0 = weightedPoints)
+            fixed ((T, int)* p0 = weightedPoints)
             {
-                (T, int) * p = p0;
+                (T, int)* p = p0;
                 int pointCount = weightedPoints.Length;
                 int clusterCount = clusters.Length;
 
@@ -289,3 +300,4 @@ namespace ClusterNet.MeanShift
         }
     }
 }
+#pragma warning restore SA1009 // Closing parenthesis should be spaced correctly

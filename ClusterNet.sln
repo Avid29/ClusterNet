@@ -35,11 +35,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests-Shared", "tests\Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMeans-Tests", "tests\UnitTests\KMeans-Tests\KMeans-Tests.csproj", "{357FD8ED-CBFB-4578-9DF6-C4874855753B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMeans-Benchmark", "tests\Benchmarks\KMeans-Benchmark\KMeans-Benchmark.csproj", "{12F0EB77-FB8C-4BFB-B4CC-C0FC471B9603}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMeans-Benchmark", "tests\Benchmarks\KMeans-Benchmark\KMeans-Benchmark.csproj", "{12F0EB77-FB8C-4BFB-B4CC-C0FC471B9603}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeanShift-Benchmark", "tests\Benchmarks\MeanShift-Benchmark\MeanShift-Benchmark.csproj", "{8D9D0280-59C1-406E-A502-6AAB56D40A56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeanShift-Benchmark", "tests\Benchmarks\MeanShift-Benchmark\MeanShift-Benchmark.csproj", "{8D9D0280-59C1-406E-A502-6AAB56D40A56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllBenchmarks", "tests\Benchmarks\AllBenchmarks\AllBenchmarks.csproj", "{DE306B7B-B839-4FA8-A225-69EB437AACC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AllBenchmarks", "tests\Benchmarks\AllBenchmarks\AllBenchmarks.csproj", "{DE306B7B-B839-4FA8-A225-69EB437AACC3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ADFCC075-B22D-46F6-BE58-83E27C75CA71}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		stylecop.json = stylecop.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

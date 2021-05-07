@@ -1,4 +1,6 @@
-﻿namespace ClusterNet.Kernels
+﻿// Adam Dernis © 2021
+
+namespace ClusterNet.Kernels
 {
     /// <summary>
     /// An interface for a Kernel distribution.
@@ -7,15 +9,15 @@
     /// Kernel requirements
     /// 1: \int K(u)du = 1
     /// 2: K(u) = K(|u|)
-    /// 
+    ///
     /// In other words:
-    /// The kernel must be normalized
-    /// The kernel must be symmetric
+    /// The kernel must be normalized.
+    /// The kernel must be symmetric.
     /// </remarks>
     public interface IKernel
     {
         /// <summary>
-        /// The windows size of the kernel.
+        /// Gets or sets the windows size of the kernel.
         /// </summary>
         double WindowSize { get; set; }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Adam Dernis © 2021
+
+using System;
 using System.Runtime.CompilerServices;
 
 namespace ClusterNet.Kernels
@@ -12,7 +14,7 @@ namespace ClusterNet.Kernels
         private double _bandwidth;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GaussianKernel"/> class.
+        /// Initializes a new instance of the <see cref="GaussianKernel"/> struct.
         /// </summary>
         /// <param name="bandwidth">The bandwidth of the <see cref="GaussianKernel"/>.</param>
         public GaussianKernel(double bandwidth)
@@ -39,7 +41,9 @@ namespace ClusterNet.Kernels
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double WeightDistance(double distanceSquared)
         {
-            //return Math.Pow(Math.E, -.5 * distanceSquared / _bandwidthSquared);
+            // Unoptimized equivilent.
+            // return Math.Pow(Math.E, -.5 * distanceSquared / _bandwidth * _bandwidth);
+            // Optimized below.
             return Math.Exp(distanceSquared / _denominatorBandwidth);
         }
     }

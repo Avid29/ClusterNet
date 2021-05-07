@@ -1,4 +1,6 @@
-﻿using ClusterNet.Shapes;
+﻿// Adam Dernis © 2021
+
+using ClusterNet.Shapes;
 
 namespace ClusterNet.Abstract
 {
@@ -11,10 +13,13 @@ namespace ClusterNet.Abstract
         where T : unmanaged
         where TShape : struct, IPoint<T>
     {
+        /// <summary>
+        /// Tracks the last calculated centroid.
+        /// </summary>
         protected T? _centroid;
 
         /// <summary>
-        /// The center point of all points in the <see cref="Cluster{T, TShape}"/>, calculated with average.
+        /// Gets the center point of all points in the <see cref="Cluster{T, TShape}"/>, calculated with average.
         /// </summary>
         public T Centroid
         {

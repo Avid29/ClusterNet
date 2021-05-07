@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	<LangVersion>8.0</LangVersion>
+	<LangVersion>9.0</LangVersion>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,11 +16,19 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Experimental.Collections" Version="1.0.6-e190117-3" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\ClusterNet.Common\ClusterNet.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\..\stylecop.json" />
   </ItemGroup>
 
 </Project>
