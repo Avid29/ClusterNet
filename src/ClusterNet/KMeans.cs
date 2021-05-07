@@ -11,7 +11,6 @@ namespace ClusterNet
     public static partial class ClusterAlgorithms
     {
         /// <inheritdoc cref="Run.KMeans{T, TShape}(ReadOnlySpan{T}, int)"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T, int)[] KMeans<T, TShape>(
             ReadOnlySpan<T> points,
             int clusterCount)

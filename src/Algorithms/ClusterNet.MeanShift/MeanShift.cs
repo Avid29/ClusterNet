@@ -3,6 +3,7 @@
 using ClusterNet.Kernels;
 using ClusterNet.Shapes;
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,6 +72,7 @@ namespace ClusterNet.MeanShift
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (T, int)[] MeanShift<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,
@@ -110,6 +112,7 @@ namespace ClusterNet.MeanShift
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (T, int)[] MeanShiftMultiThreaded<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,
@@ -160,6 +163,7 @@ namespace ClusterNet.MeanShift
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <param name="threadCount">Number of threads to open. <see cref="Environment.ProcessorCount"/> if 0.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (T, int)[] MeanShiftFixedThreaded<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,

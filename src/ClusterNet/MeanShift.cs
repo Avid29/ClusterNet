@@ -14,7 +14,6 @@ namespace ClusterNet
     public static partial class ClusterAlgorithms
     {
         /// <inheritdoc cref="Run.MeanShift{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (T, int)[] MeanShift<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,
@@ -27,7 +26,6 @@ namespace ClusterNet
         }
 
         /// <inheritdoc cref="Run.MeanShiftMultiThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int)"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (T, int)[] MeanShiftMultiThreaded<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,
@@ -40,7 +38,6 @@ namespace ClusterNet
         }
 
         /// <inheritdoc cref="Run.MeanShiftFixedThreaded{T, TShape, TKernel}(ReadOnlySpan{T}, TKernel, int, int)"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe (T, int)[] MeanShiftFixedThreaded<T, TShape, TKernel>(
             ReadOnlySpan<T> points,
             TKernel kernel,

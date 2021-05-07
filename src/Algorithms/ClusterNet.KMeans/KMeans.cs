@@ -2,6 +2,7 @@
 
 using ClusterNet.Shapes;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace ClusterNet.KMeans
 {
@@ -23,6 +24,7 @@ namespace ClusterNet.KMeans
         /// <param name="points">A list of points to cluster.</param>
         /// <param name="clusterCount">The amount of clusters to form.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T, int)[] KMeans<T, TShape>(
             ReadOnlySpan<T> points,
             int clusterCount)
