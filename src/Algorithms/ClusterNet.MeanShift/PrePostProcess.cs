@@ -1,10 +1,15 @@
-﻿using ClusterNet.Kernels;
+﻿// Adam Dernis © 2021
+
+using ClusterNet.Kernels;
 using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
 
 namespace ClusterNet.MeanShift
 {
+    /// <summary>
+    /// A class containing pre and post process methods for the MeanShift method.
+    /// </summary>
     internal static class PrePostProcess
     {
         /// <summary>
@@ -44,11 +49,12 @@ namespace ClusterNet.MeanShift
             {
                 clusters[i] = points[i * n];
             }
+
             return clusters;
         }
 
         /// <summary>
-        /// Sets up the cluster array to be shifted.
+        /// Sets up the cluster array to be shifted for weighted points.
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <param name="points">The full list of points to apply MeanShift with.</param>
@@ -67,7 +73,9 @@ namespace ClusterNet.MeanShift
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
+        /// <typeparam name="TKernel">The type of kernel to use on the cluster.</typeparam>
         /// <param name="clusters">The clusters to merge and sort.</param>
+        /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <returns>A merged sorted list of clusters.</returns>
         public static (T, int)[] PostProcess<T, TShape, TKernel>(
             T[] clusters,
@@ -117,8 +125,10 @@ namespace ClusterNet.MeanShift
                         otherValue = 0;
                         fullyUnqiueClusterCount--;
                     }
+
                     j++;
                 }
+
                 i++;
             }
 
@@ -134,9 +144,11 @@ namespace ClusterNet.MeanShift
                 }
             }
 
-            Array.Sort(mergedCentroids,
-                delegate ((T, int) clus1,
-                (T, int) clus2)
+            Array.Sort(
+                mergedCentroids,
+                delegate(
+                    (T, int) clus1,
+                    (T, int) clus2)
                 {
                     return clus2.Item2.CompareTo(clus1.Item2);
                 });
@@ -145,11 +157,13 @@ namespace ClusterNet.MeanShift
         }
 
         /// <summary>
-        /// Merges really similar clusters, then sorts them by size.
+        /// Merges really similar clusters, then sorts them by size for weighted clusters.
         /// </summary>
         /// <typeparam name="T">The type of points to cluster.</typeparam>
         /// <typeparam name="TShape">The shape to use on the points to cluster.</typeparam>
+        /// <typeparam name="TKernel">The type of kernel to use on the cluster.</typeparam>
         /// <param name="clusters">The weighted clusters to merge and sort.</param>
+        /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <returns>A merged sorted list of clusters.</returns>
         public static (T, int)[] PostProcess<T, TShape, TKernel>(
             (T, int)[] clusters,
@@ -195,8 +209,10 @@ namespace ClusterNet.MeanShift
                         otherValue = 0;
                         fullyUnqiueClusterCount--;
                     }
+
                     j++;
                 }
+
                 i++;
             }
 
@@ -211,9 +227,11 @@ namespace ClusterNet.MeanShift
                 }
             }
 
-            Array.Sort(mergedCentroids,
-                delegate ((T, int) clus1,
-                (T, int) clus2)
+            Array.Sort(
+                mergedCentroids,
+                delegate (
+                    (T, int) clus1,
+                    (T, int) clus2)
                 {
                     return clus2.Item2.CompareTo(clus1.Item2);
                 });

@@ -1,9 +1,14 @@
-﻿using ClusterNet.Kernels;
+﻿// Adam Dernis © 2021
+
+using ClusterNet.Kernels;
 using ClusterNet.Shapes;
 using System;
 
 namespace ClusterNet.MeanShift
 {
+    /// <summary>
+    /// A class containing the point shift methods.
+    /// </summary>
     internal static partial class PointShifting
     {
         /// <summary>
@@ -16,7 +21,7 @@ namespace ClusterNet.MeanShift
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="pointCount">The amount of points in the array.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
-        /// <param name="weightedSubPointList">The array to shift in (passed into to save allocation)</param>
+        /// <param name="weightedSubPointList">The array to shift in (passed into to save allocation).</param>
         /// <returns>The <paramref name="cluster"/> point fully shifted via MeanShift.</returns>
         public static unsafe T MeanShiftPoint<T, TShape, TKernel>(
             T cluster,
@@ -28,12 +33,12 @@ namespace ClusterNet.MeanShift
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
+            // TODO: Change weightedSubPointList to a Span.
             TShape shape = default;
-
 
             // Shift the cluster until it does not shift.
             bool changed = true;
-            T newCluster = default;
+            T newCluster; // TODO: Unsafe.SkipInit if/when available.
             while (changed)
             {
                 newCluster = Shift<T, TShape, TKernel>(cluster, points, pointCount, kernel, weightedSubPointList);
@@ -52,7 +57,9 @@ namespace ClusterNet.MeanShift
         /// <typeparam name="TKernel">The type of kernel to use on the cluster.</typeparam>
         /// <param name="p">The cluster to shift.</param>
         /// <param name="points">The list of points to cluster.</param>
+        /// <param name="pointCount">The number of points in the point list.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
+        /// <param name="weightedSubPointList">The arrays to use for weighted subpoints while shifting.</param>
         /// <returns>The new cluster from the cluster being shifted.</returns>
         public static unsafe T Shift<T, TShape, TKernel>(
             T p,
