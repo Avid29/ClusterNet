@@ -1,8 +1,13 @@
-﻿using ClusterNet.Shapes;
+﻿// Adam Dernis © 2021
+
+using ClusterNet.Shapes;
 using System;
 
 namespace ClusterNet.KMeans
 {
+    /// <summary>
+    /// A class containing pre and post operations for the KMeans algorithm.
+    /// </summary>
     internal static class PrePost
     {
         /// <summary>

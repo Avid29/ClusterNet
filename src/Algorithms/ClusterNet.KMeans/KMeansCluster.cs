@@ -1,4 +1,6 @@
-﻿using ClusterNet.Abstract;
+﻿// Adam Dernis © 2021
+
+using ClusterNet.Abstract;
 using ClusterNet.Shapes;
 using System.Collections.Generic;
 
