@@ -1,4 +1,6 @@
-﻿namespace ClusterNet.Kernels
+﻿// Adam Dernis © 2021
+
+namespace ClusterNet.Kernels
 {
     /// <summary>
     /// A Kernel with a flat cutoff at its window size.
@@ -9,7 +11,7 @@
         private double _window;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FlatKernel"/> class.
+        /// Initializes a new instance of the <see cref="FlatKernel"/> struct.
         /// </summary>
         /// <param name="window">The window size of the Kernel.</param>
         public FlatKernel(double window)
