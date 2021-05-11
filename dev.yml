@@ -1,0 +1,24 @@
+# A pipeline triggered when merging to dev.
+# Ensures the soltuion builds
+
+trigger:
+- dev
+
+pool:
+  vmImage: windows-latest
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet restore'
+    inputs:
+      command: restore
+      projects: $(solution)
+      configuration: $(BuildConfiguration)
+      
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet build'
+    inputs:
+      command: build
+      projects: $(solution)
+      configuration: $(BuildConfiguration)
+      
