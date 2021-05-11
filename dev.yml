@@ -8,12 +8,6 @@ pool:
   vmImage: windows-latest
 
 steps:
-
-  - task: UseDotNet@2
-    displayName: 'use dotnet'
-    inputs:
-      packageType: 'sdk'
-      version: '2.x'
       
   - task: DotNetCoreCLI@2
     displayName: 'dotnet restore'
