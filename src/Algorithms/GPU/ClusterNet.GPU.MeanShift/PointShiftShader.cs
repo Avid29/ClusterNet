@@ -37,7 +37,7 @@ namespace ClusterNet.GPU.MeanShift
         public readonly GaussianKernel _kernel;
 
         /// <inheritdoc/>
-        public unsafe void Execute()
+        public void Execute()
         {
             int offset = ThreadIds.X;
             Vector3 point = _pointBuffer[offset];
