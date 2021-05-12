@@ -36,29 +36,13 @@ namespace ClusterNet.GPU.MeanShift
         /// </summary>
         public readonly GaussianKernel _kernel;
 
-        /// <summary>
-        /// Finds the euclidean distance between 2 Vector3s.
-        /// </summary>
-        /// <param name="it1">The first vector.</param>
-        /// <param name="it2">The second vector.</param>
-        /// <returns>The euclidean distance between the vectors.</returns>
-        public static double FindDistanceSquared(Vector3 it1, Vector3 it2)
-        {
-            float x = it1.X - it2.X;
-            float y = it1.Y - it2.Y;
-            float z = it1.Z - it2.Z;
-
-            return (x * x) + (y * y) + (z * z);
-        }
-
         /// <inheritdoc/>
         public unsafe void Execute()
         {
             int offset = ThreadIds.X;
             Vector3 point = _pointBuffer[offset];
-            Vector3Shape shape = default;
 
-            // double weight = FindDistanceSquared(point, _cluster);
+            Vector3Shape shape = default;
             double weight = shape.FindDistanceSquared(point, _cluster);
 
             weight = _kernel.WeightDistance(weight);
