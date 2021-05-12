@@ -54,7 +54,7 @@ namespace ClusterNet.GPU.MeanShift
             GaussianKernel kernel,
             ReadWriteBuffer<double> weights)
         {
-            Vector3Shape shape = default;
+            // Vector3Shape shape = default;
             Gpu.Default.For(points.Length, new PointShiftShader(p, points, weights, kernel));
 
             // TODO: Convert results to tuple array
