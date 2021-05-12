@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ComputeSharp" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ClusterNet.Common\ClusterNet.Common.csproj" />
+    <ProjectReference Include="..\..\ClusterNet.MeanShift\ClusterNet.MeanShift.csproj" />
+  </ItemGroup>
+
+</Project>
