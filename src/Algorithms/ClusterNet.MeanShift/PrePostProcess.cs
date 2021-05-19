@@ -4,6 +4,8 @@ using ClusterNet.Kernels;
 using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClusterNet.MeanShift
 {
@@ -93,55 +95,49 @@ namespace ClusterNet.MeanShift
                 mergedCentroidsMap.GetOrAddValueRef(cluster)++;
             }
 
-            // Sometimes clusters can be very similar due to the nature of discrete computation.
-            // This is inaccurate, merge clusters with in too similar of a range.
-            // TODO: Investigate better convergence to elimate this.
-            int fullyUnqiueClusterCount = mergedCentroidsMap.Count;
-            int i = 0;
-            foreach (var entry in mergedCentroidsMap)
+            // Connected componenents merge.
+            // Because convergence may be imperfect, a minimum difference can be used to merge similar clusters.
+
+            // Merge to list of connected components
+            List<List<(T, int)>> similarCentroids = new List<List<(T, int)>>();
+            foreach (var mergedCluster in mergedCentroidsMap)
             {
-                // This entry has been merged, skip it
-                if (entry.Value == 0)
+                foreach (var clusterGroup in similarCentroids)
                 {
-                    i++;
-                    continue;
+                    foreach (var cluster in clusterGroup)
+                    {
+                        if (shape.FindDistanceSquared(mergedCluster.Key, cluster.Item1) < kernel.WindowSize)
+                        {
+                            clusterGroup.Add((mergedCluster.Key, mergedCluster.Value));
+
+                            // TODO: Handle merging components when a component fits in multiple components
+                            goto ClusterMerged;
+                        }
+                    }
                 }
 
-                int j = 0;
-                foreach (var otherEntry in mergedCentroidsMap)
-                {
-                    // The comparison has already been made, or they are the same item.
-                    if (j <= i)
-                    {
-                        j++;
-                        continue;
-                    }
+                similarCentroids.Add(new List<(T, int)>());
+                similarCentroids.Last().Add((mergedCluster.Key, mergedCluster.Value));
 
-                    // Merge clusters if they're with in the kernel's WindowSize
-                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < kernel.WindowSize)
-                    {
-                        ref int otherValue = ref mergedCentroidsMap.GetOrAddValueRef(otherEntry.Key);
-                        mergedCentroidsMap.GetOrAddValueRef(entry.Key) += otherValue;
-                        otherValue = 0;
-                        fullyUnqiueClusterCount--;
-                    }
-
-                    j++;
-                }
-
-                i++;
+            // Jump to end of top loop after inserting a point
+            ClusterMerged:
+                continue;
             }
 
-            // TODO: Investigate issues allowing fullyUnqiueClusterCount to be negative
-            (T, int)[] mergedCentroids = new (T, int)[fullyUnqiueClusterCount];
-            i = 0; // Reuse i as an iter again.
-            foreach (var entry in mergedCentroidsMap)
+            // Merge connected components into concrete unmerged components
+            (T, int)[] mergedCentroids = new (T, int)[similarCentroids.Count];
+            for (int i = 0; i < similarCentroids.Count; i++)
             {
-                if (entry.Value != 0)
+                var cluster = similarCentroids[i];
+                (T, double)[] rewrittenList = new (T, double)[cluster.Count];
+                int count = 0;
+                for (int j = 0; j < cluster.Count; j++)
                 {
-                    mergedCentroids[i] = (entry.Key, entry.Value);
-                    i++;
+                    rewrittenList[j] = cluster[j];
+                    count += cluster[j].Item2;
                 }
+
+                mergedCentroids[i] = (shape.WeightedAverage(rewrittenList), count);
             }
 
             Array.Sort(
