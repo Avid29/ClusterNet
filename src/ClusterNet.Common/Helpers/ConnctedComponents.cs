@@ -11,7 +11,7 @@ namespace ClusterNet.Helpers
     /// <summary>
     /// A class containing methods to run connect components.
     /// </summary>
-    public class ConnctedComponents
+    public static class ConnctedComponents
     {
         /// <summary>
         /// Merges similar clusters.
