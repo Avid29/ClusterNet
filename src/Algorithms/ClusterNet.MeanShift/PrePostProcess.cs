@@ -1,5 +1,6 @@
 ﻿// Adam Dernis © 2021
 
+using ClusterNet.Helpers;
 using ClusterNet.Kernels;
 using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
@@ -86,8 +87,6 @@ namespace ClusterNet.MeanShift
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
-            TShape shape = default;
-
             // Remove explict duplicate values.
             DictionarySlim<T, int> mergedCentroidsMap = new DictionarySlim<T, int>();
             foreach (var cluster in clusters)
@@ -98,47 +97,15 @@ namespace ClusterNet.MeanShift
             // Connected componenents merge.
             // Because convergence may be imperfect, a minimum difference can be used to merge similar clusters.
 
-            // Merge to list of connected components
-            List<List<(T, int)>> similarCentroids = new List<List<(T, int)>>();
-            foreach (var mergedCluster in mergedCentroidsMap)
+            (T, int)[] mergedCentroids = new (T, int)[mergedCentroidsMap.Count];
+            int i = 0;
+            foreach (var value in mergedCentroidsMap)
             {
-                foreach (var clusterGroup in similarCentroids)
-                {
-                    foreach (var cluster in clusterGroup)
-                    {
-                        if (shape.FindDistanceSquared(mergedCluster.Key, cluster.Item1) < kernel.WindowSize)
-                        {
-                            clusterGroup.Add((mergedCluster.Key, mergedCluster.Value));
-
-                            // TODO: Handle merging components when a component fits in multiple components
-                            goto ClusterMerged;
-                        }
-                    }
-                }
-
-                similarCentroids.Add(new List<(T, int)>());
-                similarCentroids.Last().Add((mergedCluster.Key, mergedCluster.Value));
-
-            // Jump to end of top loop after inserting a point
-            ClusterMerged:
-                continue;
+                mergedCentroids[i] = (value.Key, value.Value);
+                i++;
             }
 
-            // Merge connected components into concrete unmerged components
-            (T, int)[] mergedCentroids = new (T, int)[similarCentroids.Count];
-            for (int i = 0; i < similarCentroids.Count; i++)
-            {
-                var cluster = similarCentroids[i];
-                (T, double)[] rewrittenList = new (T, double)[cluster.Count];
-                int count = 0;
-                for (int j = 0; j < cluster.Count; j++)
-                {
-                    rewrittenList[j] = cluster[j];
-                    count += cluster[j].Item2;
-                }
-
-                mergedCentroids[i] = (shape.WeightedAverage(rewrittenList), count);
-            }
+            mergedCentroids = ConnctedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
 
             Array.Sort(
                 mergedCentroids,
