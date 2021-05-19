@@ -11,7 +11,7 @@ namespace ClusterNet.Helpers
     /// <summary>
     /// A class containing methods to run connect components.
     /// </summary>
-    public static class ConnctedComponents
+    public static class ConnectedComponents
     {
         /// <summary>
         /// Merges similar clusters.
@@ -31,18 +31,19 @@ namespace ClusterNet.Helpers
         {
             TShape shape = default;
 
-            List<List<(T, int)>> connectedComponents = new List<List<(T, int)>>();
+            List<List<(T, int)>> connectedComponents = new List<List<(T, int)>>(clusters.Length);
             foreach (var cluster in clusters)
             {
                 // Determine which existing connections this cluster connects to
-                List<List<(T, int)>> connections = new List<List<(T, int)>>();
-                foreach (var list in connectedComponents)
+                // and track their indicies.
+                List<int> connections = new List<int>(connectedComponents.Count);
+                for (int i = 0; i < connectedComponents.Count; i++)
                 {
-                    foreach (var component in list)
+                    foreach (var component in connectedComponents[i])
                     {
                         if (shape.FindDistanceSquared(component.Item1, cluster.Item1) < kernel.WindowSize)
                         {
-                            connections.Add(list);
+                            connections.Add(i);
                             break;
                         }
                     }
@@ -57,15 +58,16 @@ namespace ClusterNet.Helpers
                 else if (connections.Count == 1)
                 {
                     // Add to overlapping connection
-                    connections[0].Add(cluster);
+                    connectedComponents[connections[0]].Add(cluster);
                 }
                 else
                 {
                     // Merge overlapping connections
-                    for (int i = 1; i < connections.Count; i++)
+                    // Remove start from back so indicies aren't changed.
+                    for (int i = connections.Count - 1; i > 0; i++)
                     {
-                        connections[0].AddRange(connections[i]);
-                        connectedComponents.Remove(connections[i]);
+                        connectedComponents[connections[0]].AddRange(connectedComponents[connections[i]]);
+                        connectedComponents.RemoveAt(connections[i]);
                     }
                 }
             }
