@@ -42,7 +42,7 @@ namespace ClusterNet.Kernels
         public double WeightDistance(double distanceSquared)
         {
             // Unoptimized equivilent.
-            // return Math.Pow(Math.E, -.5 * distanceSquared / _bandwidth * _bandwidth);
+            // return Math.Pow(Math.E, -.5 * distanceSquared / (_bandwidth * _bandwidth);
             // Optimized below.
             return Math.Exp(distanceSquared / _denominatorBandwidth);
         }
