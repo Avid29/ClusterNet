@@ -97,6 +97,7 @@ namespace ClusterNet.MeanShift
             // Connected componenents merge.
             // Because convergence may be imperfect, a minimum difference can be used to merge similar clusters.
 
+            // Convert Dictionary to tuple list.
             (T, int)[] mergedCentroids = new (T, int)[mergedCentroidsMap.Count];
             int i = 0;
             foreach (var value in mergedCentroidsMap)
@@ -105,6 +106,7 @@ namespace ClusterNet.MeanShift
                 i++;
             }
 
+            // Apply Connect Components
             mergedCentroids = ConnctedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
 
             Array.Sort(
