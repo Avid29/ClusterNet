@@ -11,7 +11,7 @@ namespace ClusterNet.Helpers
     /// <summary>
     /// A class containing methods to run connect components.
     /// </summary>
-    public static class ConnctedComponents
+    public static class ConnectedComponents
     {
         /// <summary>
         /// Merges similar clusters.
@@ -31,7 +31,7 @@ namespace ClusterNet.Helpers
         {
             TShape shape = default;
 
-            List<List<(T, int)>> connectedComponents = new List<List<(T, int)>>();
+            List<List<(T, int)>> connectedComponents = new List<List<(T, int)>>(clusters.Length);
             foreach (var cluster in clusters)
             {
                 // Determine which existing connections this cluster connects to
