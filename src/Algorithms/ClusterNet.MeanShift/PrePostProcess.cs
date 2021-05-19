@@ -157,7 +157,7 @@ namespace ClusterNet.MeanShift
             }
 
             // Apply Connect Components
-            mergedCentroids = ConnctedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
+            mergedCentroids = ConnectedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
 
             Array.Sort(
                 mergedCentroids,
