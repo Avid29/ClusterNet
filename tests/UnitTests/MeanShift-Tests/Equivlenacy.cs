@@ -38,18 +38,6 @@ namespace Tests.MeanShift
             }
         }
 
-        private void RunWeightedTest<T, TShape>(Test<T> test)
-            where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
-        {
-            GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
-            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
-            var actual = ClusterAlgorithms.WeightedMeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
-
-            // MeanShift results should be approx equal to Weighted
-            CompareResults<T, TShape>(test, expected, actual, ACCEPTED_ERROR);
-        }
-
         private void RunMultiThreadedTest<T, TShape>(Test<T> test)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
@@ -62,6 +50,39 @@ namespace Tests.MeanShift
             CompareResults<T, TShape>(test, expected, actual, 0);
         }
 
+        private void RunWeightedTest<T, TShape>(Test<T> test)
+            where T : unmanaged, IEquatable<T>
+            where TShape : struct, IPoint<T>
+        {
+            GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
+            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
+            var actual = ClusterAlgorithms.WeightedMeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
+
+            // MeanShift results should be approx equal to Weighted
+            CompareResults<T, TShape>(test, expected, actual, ACCEPTED_ERROR);
+        }
+
+        private void RunWeightedMultiThreadedTest<T, TShape>(Test<T> test)
+            where T : unmanaged, IEquatable<T>
+            where TShape : struct, IPoint<T>
+        {
+            GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
+            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
+            var actual = ClusterAlgorithms.WeightedMeanShiftMultiThreaded<T, TShape, GaussianKernel>(test.Input, kernel);
+
+            // MeanShift results should be approx equal to Weighted
+            CompareResults<T, TShape>(test, expected, actual, ACCEPTED_ERROR);
+        }
+
+        [TestMethod]
+        public void MultiThreadedEquivilency_ImageTests()
+        {
+            foreach (var test in ImageTests.All_ImageTests)
+            {
+                RunMultiThreadedTest<RGBColor, RGBShape>(test);
+            }
+        }
+
         [TestMethod]
         public void WeightedEquivilency_ImageTests()
         {
@@ -72,11 +93,11 @@ namespace Tests.MeanShift
         }
 
         [TestMethod]
-        public void MultiThreadedEquivilency_ImageTests()
+        public void WeightedMultiThreadedEquivilency_ImageTests()
         {
             foreach (var test in ImageTests.All_ImageTests)
             {
-                RunMultiThreadedTest<RGBColor, RGBShape>(test);
+                RunWeightedMultiThreadedTest<RGBColor, RGBShape>(test);
             }
         }
     }
