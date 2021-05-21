@@ -137,8 +137,6 @@ namespace ClusterNet.MeanShift
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
-            TShape shape = default;
-
             // Remove explict duplicate values.
             DictionarySlim<T, int> mergedCentroidsMap = new DictionarySlim<T, int>();
             foreach (var cluster in clusters)
@@ -146,51 +144,20 @@ namespace ClusterNet.MeanShift
                 mergedCentroidsMap.GetOrAddValueRef(cluster.Item1) += cluster.Item2;
             }
 
-            int fullyUnqiueClusterCount = mergedCentroidsMap.Count;
+            // Connected componenents merge.
+            // Because convergence may be imperfect, a minimum difference can be used to merge similar clusters.
+
+            // Convert Dictionary to tuple list.
+            (T, int)[] mergedCentroids = new (T, int)[mergedCentroidsMap.Count];
             int i = 0;
-            foreach (var entry in mergedCentroidsMap)
+            foreach (var value in mergedCentroidsMap)
             {
-                // This entry has been merged, skip it
-                if (entry.Value == 0)
-                {
-                    i++;
-                    continue;
-                }
-
-                int j = 0;
-                foreach (var otherEntry in mergedCentroidsMap)
-                {
-                    // The comparison has already been made, or they are the same item.
-                    if (j <= i)
-                    {
-                        j++;
-                        continue;
-                    }
-
-                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < kernel.WindowSize)
-                    {
-                        ref int otherValue = ref mergedCentroidsMap.GetOrAddValueRef(otherEntry.Key);
-                        mergedCentroidsMap.GetOrAddValueRef(entry.Key) += otherValue;
-                        otherValue = 0;
-                        fullyUnqiueClusterCount--;
-                    }
-
-                    j++;
-                }
-
+                mergedCentroids[i] = (value.Key, value.Value);
                 i++;
             }
 
-            (T, int)[] mergedCentroids = new (T, int)[fullyUnqiueClusterCount];
-            i = 0; // Reuse i as an iter again.
-            foreach (var entry in mergedCentroidsMap)
-            {
-                if (entry.Value != 0)
-                {
-                    mergedCentroids[i] = (entry.Key, entry.Value);
-                    i++;
-                }
-            }
+            // Apply Connect Components
+            mergedCentroids = ConnectedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
 
             Array.Sort(
                 mergedCentroids,
