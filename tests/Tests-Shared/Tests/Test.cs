@@ -2,12 +2,15 @@
 {
     public class Test<T>
     {
-        public Test(T[] input, double bandwidth, int clusters)
+        public Test(string name, T[] input, double bandwidth, int clusters)
         {
+            Name = name;
             Input = input;
             Bandwidth = bandwidth;
             K = clusters;
         }
+
+        public string Name { get; }
 
         public virtual T[] Input { get; }
 
