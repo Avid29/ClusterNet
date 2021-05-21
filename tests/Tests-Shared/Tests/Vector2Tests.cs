@@ -5,6 +5,7 @@ namespace Tests
     public static class Vector2Tests
     {
         public static Test<Vector2> Vector2Test1 = new Test<Vector2>(
+            "Vector2 Test 1",
             new Vector2[]
             {
                 new Vector2(0, 2),

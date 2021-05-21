@@ -8,8 +8,8 @@ namespace Tests.Tests.Image
         private string _url;
         private int _quality;
 
-        public ImageTest(string url, int quality, double bandwidth, int clusters) :
-            base(null, bandwidth, clusters)
+        public ImageTest(string name, string url, int quality, double bandwidth, int clusters) :
+            base(name, null, bandwidth, clusters)
         {
             _url = url;
             _quality = quality;
