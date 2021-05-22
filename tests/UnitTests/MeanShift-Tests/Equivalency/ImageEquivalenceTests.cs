@@ -34,5 +34,23 @@ namespace Tests.MeanShift.Equivalency
                 Equivalency.RunWeightedMultiThreadedTest<RGBColor, RGBShape>(test);
             }
         }
+
+        [TestMethod]
+        public void FixedThreaded()
+        {
+            foreach (var test in ImageTests.All)
+            {
+                Equivalency.RunFixedThreadedTest<RGBColor, RGBShape>(test);
+            }
+        }
+
+        [TestMethod]
+        public void WeightedFixedThreaded()
+        {
+            foreach (var test in ImageTests.All)
+            {
+                Equivalency.RunWeightedFixedThreadedTest<RGBColor, RGBShape>(test);
+            }
+        }
     }
 }

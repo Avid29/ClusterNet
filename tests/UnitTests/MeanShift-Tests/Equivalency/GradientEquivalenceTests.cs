@@ -49,5 +49,33 @@ namespace Tests.MeanShift.Equivalency
                 Equivalency.RunWeightedMultiThreadedTest<Vector2, Vector2Shape>(test);
             }
         }
+
+        [TestMethod]
+        public void FixedThreaded()
+        {
+            foreach (var test in GradientTests.All1D)
+            {
+                Equivalency.RunFixedThreadedTest<double, DoubleShape>(test);
+            }
+
+            foreach (var test in GradientTests.All2D)
+            {
+                Equivalency.RunFixedThreadedTest<Vector2, Vector2Shape>(test);
+            }
+        }
+
+        [TestMethod]
+        public void WeightedFixedThreaded()
+        {
+            foreach (var test in GradientTests.All1D)
+            {
+                Equivalency.RunWeightedFixedThreadedTest<double, DoubleShape>(test);
+            }
+
+            foreach (var test in GradientTests.All2D)
+            {
+                Equivalency.RunWeightedFixedThreadedTest<Vector2, Vector2Shape>(test);
+            }
+        }
     }
 }
