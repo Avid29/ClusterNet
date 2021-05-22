@@ -43,6 +43,7 @@
             IsThisIt,
             Minecraft,
             Nevermind,
+            Revolver,
             Time,
         };
     }
