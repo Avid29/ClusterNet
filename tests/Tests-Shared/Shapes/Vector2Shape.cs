@@ -3,8 +3,22 @@ using System.Numerics;
 
 namespace Tests.Shapes
 {
-    public struct Vector2Shape : IPoint<Vector2>
+    public struct Vector2Shape : IPoint<Vector2, (Vector2, double)>
     {
+        public (Vector2, double) AddToAverage((Vector2, double) avgProgress, Vector2 item)
+        {
+            avgProgress.Item1 += item;
+            avgProgress.Item2++;
+            return avgProgress;
+        }
+
+        public (Vector2, double) AddToAverage((Vector2, double) avgProgress, (Vector2, double) item)
+        {
+            avgProgress.Item1 += item.Item1 * (float)item.Item2;
+            avgProgress.Item2 += item.Item2;
+            return avgProgress;
+        }
+
         public bool AreEqual(Vector2 it1, Vector2 it2)
         {
             return it1 == it2;
@@ -27,6 +41,11 @@ namespace Tests.Shapes
             sumVector.X /= count;
             sumVector.Y /= count;
             return sumVector;
+        }
+
+        public Vector2 FinalizeAverage((Vector2, double) avgProgress)
+        {
+            return avgProgress.Item1 / (float)avgProgress.Item2;
         }
 
         public double FindDistanceSquared(Vector2 it1, Vector2 it2)

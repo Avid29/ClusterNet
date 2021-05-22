@@ -23,16 +23,14 @@ namespace ClusterNet.MeanShift
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="pointCount">The amount of points in the array.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
-        /// <param name="weightedSubPointList">The array to shift in (passed into to save allocation).</param>
         /// <returns>The <paramref name="cluster"/> point fully shifted via MeanShift.</returns>
-        public static unsafe T MeanShiftPoint<T, TShape, TKernel>(
+        public static unsafe T MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(
             T cluster,
             T* points,
             int pointCount,
-            TKernel kernel,
-            (T, double)[] weightedSubPointList)
+            TKernel kernel)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             // TODO: Change weightedSubPointList to a Span.
@@ -43,7 +41,7 @@ namespace ClusterNet.MeanShift
             T newCluster; // TODO: Unsafe.SkipInit if/when available.
             while (changed)
             {
-                newCluster = Shift<T, TShape, TKernel>(cluster, points, pointCount, kernel, weightedSubPointList);
+                newCluster = Shift<T, TShape, TKernel, TAvgProgress>(cluster, points, pointCount, kernel);
                 changed = !shape.AreEqual(newCluster, cluster, ACCEPTED_ERROR);
                 cluster = newCluster;
             }
@@ -61,19 +59,20 @@ namespace ClusterNet.MeanShift
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="pointCount">The number of points in the point list.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
-        /// <param name="weightedSubPointList">The arrays to use for weighted subpoints while shifting.</param>
         /// <returns>The new cluster from the cluster being shifted.</returns>
-        public static unsafe T Shift<T, TShape, TKernel>(
+        public static unsafe T Shift<T, TShape, TKernel, TAvgProgress>(
             T p,
             T* points,
             int pointCount,
-            TKernel kernel,
-            (T, double)[] weightedSubPointList)
+            TKernel kernel)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             TShape shape = default;
+
+            TAvgProgress progress = default;
+            double totalWeight = 0;
 
             // Create cluster based on distance of points from the current cluster's centroid
             for (int i = 0; i < pointCount; i++)
@@ -81,10 +80,11 @@ namespace ClusterNet.MeanShift
                 T point = points[i];
                 double distance = shape.FindDistanceSquared(p, point);
                 double weight = kernel.WeightDistance(distance);
-                weightedSubPointList[i] = (point, weight);
+                progress = shape.AddToAverage(progress, (point, weight));
+                totalWeight += weight;
             }
 
-            return shape.WeightedAverage(weightedSubPointList);
+            return shape.FinalizeAverage(progress);
         }
     }
 }

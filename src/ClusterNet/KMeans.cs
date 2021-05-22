@@ -11,13 +11,13 @@ namespace ClusterNet
     public static partial class ClusterAlgorithms
     {
         /// <inheritdoc cref="Run.KMeans{T, TShape}(ReadOnlySpan{T}, int)"/>
-        public static (T, int)[] KMeans<T, TShape>(
+        public static (T, int)[] KMeans<T, TShape, TAvgProgress>(
             ReadOnlySpan<T> points,
             int clusterCount)
             where T : unmanaged
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
         {
-            return Run.KMeans<T, TShape>(points, clusterCount);
+            return Run.KMeans<T, TShape, TAvgProgress>(points, clusterCount);
         }
     }
 }

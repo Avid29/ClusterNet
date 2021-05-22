@@ -73,29 +73,26 @@ namespace ClusterNet.MeanShift
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (T, int)[] MeanShift<T, TShape, TKernel>(
+        public static unsafe (T, int)[] MeanShift<T, TShape, TKernel, TAvgProgress>(
             ReadOnlySpan<T> points,
             TKernel kernel,
             int initialClusters = 0)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             T[] clusters = PrePostProcess.SetupClusters(points, initialClusters);
-
-            // Define this here, and reuse it on every iteration of Shift.
-            (T, double)[] weightedSubPointList = new (T, double)[points.Length];
 
             fixed (T* p = points)
             {
                 for (int i = 0; i < clusters.Length; i++)
                 {
                     T cluster = clusters[i];
-                    clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel>(cluster, p, points.Length, kernel, weightedSubPointList);
+                    clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, points.Length, kernel);
                 }
             }
 
-            return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
+            return PrePostProcess.PostProcess<T, TShape, TKernel, TAvgProgress>(clusters, kernel);
         }
 
         /// <summary>
@@ -113,12 +110,12 @@ namespace ClusterNet.MeanShift
         /// <param name="initialClusters">How many of the points to shift into place. 0 means one for each point.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (T, int)[] MeanShiftMultiThreaded<T, TShape, TKernel>(
+        public static unsafe (T, int)[] MeanShiftMultiThreaded<T, TShape, TKernel, TAvgProgress>(
             ReadOnlySpan<T> points,
             TKernel kernel,
             int initialClusters = 0)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             // When running MeanShift Multi-threaded, each cluster can be shifted on a different thread.
@@ -138,14 +135,12 @@ namespace ClusterNet.MeanShift
                 // This will cut memory usage by reducing the number of weightedSubPointLists and reduce strain on the task scheduler.
                 Parallel.For(0, clusters.Length, (i, state) =>
                 {
-                    // Define this here, and reuse it on every iteration of Shift on this thread.
-                    (T, double)[] weightedSubPointList = new (T, double)[pointCount];
                     T cluster = clusters[i];
-                    clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel>(cluster, p, pointCount, kernel, weightedSubPointList);
+                    clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, pointCount, kernel);
                 });
             }
 
-            return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
+            return PrePostProcess.PostProcess<T, TShape, TKernel, TAvgProgress>(clusters, kernel);
         }
 
         /// <summary>
@@ -164,13 +159,13 @@ namespace ClusterNet.MeanShift
         /// <param name="threadCount">Number of threads to open. <see cref="Environment.ProcessorCount"/> if 0.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe (T, int)[] MeanShiftFixedThreaded<T, TShape, TKernel>(
+        public static unsafe (T, int)[] MeanShiftFixedThreaded<T, TShape, TKernel, TAvgProgress>(
             ReadOnlySpan<T> points,
             TKernel kernel,
             int initialClusters = 0,
             int threadCount = 0)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             // When running MeanShift Multi-threaded, each cluster can be shifted on a different thread.
@@ -201,9 +196,6 @@ namespace ClusterNet.MeanShift
                 {
                     threads[i] = new Thread(() =>
                     {
-                        // Define this here, and reuse it on every iteration of Shift on this thread.
-                        (T, double)[] weightedSubPointList = new (T, double)[pointCount];
-
                         while (true)
                         {
                             int activeCluster = 0;
@@ -222,7 +214,7 @@ namespace ClusterNet.MeanShift
                             }
 
                             T cluster = clusters[activeCluster];
-                            clusters[activeCluster] = PointShifting.MeanShiftPoint<T, TShape, TKernel>(cluster, p, pointCount, kernel, weightedSubPointList);
+                            clusters[activeCluster] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, pointCount, kernel);
                         }
                     });
                     threads[i].Start();
@@ -235,7 +227,7 @@ namespace ClusterNet.MeanShift
                 }
             }
 
-            return PrePostProcess.PostProcess<T, TShape, TKernel>(clusters, kernel);
+            return PrePostProcess.PostProcess<T, TShape, TKernel, TAvgProgress>(clusters, kernel);
         }
     }
 }

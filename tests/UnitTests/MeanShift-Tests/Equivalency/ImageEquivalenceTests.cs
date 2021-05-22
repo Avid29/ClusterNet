@@ -13,7 +13,7 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in ImageTests.All)
             {
-                Equivalency.RunWeightedTest<RGBColor, RGBShape>(test);
+                Equivalency.RunWeightedTest<RGBColor, RGBShape, RGBProgress>(test);
             }
         }
 
@@ -22,7 +22,7 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in ImageTests.All)
             {
-                Equivalency.RunMultiThreadedTest<RGBColor, RGBShape>(test);
+                Equivalency.RunMultiThreadedTest<RGBColor, RGBShape, RGBProgress>(test);
             }
         }
 
@@ -31,7 +31,7 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in ImageTests.All)
             {
-                Equivalency.RunWeightedMultiThreadedTest<RGBColor, RGBShape>(test);
+                Equivalency.RunWeightedMultiThreadedTest<RGBColor, RGBShape, RGBProgress>(test);
             }
         }
     }

@@ -13,9 +13,9 @@ namespace Tests.MeanShift.Equivalency
     {
         public const double ACCEPTED_ERROR = .000001;
 
-        private static void CompareResults<T, TShape>(Test<T> test, (T, int)[] expected, (T, int)[] actual, double error = ACCEPTED_ERROR)
+        private static void CompareResults<T, TShape, TAvgProgress>(Test<T> test, (T, int)[] expected, (T, int)[] actual, double error = ACCEPTED_ERROR)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
         {
             TShape shape = default;
             Assert.AreEqual(
@@ -37,40 +37,40 @@ namespace Tests.MeanShift.Equivalency
             }
         }
 
-        public static void RunMultiThreadedTest<T, TShape>(Test<T> test)
+        public static void RunMultiThreadedTest<T, TShape, TAvgProgress>(Test<T> test)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
         {
             GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
-            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
-            var actual = ClusterAlgorithms.WeightedMeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
+            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel, TAvgProgress>(test.Input, kernel);
+            var actual = ClusterAlgorithms.WeightedMeanShift<T, TShape, GaussianKernel, TAvgProgress>(test.Input, kernel);
 
             // MeanShift results should be exactly equal to MultiThreaded
-            CompareResults<T, TShape>(test, expected, actual, 0);
+            CompareResults<T, TShape, TAvgProgress>(test, expected, actual, 0);
         }
 
-        public static void RunWeightedTest<T, TShape>(Test<T> test)
+        public static void RunWeightedTest<T, TShape, TAvgProgress>(Test<T> test)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
         {
             GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
-            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
-            var actual = ClusterAlgorithms.WeightedMeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
+            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel, TAvgProgress>(test.Input, kernel);
+            var actual = ClusterAlgorithms.WeightedMeanShift<T, TShape, GaussianKernel, TAvgProgress>(test.Input, kernel);
 
             // MeanShift results should be approx equal to Weighted
-            CompareResults<T, TShape>(test, expected, actual, ACCEPTED_ERROR);
+            CompareResults<T, TShape, TAvgProgress>(test, expected, actual, ACCEPTED_ERROR);
         }
 
-        public static void RunWeightedMultiThreadedTest<T, TShape>(Test<T> test)
+        public static void RunWeightedMultiThreadedTest<T, TShape, TAvgProgress>(Test<T> test)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
         {
             GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
-            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
-            var actual = ClusterAlgorithms.WeightedMeanShiftMultiThreaded<T, TShape, GaussianKernel>(test.Input, kernel);
+            var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel, TAvgProgress>(test.Input, kernel);
+            var actual = ClusterAlgorithms.WeightedMeanShiftMultiThreaded<T, TShape, GaussianKernel, TAvgProgress>(test.Input, kernel);
 
             // MeanShift results should be approx equal to Weighted
-            CompareResults<T, TShape>(test, expected, actual, ACCEPTED_ERROR);
+            CompareResults<T, TShape, TAvgProgress>(test, expected, actual, ACCEPTED_ERROR);
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in ImageTests.All)
             {
-                RunMultiThreadedTest<RGBColor, RGBShape>(test);
+                RunMultiThreadedTest<RGBColor, RGBShape, RGBProgress>(test);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in ImageTests.All)
             {
-                RunWeightedTest<RGBColor, RGBShape>(test);
+                RunWeightedTest<RGBColor, RGBShape, RGBProgress>(test);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in ImageTests.All)
             {
-                RunWeightedMultiThreadedTest<RGBColor, RGBShape>(test);
+                RunWeightedMultiThreadedTest<RGBColor, RGBShape, RGBProgress>(test);
             }
         }
     }

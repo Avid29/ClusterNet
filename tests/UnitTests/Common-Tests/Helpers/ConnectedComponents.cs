@@ -21,7 +21,7 @@ namespace Tests.Common.Helpers.ConnectedComponents
                 (-2, 1),
             };
 
-            var results = ClusterNet.Helpers.ConnectedComponents.ConnectComponents<double, DoubleShape, GaussianKernel>(components, kernel);
+            var results = ClusterNet.Helpers.ConnectedComponents.ConnectComponents<double, DoubleShape, GaussianKernel, (double, double)>(components, kernel);
 
             // Should not effect collection
             Assert.AreEqual(components.Length, results.Length);
@@ -49,7 +49,7 @@ namespace Tests.Common.Helpers.ConnectedComponents
                 (0, 5)
             };
 
-            var results = ClusterNet.Helpers.ConnectedComponents.ConnectComponents<double, DoubleShape, GaussianKernel>(components, kernel);
+            var results = ClusterNet.Helpers.ConnectedComponents.ConnectComponents<double, DoubleShape, GaussianKernel, (double, double)>(components, kernel);
 
             // Compare results to expected
             Assert.AreEqual(expected.Length, results.Length);
@@ -79,7 +79,7 @@ namespace Tests.Common.Helpers.ConnectedComponents
                 (3.1, 1),
             };
 
-            var results = ClusterNet.Helpers.ConnectedComponents.ConnectComponents<double, DoubleShape, GaussianKernel>(components, kernel);
+            var results = ClusterNet.Helpers.ConnectedComponents.ConnectComponents<double, DoubleShape, GaussianKernel, (double, double)>(components, kernel);
 
             // Compare results to expected
             Assert.AreEqual(expected.Length, results.Length);

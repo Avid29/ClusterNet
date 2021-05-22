@@ -4,8 +4,26 @@ using System.Runtime.CompilerServices;
 
 namespace ColorExtractor.Shapes
 {
-    public struct RGBShape : IPoint<RGBColor>
+    public struct RGBShape : IPoint<RGBColor, RGBProgress>
     {
+        public RGBProgress AddToAverage(RGBProgress avgProgress, RGBColor item)
+        {
+            avgProgress.R += item.R;
+            avgProgress.G += item.G;
+            avgProgress.B += item.B;
+            avgProgress.TotalWeight++;
+            return avgProgress;
+        }
+
+        public RGBProgress AddToAverage(RGBProgress avgProgress, (RGBColor, double) item)
+        {
+            avgProgress.R += item.Item1.R * item.Item2;
+            avgProgress.G += item.Item1.G * item.Item2;
+            avgProgress.B += item.Item1.B * item.Item2;
+            avgProgress.TotalWeight += item.Item2;
+            return avgProgress;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool AreEqual(RGBColor it1, RGBColor it2)
         {
@@ -42,6 +60,14 @@ namespace ColorExtractor.Shapes
             };
 
             return color;
+        }
+
+        public RGBColor FinalizeAverage(RGBProgress avgProgress)
+        {
+            return new RGBColor(
+                (float)(avgProgress.R / avgProgress.TotalWeight),
+                (float)(avgProgress.G / avgProgress.TotalWeight),
+                (float)(avgProgress.B / avgProgress.TotalWeight));
         }
 
         public double FindDistanceSquared(RGBColor it1, RGBColor it2)

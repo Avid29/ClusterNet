@@ -3,8 +3,22 @@ using System;
 
 namespace Tests.Shapes
 {
-    public struct DoubleShape : IPoint<double>
+    public struct DoubleShape : IPoint<double, (double, double)>
     {
+        public (double, double) AddToAverage((double, double) avgProgress, double item)
+        {
+            avgProgress.Item1 += item;
+            avgProgress.Item2++;
+            return avgProgress;
+        }
+
+        public (double, double) AddToAverage((double, double) avgProgress, (double, double) item)
+        {
+            avgProgress.Item1 += item.Item1 * item.Item2;
+            avgProgress.Item2 += item.Item2;
+            return avgProgress;
+        }
+
         public bool AreEqual(double it1, double it2)
         {
             return it1 == it2;
@@ -27,10 +41,9 @@ namespace Tests.Shapes
             return sum /= count;
         }
 
-        public double Divide(double it, double count)
+        public double FinalizeAverage((double, double) avgProgress)
         {
-            it /= count;
-            return it;
+            return avgProgress.Item1 / avgProgress.Item2;
         }
 
         public double FindDistanceSquared(double it1, double it2)

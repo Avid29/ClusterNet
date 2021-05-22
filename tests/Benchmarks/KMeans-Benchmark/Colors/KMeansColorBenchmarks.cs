@@ -61,7 +61,7 @@ namespace Benchmarks.KMeans.Colors
         [Benchmark]
         public void KMeans()
         {
-            ClusterAlgorithms.KMeans<RGBColor, RGBShape>(colors, Clusters);
+            ClusterAlgorithms.KMeans<RGBColor, RGBShape, RGBProgress>(colors, Clusters);
         }
     }
 }

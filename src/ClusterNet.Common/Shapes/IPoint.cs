@@ -8,11 +8,21 @@ namespace ClusterNet.Shapes
     /// A Shape for the Point in a <see cref="Cluster{T, TShape}"/>.
     /// </summary>
     /// <typeparam name="T">The type being wrapped by the implementation.</typeparam>
+    /// <typeparam name="TAvgProgress">The type to use to represent average calculation progress.</typeparam>
     /// <remarks>
     /// It is highly recommended to use floats for your data.
     /// </remarks>
-    public interface IPoint<T>
+    public interface IPoint<T, TAvgProgress>
     {
+        /// <summary>
+        /// Checks equality of two items.
+        /// </summary>
+        /// <param name="it1">The item to compare.</param>
+        /// <param name="it2">The item to compare it to.</param>
+        /// <param name="error">The accepted error by distance for a comparison.</param>
+        /// <returns>Whether or not the items are equal.</returns>
+        bool AreEqual(T it1, T it2, double error = 0);
+
         /// <summary>
         /// Gets the average value of a list of <typeparamref name="T"/> items.
         /// </summary>
@@ -29,19 +39,33 @@ namespace ClusterNet.Shapes
         double FindDistanceSquared(T it1, T it2);
 
         /// <summary>
+        /// Adds an item to the average calculation.
+        /// </summary>
+        /// <param name="avgProgress">The average progress so far.</param>
+        /// <param name="item">The item to add to the average progress.</param>
+        /// <returns>The new average progress.</returns>
+        TAvgProgress AddToAverage(TAvgProgress avgProgress, T item);
+
+        /// <summary>
+        /// Adds an item to the average calculation.
+        /// </summary>
+        /// <param name="avgProgress">The average progress so far.</param>
+        /// <param name="item">The item to add to the average progress and its weight.</param>
+        /// <returns>The new average progress.</returns>
+        TAvgProgress AddToAverage(TAvgProgress avgProgress, (T, double) item);
+
+        /// <summary>
+        /// Gets the average of an average progress for the shape.
+        /// </summary>
+        /// <param name="avgProgress">The average progress to finalize.</param>
+        /// <returns>The average of all items in the progress.</returns>
+        T FinalizeAverage(TAvgProgress avgProgress);
+
+        /// <summary>
         /// Gets the weighted average value of a list of (T, double) by point and weight.
         /// </summary>
         /// <param name="items">A weighted list of points.</param>
         /// <returns>The weighted center of the points.</returns>
         T WeightedAverage((T, double)[] items);
-
-        /// <summary>
-        /// Checks equality of two items.
-        /// </summary>
-        /// <param name="it1">The item to compare.</param>
-        /// <param name="it2">The item to compare it to.</param>
-        /// <param name="error">The accepted error by distance for a comparison.</param>
-        /// <returns>Whether or not the items are equal.</returns>
-        bool AreEqual(T it1, T it2, double error = 0);
     }
 }

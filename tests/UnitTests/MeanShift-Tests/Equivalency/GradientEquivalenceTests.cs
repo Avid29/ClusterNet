@@ -13,12 +13,12 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in GradientTests.All1D)
             {
-                Equivalency.RunWeightedTest<double, DoubleShape>(test);
+                Equivalency.RunWeightedTest<double, DoubleShape, (double, double)>(test);
             }
 
             foreach (var test in GradientTests.All2D)
             {
-                Equivalency.RunWeightedTest<Vector2, Vector2Shape>(test);
+                Equivalency.RunWeightedTest<Vector2, Vector2Shape, (Vector2, double)>(test);
             }
         }
 
@@ -27,12 +27,12 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in GradientTests.All1D)
             {
-                Equivalency.RunMultiThreadedTest<double, DoubleShape>(test);
+                Equivalency.RunMultiThreadedTest<double, DoubleShape, (double, double)>(test);
             }
 
             foreach (var test in GradientTests.All2D)
             {
-                Equivalency.RunMultiThreadedTest<Vector2, Vector2Shape>(test);
+                Equivalency.RunMultiThreadedTest<Vector2, Vector2Shape, (Vector2, double)>(test);
             }
         }
 
@@ -41,12 +41,12 @@ namespace Tests.MeanShift.Equivalency
         {
             foreach (var test in GradientTests.All1D)
             {
-                Equivalency.RunWeightedMultiThreadedTest<double, DoubleShape>(test);
+                Equivalency.RunWeightedMultiThreadedTest<double, DoubleShape, (double, double)>(test);
             }
 
             foreach (var test in GradientTests.All2D)
             {
-                Equivalency.RunWeightedMultiThreadedTest<Vector2, Vector2Shape>(test);
+                Equivalency.RunWeightedMultiThreadedTest<Vector2, Vector2Shape, (Vector2, double)>(test);
             }
         }
     }

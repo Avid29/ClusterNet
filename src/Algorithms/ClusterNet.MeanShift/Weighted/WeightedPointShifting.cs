@@ -26,14 +26,14 @@ namespace ClusterNet.MeanShift
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="weightedSubPointList">The array to shift in (passed into to save allocation).</param>
         /// <returns>The <paramref name="cluster"/> point fully shifted via MeanShift.</returns>
-        public static unsafe (T, int) MeanShiftPoint<T, TShape, TKernel>(
+        public static unsafe (T, int) MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(
             (T, int) cluster,
             (T, int)* points,
             int pointCount,
             TKernel kernel,
             (T, double)[] weightedSubPointList)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             // TODO: Change weightedSubPointList to a Span.
@@ -44,7 +44,7 @@ namespace ClusterNet.MeanShift
             (T, int) newCluster; // TODO: Unsafe.SkipInit if/when available.
             while (changed)
             {
-                newCluster = Shift<T, TShape, TKernel>(cluster, points, pointCount, kernel, weightedSubPointList);
+                newCluster = Shift<T, TShape, TKernel, TAvgProgress>(cluster, points, pointCount, kernel, weightedSubPointList);
                 changed = !shape.AreEqual(newCluster.Item1, cluster.Item1, ACCEPTED_ERROR);
                 cluster = newCluster;
             }
@@ -64,14 +64,14 @@ namespace ClusterNet.MeanShift
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="weightedSubPointList">The arrays to use for weighted subpoints while shifting.</param>
         /// <returns>The new cluster from the cluster being shifted.</returns>
-        public static unsafe (T, int) Shift<T, TShape, TKernel>(
+        public static unsafe (T, int) Shift<T, TShape, TKernel, TAvgProgress>(
             (T, int) p,
             (T, int)* points,
             int pointCount,
             TKernel kernel,
             (T, double)[] weightedSubPointList)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             TShape shape = default;

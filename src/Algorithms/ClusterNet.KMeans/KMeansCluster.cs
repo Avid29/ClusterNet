@@ -11,9 +11,9 @@ namespace ClusterNet.KMeans
     /// </summary>
     /// <typeparam name="T">The type of data in the cluster.</typeparam>
     /// <typeparam name="TShape">A shape to describe to provide comparison methods for <see cref="T"/>.</typeparam>
-    public class KMeansCluster<T, TShape> : Cluster<T, TShape>
+    public class KMeansCluster<T, TShape, TAvgProgress> : Cluster<T, TShape, TAvgProgress>
         where T : unmanaged
-        where TShape : struct, IPoint<T>
+        where TShape : struct, IPoint<T, TAvgProgress>
     {
         private List<T> _subPointSet;
 

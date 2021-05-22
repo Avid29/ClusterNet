@@ -25,14 +25,14 @@ namespace ClusterNet.KMeans
         /// <param name="clusterCount">The amount of clusters to form.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static (T, int)[] KMeans<T, TShape>(
+        public static (T, int)[] KMeans<T, TShape, TAvgProgress>(
             ReadOnlySpan<T> points,
             int clusterCount)
             where T : unmanaged
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
         {
             // Split to arbitrary clusters
-            KMeansCluster<T, TShape>[] clusters = PrePost.Split<T, TShape>(points, clusterCount);
+            KMeansCluster<T, TShape, TAvgProgress>[] clusters = PrePost.Split<T, TShape, TAvgProgress>(points, clusterCount);
 
             // Run no items change cluster on iteration.
             bool changed = true;
@@ -43,7 +43,7 @@ namespace ClusterNet.KMeans
                 // For each point in each cluster
                 for (int i = 0; i < clusters.Length; i++)
                 {
-                    KMeansCluster<T, TShape> cluster = clusters[i];
+                    KMeansCluster<T, TShape, TAvgProgress> cluster = clusters[i];
                     for (int pointIndex = 0; pointIndex < cluster.Count; pointIndex++)
                     {
                         T point = cluster[pointIndex];
@@ -91,11 +91,11 @@ namespace ClusterNet.KMeans
         /// <param name="point">The point to find a nearest cluster for.</param>
         /// <param name="clusters">The list of clusters.</param>
         /// <returns>The index in <paramref name="clusters"/> of the nearest cluster to <paramref name="point"/>.</returns>
-        private static int FindNearestClusterIndex<T, TShape>(
+        private static int FindNearestClusterIndex<T, TShape, TAvgProgress>(
             T point,
-            KMeansCluster<T, TShape>[] clusters)
+            KMeansCluster<T, TShape, TAvgProgress>[] clusters)
             where T : unmanaged
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
         {
             TShape shape = default;
 

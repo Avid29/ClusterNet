@@ -58,42 +58,42 @@ namespace Benchmarks.MeanShift.Colors
         public void MeanShiftGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel, RGBProgress>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void WeightedMeanShiftGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel, RGBProgress>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void MeanShiftMultiThreadedGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel, RGBProgress>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void WeightedMeanShiftMultiThreadedGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.WeightedMeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.WeightedMeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel, RGBProgress>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void MeanShiftFixedThreadedGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.MeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel, RGBProgress>(colors, kernel, Quality);
         }
 
         [Benchmark]
         public void WeightedMeanShiftFixedThreadedGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.WeightedMeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.WeightedMeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel, RGBProgress>(colors, kernel, Quality);
         }
     }
 }

@@ -80,11 +80,11 @@ namespace ClusterNet.MeanShift
         /// <param name="clusters">The clusters to merge and sort.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <returns>A merged sorted list of clusters.</returns>
-        public static (T, int)[] PostProcess<T, TShape, TKernel>(
+        public static (T, int)[] PostProcess<T, TShape, TKernel, TAvgProgress>(
             T[] clusters,
             TKernel kernel)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             // Remove explict duplicate values.
@@ -107,7 +107,7 @@ namespace ClusterNet.MeanShift
             }
 
             // Apply Connect Components
-            mergedCentroids = ConnectedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
+            mergedCentroids = ConnectedComponents.ConnectComponents<T, TShape, TKernel, TAvgProgress>(mergedCentroids, kernel);
 
             Array.Sort(
                 mergedCentroids,
@@ -130,11 +130,11 @@ namespace ClusterNet.MeanShift
         /// <param name="clusters">The weighted clusters to merge and sort.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <returns>A merged sorted list of clusters.</returns>
-        public static (T, int)[] PostProcess<T, TShape, TKernel>(
+        public static (T, int)[] PostProcess<T, TShape, TKernel, TAvgProgress>(
             (T, int)[] clusters,
             TKernel kernel)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             // Remove explict duplicate values.
@@ -157,7 +157,7 @@ namespace ClusterNet.MeanShift
             }
 
             // Apply Connect Components
-            mergedCentroids = ConnectedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
+            mergedCentroids = ConnectedComponents.ConnectComponents<T, TShape, TKernel, TAvgProgress>(mergedCentroids, kernel);
 
             Array.Sort(
                 mergedCentroids,

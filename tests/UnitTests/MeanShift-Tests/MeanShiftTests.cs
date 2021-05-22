@@ -15,14 +15,14 @@ namespace Tests.MeanShift
     [TestClass]
     public class MeanShiftTests
     {
-        private void RunTest<T, TShape>(Test<T> test)
+        private void RunTest<T, TShape, TAvgProgress>(Test<T> test)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
         {
             GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
             try
             {
-                var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel>(test.Input, kernel);
+                var expected = ClusterAlgorithms.MeanShift<T, TShape, GaussianKernel, TAvgProgress>(test.Input, kernel);
             } catch (Exception e)
             {
                 throw new Exception($"Test {test.Name} failed.", e);
@@ -34,12 +34,12 @@ namespace Tests.MeanShift
         {
             foreach (var test in GradientTests.All1D)
             {
-                RunTest<double, DoubleShape>(test);
+                RunTest<double, DoubleShape, (double, double)>(test);
             }
 
             foreach (var test in GradientTests.All2D)
             {
-                RunTest<Vector2, Vector2Shape>(test);
+                RunTest<Vector2, Vector2Shape, (Vector2, double)>(test);
             }
         }
 
@@ -48,7 +48,7 @@ namespace Tests.MeanShift
         {
             foreach(var test in ImageTests.All)
             {
-                RunTest<RGBColor, RGBShape>(test);
+                RunTest<RGBColor, RGBShape, RGBProgress>(test);
             }
         }
     }

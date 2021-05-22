@@ -9,9 +9,9 @@ namespace ClusterNet.Abstract
     /// </summary>
     /// <typeparam name="T">The type of data in the cluster.</typeparam>
     /// <typeparam name="TShape">A shape to describe to provide comparison methods for <see cref="T"/>.</typeparam>
-    public abstract class Cluster<T, TShape>
+    public abstract class Cluster<T, TShape, TAvgProgress>
         where T : unmanaged
-        where TShape : struct, IPoint<T>
+        where TShape : struct, IPoint<T, TAvgProgress>
     {
         /// <summary>
         /// Tracks the last calculated centroid.

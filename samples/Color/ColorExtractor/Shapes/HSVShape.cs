@@ -5,8 +5,26 @@ using System.Runtime.CompilerServices;
 
 namespace ColorExtractor.Shapes
 {
-    public struct HSVShape : IPoint<HSVColor>
+    public struct HSVShape : IPoint<HSVColor, HSVProgress>
     {
+        public HSVProgress AddToAverage(HSVProgress avgProgress, HSVColor item)
+        {
+            avgProgress.H += item.H;
+            avgProgress.S += item.S;
+            avgProgress.V += item.V;
+            avgProgress.TotalWeight++;
+            return avgProgress;
+        }
+
+        public HSVProgress AddToAverage(HSVProgress avgProgress, (HSVColor, double) item)
+        {
+            avgProgress.H += item.Item1.H * item.Item2;
+            avgProgress.S += item.Item1.S * item.Item2;
+            avgProgress.V += item.Item1.V * item.Item2;
+            avgProgress.TotalWeight += item.Item2;
+            return avgProgress;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool AreEqual(HSVColor it1, HSVColor it2, double error = 0)
         {
@@ -36,6 +54,14 @@ namespace ColorExtractor.Shapes
             };
 
             return color;
+        }
+
+        public HSVColor FinalizeAverage(HSVProgress avgProgress)
+        {
+            return new HSVColor(
+                (int)(avgProgress.H / avgProgress.TotalWeight),
+                (float)(avgProgress.S / avgProgress.TotalWeight),
+                (float)(avgProgress.V / avgProgress.TotalWeight));
         }
 
         public double FindDistanceSquared(HSVColor it1, HSVColor it2)

@@ -22,11 +22,11 @@ namespace ClusterNet.Helpers
         /// <param name="clusters">The clusters to merge under a minimum difference.</param>
         /// <param name="kernel">The kernel that contains the min difference to merge by.</param>
         /// <returns>A smaller list of clusters that have been merged by similar distances.</returns>
-        public static (T, int)[] ConnectComponents<T, TShape, TKernel>(
+        public static (T, int)[] ConnectComponents<T, TShape, TKernel, TAvgProgress>(
             (T, int)[] clusters,
             TKernel kernel)
             where T : unmanaged, IEquatable<T>
-            where TShape : struct, IPoint<T>
+            where TShape : struct, IPoint<T, TAvgProgress>
             where TKernel : struct, IKernel
         {
             TShape shape = default;
