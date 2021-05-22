@@ -5,20 +5,15 @@ using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Numerics;
-using Tests.Shapes;
-using Tests.Tests.Gradient;
-using Tests.Tests.Gradient.Shape;
 using Tests.Tests.Image;
 
-namespace Tests.MeanShift
+namespace Tests.MeanShift.Equivalency
 {
-    [TestClass]
-    public class Equivlenacy
+    public class Equivalency
     {
         public const double ACCEPTED_ERROR = .000001;
 
-        private void CompareResults<T, TShape>(Test<T> test, (T, int)[] expected, (T, int)[] actual, double error = ACCEPTED_ERROR)
+        private static void CompareResults<T, TShape>(Test<T> test, (T, int)[] expected, (T, int)[] actual, double error = ACCEPTED_ERROR)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
         {
@@ -37,12 +32,12 @@ namespace Tests.MeanShift
 
                 double distance = shape.FindDistanceSquared(expected[i].Item1, actual[i].Item1);
                 Assert.IsTrue(
-                     distance < ACCEPTED_ERROR,
-                    $"Failed on test \"{test.Name}\" because cluster {i} expected was {distance} different from the expected value, which is greater than {ACCEPTED_ERROR}.");
+                     distance <= error,
+                    $"Failed on test \"{test.Name}\" because cluster {i} expected was {distance} different from the expected value, which is greater than {error}.");
             }
         }
 
-        private void RunMultiThreadedTest<T, TShape>(Test<T> test)
+        public static void RunMultiThreadedTest<T, TShape>(Test<T> test)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
         {
@@ -54,7 +49,7 @@ namespace Tests.MeanShift
             CompareResults<T, TShape>(test, expected, actual, 0);
         }
 
-        private void RunWeightedTest<T, TShape>(Test<T> test)
+        public static void RunWeightedTest<T, TShape>(Test<T> test)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
         {
@@ -66,7 +61,7 @@ namespace Tests.MeanShift
             CompareResults<T, TShape>(test, expected, actual, ACCEPTED_ERROR);
         }
 
-        private void RunWeightedMultiThreadedTest<T, TShape>(Test<T> test)
+        public static void RunWeightedMultiThreadedTest<T, TShape>(Test<T> test)
             where T : unmanaged, IEquatable<T>
             where TShape : struct, IPoint<T>
         {
@@ -79,18 +74,9 @@ namespace Tests.MeanShift
         }
 
         [TestMethod]
-        public void MultiThreadedEquivilency_GradientTests()
-        {
-            foreach (var test in GradientTests.All_GradientTests)
-            {
-                RunMultiThreadedTest<Vector2, Vector2Shape>(test);
-            }
-        }
-
-        [TestMethod]
         public void MultiThreadedEquivilency_ImageTests()
         {
-            foreach (var test in ImageTests.All_ImageTests)
+            foreach (var test in ImageTests.All)
             {
                 RunMultiThreadedTest<RGBColor, RGBShape>(test);
             }
@@ -99,7 +85,7 @@ namespace Tests.MeanShift
         [TestMethod]
         public void WeightedEquivilency_ImageTests()
         {
-            foreach (var test in ImageTests.All_ImageTests)
+            foreach (var test in ImageTests.All)
             {
                 RunWeightedTest<RGBColor, RGBShape>(test);
             }
@@ -108,7 +94,7 @@ namespace Tests.MeanShift
         [TestMethod]
         public void WeightedMultiThreadedEquivilency_ImageTests()
         {
-            foreach (var test in ImageTests.All_ImageTests)
+            foreach (var test in ImageTests.All)
             {
                 RunWeightedMultiThreadedTest<RGBColor, RGBShape>(test);
             }

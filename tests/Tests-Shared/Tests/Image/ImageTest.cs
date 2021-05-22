@@ -15,6 +15,10 @@ namespace Tests.Tests.Image
             _quality = quality;
         }
 
+        public ImageTest(Image image, int quality, double bandwidth, int clusters) :
+            this(image.Name, image.Url, quality, bandwidth, clusters)
+        { }
+
         public override RGBColor[] Input
         {
             get
