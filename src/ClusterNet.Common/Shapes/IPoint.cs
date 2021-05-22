@@ -40,7 +40,8 @@ namespace ClusterNet.Shapes
         /// </summary>
         /// <param name="it1">The item to compare.</param>
         /// <param name="it2">The item to compare it to.</param>
+        /// <param name="error">The accepted error by distance for a comparison.</param>
         /// <returns>Whether or not the items are equal.</returns>
-        bool AreEqual(T it1, T it2);
+        bool AreEqual(T it1, T it2, double error = 0);
     }
 }
