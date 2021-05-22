@@ -11,6 +11,8 @@ namespace ClusterNet.MeanShift
     /// </summary>
     internal static partial class PointShifting
     {
+        private const double ACCEPTED_ERROR = 0.000005;
+
         /// <summary>
         /// Runs shift on a single cluster with the full readonly points.
         /// </summary>
@@ -42,7 +44,7 @@ namespace ClusterNet.MeanShift
             while (changed)
             {
                 newCluster = Shift<T, TShape, TKernel>(cluster, points, pointCount, kernel, weightedSubPointList);
-                changed = !shape.AreEqual(newCluster, cluster);
+                changed = !shape.AreEqual(newCluster, cluster, ACCEPTED_ERROR);
                 cluster = newCluster;
             }
 
