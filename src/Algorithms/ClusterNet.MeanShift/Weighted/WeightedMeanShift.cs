@@ -163,15 +163,12 @@ namespace ClusterNet.MeanShift
         {
             (T, int)[] clusters = PrePostProcess.SetupClusters(weightedPoints, initialClusters);
 
-            // Define this here, and reuse it on every iteration of Shift.
-            (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
-
             fixed ((T, int)* p = weightedPoints)
             {
                 for (int i = 0; i < clusters.Length; i++)
                 {
                     (T, int) cluster = clusters[i];
-                    clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, weightedPoints.Length, kernel, weightedSubPointList);
+                    clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, weightedPoints.Length, kernel);
                 }
             }
 
@@ -199,9 +196,6 @@ namespace ClusterNet.MeanShift
         {
             (T, int)[] clusters = PrePostProcess.SetupClusters(weightedPoints, initialClusters);
 
-            // Define this here, and reuse it on every iteration of Shift.
-            (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
-
             fixed ((T, int)* p0 = weightedPoints)
             {
                 (T, int)* p = p0;
@@ -213,7 +207,7 @@ namespace ClusterNet.MeanShift
                     // Define this here, and reuse it on every iteration of Shift on this thread.
                     (T, double)[] weightedSubPointList = new (T, double)[pointCount];
                     (T, int) cluster = clusters[i];
-                    clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, pointCount, kernel, weightedSubPointList);
+                    clusters[i] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, pointCount, kernel);
                 });
             }
 
@@ -247,9 +241,6 @@ namespace ClusterNet.MeanShift
             }
 
             (T, int)[] clusters = PrePostProcess.SetupClusters(weightedPoints, initialClusters);
-
-            // Define this here, and reuse it on every iteration of Shift.
-            (T, double)[] weightedSubPointList = new (T, double)[weightedPoints.Length];
 
             fixed ((T, int)* p0 = weightedPoints)
             {
@@ -290,7 +281,7 @@ namespace ClusterNet.MeanShift
                             }
 
                             (T, int) cluster = clusters[activeCluster];
-                            clusters[activeCluster] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, pointCount, kernel, weightedSubPointList);
+                            clusters[activeCluster] = PointShifting.MeanShiftPoint<T, TShape, TKernel, TAvgProgress>(cluster, p, pointCount, kernel);
                         }
                     });
                     threads[i].Start();

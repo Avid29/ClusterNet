@@ -72,7 +72,6 @@ namespace ClusterNet.MeanShift
             TShape shape = default;
 
             TAvgProgress progress = default;
-            double totalWeight = 0;
 
             // Create cluster based on distance of points from the current cluster's centroid
             for (int i = 0; i < pointCount; i++)
@@ -81,7 +80,6 @@ namespace ClusterNet.MeanShift
                 double distance = shape.FindDistanceSquared(p, point);
                 double weight = kernel.WeightDistance(distance);
                 progress = shape.AddToAverage(progress, (point, weight));
-                totalWeight += weight;
             }
 
             return shape.FinalizeAverage(progress);
