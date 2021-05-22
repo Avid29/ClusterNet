@@ -1,6 +1,5 @@
 ﻿using ClusterNet.Shapes;
 using System;
-using System.Collections.Generic;
 
 namespace Tests.Shapes
 {
@@ -9,6 +8,11 @@ namespace Tests.Shapes
         public bool AreEqual(double it1, double it2)
         {
             return it1 == it2;
+        }
+
+        public bool AreEqual(double it1, double it2, double error = 0)
+        {
+            return FindDistanceSquared(it1, it2) <= error;
         }
 
         public double Average(double[] items)

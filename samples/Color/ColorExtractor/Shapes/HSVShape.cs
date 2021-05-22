@@ -8,9 +8,9 @@ namespace ColorExtractor.Shapes
     public struct HSVShape : IPoint<HSVColor>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool AreEqual(HSVColor it1, HSVColor it2)
+        public bool AreEqual(HSVColor it1, HSVColor it2, double error = 0)
         {
-            return FindDistanceSquared(it1, it2) == 0;
+            return FindDistanceSquared(it1, it2) <= 0;
         }
 
         public HSVColor Average(HSVColor[] items)

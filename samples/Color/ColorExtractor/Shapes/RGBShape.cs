@@ -15,6 +15,12 @@ namespace ColorExtractor.Shapes
                 it1.B == it2.B;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool AreEqual(RGBColor it1, RGBColor it2, double error = 0)
+        {
+            return FindDistanceSquared(it1, it2) <= error;
+        }
+
         public RGBColor Average(RGBColor[] items)
         {
             float sumR, sumG, sumB;

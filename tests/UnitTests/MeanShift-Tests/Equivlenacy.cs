@@ -5,6 +5,10 @@ using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Numerics;
+using Tests.Shapes;
+using Tests.Tests.Gradient;
+using Tests.Tests.Gradient.Shape;
 using Tests.Tests.Image;
 
 namespace Tests.MeanShift
@@ -72,6 +76,15 @@ namespace Tests.MeanShift
 
             // MeanShift results should be approx equal to Weighted
             CompareResults<T, TShape>(test, expected, actual, ACCEPTED_ERROR);
+        }
+
+        [TestMethod]
+        public void MultiThreadedEquivilency_GradientTests()
+        {
+            foreach (var test in GradientTests.All_GradientTests)
+            {
+                RunMultiThreadedTest<Vector2, Vector2Shape>(test);
+            }
         }
 
         [TestMethod]
