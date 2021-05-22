@@ -13,7 +13,7 @@ namespace Benchmarks.MeanShift.Colors
     public class MeanShiftColorBenchmarks
     {
         private RGBColor[] colors;
-        private Dictionary<string, string> nameToImage;
+        private readonly Dictionary<string, string> nameToImage = new Dictionary<string, string>();
 
         //[Params(64, 128, 256, 512)]
         [Params(480)]
