@@ -32,7 +32,12 @@ namespace Tests.MeanShift
         [TestMethod]
         public void Gradients()
         {
-            foreach (var test in GradientTests.All)
+            foreach (var test in GradientTests.All1D)
+            {
+                RunTest<double, DoubleShape>(test);
+            }
+
+            foreach (var test in GradientTests.All2D)
             {
                 RunTest<Vector2, Vector2Shape>(test);
             }

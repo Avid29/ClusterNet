@@ -11,7 +11,12 @@ namespace Tests.MeanShift.Equivalency
         [TestMethod]
         public void Weighted()
         {
-            foreach (var test in GradientTests.All)
+            foreach (var test in GradientTests.All1D)
+            {
+                Equivalency.RunWeightedTest<double, DoubleShape>(test);
+            }
+
+            foreach (var test in GradientTests.All2D)
             {
                 Equivalency.RunWeightedTest<Vector2, Vector2Shape>(test);
             }
@@ -20,7 +25,12 @@ namespace Tests.MeanShift.Equivalency
         [TestMethod]
         public void MultiThreaded()
         {
-            foreach (var test in GradientTests.All)
+            foreach (var test in GradientTests.All1D)
+            {
+                Equivalency.RunMultiThreadedTest<double, DoubleShape>(test);
+            }
+
+            foreach (var test in GradientTests.All2D)
             {
                 Equivalency.RunMultiThreadedTest<Vector2, Vector2Shape>(test);
             }
@@ -29,7 +39,12 @@ namespace Tests.MeanShift.Equivalency
         [TestMethod]
         public void WeightedMultiThreaded()
         {
-            foreach (var test in GradientTests.All)
+            foreach (var test in GradientTests.All1D)
+            {
+                Equivalency.RunWeightedMultiThreadedTest<double, DoubleShape>(test);
+            }
+
+            foreach (var test in GradientTests.All2D)
             {
                 Equivalency.RunWeightedMultiThreadedTest<Vector2, Vector2Shape>(test);
             }
