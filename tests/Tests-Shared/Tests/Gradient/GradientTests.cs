@@ -27,7 +27,7 @@ namespace Tests.Tests.Gradient
             .05,
             1);
 
-        public static GradientTest<Vector2, Vector2GradientShape>[] All_GradientTests = new GradientTest<Vector2, Vector2GradientShape>[]
+        public static GradientTest<Vector2, Vector2GradientShape>[] All = new GradientTest<Vector2, Vector2GradientShape>[]
         {
             Linear2D_11x11,
             QuadraticEaseInOut2D_21x21,
