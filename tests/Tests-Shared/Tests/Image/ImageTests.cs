@@ -2,15 +2,40 @@
 {
     public static class ImageTests
     {
-        public static ImageTest ImageTest_IsThisIt =
-            new ImageTest("Is This It - The Strokes", "https://media.pitchfork.com/photos/5929a58b13d1975652138f9b/1:1/w_600/c1b895b7.jpg", 1920, .15, 3);
-        public static ImageTest ImageTest_Minecraft =
-            new ImageTest("Minecraft - C418", "https://f4.bcbits.com/img/a3390257927_10.jpg", 1920, .15, 2);
+        public static ImageTest Califorinaction =
+            new ImageTest(Images.Califorinaction, 1920, .15, 3);
 
-        public static ImageTest[] All_ImageTests = new ImageTest[]
+        public static ImageTest Contra =
+            new ImageTest(Images.Contra, 1920, .15, 3);
+
+        public static ImageTest EveryThingAllInTime =
+            new ImageTest(Images.EveryThingAllInTime, 1920, .15, 3);
+
+        public static ImageTest IsThisIt =
+            new ImageTest(Images.IsThisIt, 1920, .15, 3);
+
+        public static ImageTest Minecraft =
+            new ImageTest(Images.Minecraft, 1920, .15, 2);
+
+        public static ImageTest Nevermind =
+            new ImageTest(Images.Nevermind, 1920, .15, 2);
+
+        public static ImageTest Revolver =
+            new ImageTest(Images.Revolver, 1920, .15, 2);
+
+        public static ImageTest Time =
+            new ImageTest(Images.Time, 1920, .15, 2);
+
+        public static ImageTest[] All = new ImageTest[]
         {
-            ImageTest_IsThisIt,
-            ImageTest_Minecraft,
+            Califorinaction,
+            Contra,
+            EveryThingAllInTime,
+            IsThisIt,
+            Minecraft,
+            Nevermind,
+            Revolver,
+            Time,
         };
     }
 }
