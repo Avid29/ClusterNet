@@ -17,11 +17,13 @@
         <StackPanel Orientation="Horizontal">
             <TextBox x:Name="UriTextBox" PlaceholderText="Uri"
                      Width="400"/>
+            <TextBox x:Name="BandwidthTextBox" Width="120"
+                     Text="0.15" PlaceholderText="Bandwidth"/>
+            <TextBox x:Name="QualityTextBox" Width="80"
+                     Text="50" PlaceholderText="Quality"/>
             <Button Content="Load" VerticalAlignment="Stretch"
                     Click="AddBlade"/>
         </StackPanel>
         <tkcontrols:BladeView x:Name="ColorsBladeView" Grid.Row="1"/>
-
-
     </Grid>
 </Page>

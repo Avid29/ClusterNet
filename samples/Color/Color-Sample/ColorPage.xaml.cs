@@ -17,12 +17,16 @@ namespace Color_Sample
 {
     public sealed partial class ColorPage : UserControl
     {
-        private string imageUrl;
+        private string _imageUrl;
+        private double _bandwidth;
+        private int _quality;
         
-        public ColorPage(string url)
+        public ColorPage(string url, double bandwidth, int quality)
         {
             this.InitializeComponent();
-            imageUrl = url;
+            _imageUrl = url;
+            _bandwidth = bandwidth;
+            _quality = quality;
 
             this.Loaded += ColorPage_Loaded;
         }
@@ -31,9 +35,9 @@ namespace Color_Sample
         {
             this.Loaded -= ColorPage_Loaded;
             
-            Image.Source = new BitmapImage(new Uri(imageUrl));
+            Image.Source = new BitmapImage(new Uri(_imageUrl));
 
-            List<(Color, int)> colors = await Task.Run(async () => await LoadColors(imageUrl));
+            List<(Color, int)> colors = await Task.Run(async () => await LoadColors());
 
             RowDefinitionCollection rowDefinitions = RootGrid.RowDefinitions;
 
@@ -55,16 +59,16 @@ namespace Color_Sample
             Grid.SetRowSpan(Image, i+1);
         }
 
-        private async Task<List<(Color, int)>> LoadColors(string url)
+        private async Task<List<(Color, int)>> LoadColors()
         {
-            var image = await ImageParser.GetImage(url);
+            var image = await ImageParser.GetImage(_imageUrl);
 
             if (image is null)
                 return null;
 
-            RGBColor[] rgbColors = ImageParser.GetImageColors(image, 1920);
-            GaussianKernel kernel = new GaussianKernel(.15);
-            (RGBColor, int)[] clusters = ClusterAlgorithms.MeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(rgbColors, kernel, 480);
+            RGBColor[] rgbColors = ImageParser.SampleImage(ImageParser.GetImageColors(image), _quality, _quality);
+            GaussianKernel kernel = new GaussianKernel(_bandwidth);
+            (RGBColor, int)[] clusters = ClusterAlgorithms.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(rgbColors, kernel);
 
             List<(Color, int)> weightedColors = clusters.Select(x =>
             {
