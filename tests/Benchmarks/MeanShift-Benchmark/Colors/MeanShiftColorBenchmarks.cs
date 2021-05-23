@@ -4,6 +4,7 @@ using ClusterNet.Kernels;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
+using System;
 using System.Collections.Generic;
 using Tests.Tests.Image;
 
@@ -15,13 +16,12 @@ namespace Benchmarks.MeanShift.Colors
         private RGBColor[] colors;
         private readonly Dictionary<string, string> nameToImage = new Dictionary<string, string>();
 
-        //[Params(64, 128, 256, 512)]
-        [Params(480)]
-        public int Quality;
-
         //[Params(.05, .1, .2, .5)]
         [Params(.15)]
         public double Bandwidth;
+
+        [Params(1920)]
+        public int Quality;
 
         [Params(
             Images.Califorinaction_Name,
@@ -51,49 +51,50 @@ namespace Benchmarks.MeanShift.Colors
             if (image is null)
                 return;
 
-            colors = ImageParser.GetImageColors(image, Quality);
+            int details = (int)Math.Sqrt(Quality);
+            colors = ImageParser.SampleImage(ImageParser.GetImageColors(image), details, details);
         }
 
         [Benchmark]
         public void MeanShiftGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel);
         }
 
         [Benchmark]
         public void WeightedMeanShiftGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel);
         }
 
         [Benchmark]
         public void MeanShiftMultiThreadedGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel);
         }
 
         [Benchmark]
         public void WeightedMeanShiftMultiThreadedGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.WeightedMeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.WeightedMeanShiftMultiThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel);
         }
 
         [Benchmark]
         public void MeanShiftFixedThreadedGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.MeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.MeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel);
         }
 
         [Benchmark]
         public void WeightedMeanShiftFixedThreadedGuassian()
         {
             GaussianKernel kernel = new GaussianKernel(Bandwidth);
-            ClusterAlgorithms.WeightedMeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Quality);
+            ClusterAlgorithms.WeightedMeanShiftFixedThreaded<RGBColor, RGBShape, GaussianKernel>(colors, kernel);
         }
     }
 }

@@ -3,6 +3,7 @@ using ClusterNet;
 using ColorExtractor;
 using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
+using System;
 using System.Collections.Generic;
 
 namespace Benchmarks.KMeans.Colors
@@ -55,7 +56,8 @@ namespace Benchmarks.KMeans.Colors
             if (image is null)
                 return;
 
-            colors = ImageParser.GetImageColors(image, Quality);
+            int details = (int)Math.Sqrt(Quality);
+            colors = ImageParser.SampleImage(ImageParser.GetImageColors(image), details, details);
         }
 
         [Benchmark]
