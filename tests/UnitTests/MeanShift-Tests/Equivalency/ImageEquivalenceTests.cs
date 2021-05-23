@@ -52,5 +52,14 @@ namespace Tests.MeanShift.Equivalency
                 Equivalency.RunWeightedFixedThreadedTest<RGBColor, RGBShape>(test);
             }
         }
+
+        [TestMethod]
+        public void GPU()
+        {
+            foreach (var test in ImageTests.All)
+            {
+                Equivalency.RunGPUTest(test);
+            }
+        }
     }
 }

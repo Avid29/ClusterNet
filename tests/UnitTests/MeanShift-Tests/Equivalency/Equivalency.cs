@@ -5,7 +5,6 @@ using ColorExtractor.ColorSpaces;
 using ColorExtractor.Shapes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Tests.Tests.Image;
 
 namespace Tests.MeanShift.Equivalency
 {
@@ -95,6 +94,16 @@ namespace Tests.MeanShift.Equivalency
 
             //MeanShift results should be approx equal to Weighted
             CompareResults<T, TShape>(test, expected, actual, ACCEPTED_ERROR);
+        }
+
+        public static void RunGPUTest(Test<RGBColor> test)
+        {
+            GaussianKernel kernel = new GaussianKernel(test.Bandwidth);
+            var expected = ClusterAlgorithms.MeanShift<RGBColor, RGBShape, GaussianKernel>(test.Input, kernel);
+            var actual = ClusterNet.GPU.ClusterAlgorithms.MeanShiftGPU(test.Input, kernel);
+
+            //MeanShift results should be approx equal to Weighted
+            CompareResults<RGBColor, RGBShape>(test, expected, actual, ACCEPTED_ERROR);
         }
     }
 }
