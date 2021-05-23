@@ -4,7 +4,6 @@ using ClusterNet.Kernels;
 using ClusterNet.MeanShift;
 using ClusterNet.Shapes;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace ClusterNet
 {

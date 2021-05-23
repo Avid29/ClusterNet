@@ -5,6 +5,7 @@ using ClusterNet.MeanShift;
 using ComputeSharp;
 using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace ClusterNet.GPU.MeanShift
 {
@@ -19,6 +20,7 @@ namespace ClusterNet.GPU.MeanShift
         /// <param name="points">The list of points to cluster.</param>
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <returns>A list of weighted clusters based on their prevelence in the points.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (Vector3, int)[] MeanShiftGPU(
             ReadOnlySpan<Vector3> points,
             GaussianKernel kernel)

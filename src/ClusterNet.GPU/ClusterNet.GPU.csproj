@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Algorithms\GPU\ClusterNet.GPU.MeanShift\ClusterNet.GPU.MeanShift.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" />
+  </ItemGroup>
+
 </Project>
