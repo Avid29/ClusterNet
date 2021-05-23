@@ -12,7 +12,7 @@
             new ImageTest(Images.EveryThingAllInTime, 1920, .15, 3);
 
         public static ImageTest IsThisIt =
-            new ImageTest(Images.IsThisIt, 1920, .15, 3);
+            new ImageTest(Images.IsThisIt, 1920, .05, 3);
 
         public static ImageTest Minecraft =
             new ImageTest(Images.Minecraft, 1920, .15, 2);

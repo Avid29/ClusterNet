@@ -64,7 +64,7 @@ namespace ClusterNet.Helpers
                 {
                     // Merge overlapping connections
                     // Remove start from back so indicies aren't changed.
-                    for (int i = connections.Count - 1; i > 0; i++)
+                    for (int i = connections.Count - 1; i > 0; i--)
                     {
                         connectedComponents[connections[0]].AddRange(connectedComponents[connections[i]]);
                         connectedComponents.RemoveAt(connections[i]);
