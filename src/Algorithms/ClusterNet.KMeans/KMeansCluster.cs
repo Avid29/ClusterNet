@@ -60,6 +60,7 @@ namespace ClusterNet.KMeans
         {
             T removed = _subPointSet[index];
             _subPointSet.RemoveAt(index);
+            _centroid = null;
             return removed;
         }
 

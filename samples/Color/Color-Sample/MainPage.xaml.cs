@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System;
+using Windows.UI.Xaml.Controls;
 
 namespace Color_Sample
 {
@@ -14,7 +15,9 @@ namespace Color_Sample
 
         private void AddBlade(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ColorsBladeView.Items.Add(new ColorPage(UriTextBox.Text));
+            ColorsBladeView.Items.Add(new ColorPage(UriTextBox.Text,
+                Convert.ToDouble(BandwidthTextBox.Text),
+                Convert.ToInt32(QualityTextBox.Text)));
         }
     }
 }

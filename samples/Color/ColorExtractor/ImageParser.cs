@@ -2,10 +2,8 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ColorExtractor
@@ -27,36 +25,55 @@ namespace ColorExtractor
             return response.GetResponseStream();
         }
 
-        public static RGBColor[] GetImageColors(
-            Image<Argb32> image,
-            int quality = 1920)
+        public static RGBColor[,] GetImageColors(
+            Image<Argb32> image)
         {
-            int nth = image.Width * image.Height / quality;
+            RGBColor[,] colors = new RGBColor[image.Height, image.Width];
 
-            int pixelsPerRow = image.Width / nth;
-
-            RGBColor[] colors = new RGBColor[image.Height * pixelsPerRow];
-
-
-            int pos = 0;
             for (int row = 0; row < image.Height; row++)
             {
                 Span<Argb32> rowPixels = image.GetPixelRowSpan(row);
-                for (int i = 0; i < pixelsPerRow; i++)
+                for (int col = 0; col < image.Width; col++)
                 {
-                    float b = rowPixels[i * nth].B / 255f;
-                    float g = rowPixels[i * nth].G / 255f;
-                    float r = rowPixels[i * nth].R / 255f;
-                    //float a = rowPixels[i].A / 255;
+                    float b = rowPixels[col].B / 255f;
+                    float g = rowPixels[col].G / 255f;
+                    float r = rowPixels[col].R / 255f;
+                    //float a = rowPixels[col].A / 255;
 
                     RGBColor color = new RGBColor(r, g, b);
 
-                    colors[pos] = color;
-                    pos++;
+                    colors[row, col] = color;
                 }
             }
 
             return colors;
+        }
+
+        public static RGBColor[] SampleImage(RGBColor[,] colors, int rowSamples, int colSamples)
+        {
+            int rows = colors.GetLength(0);
+            int cols = colors.GetLength(1);
+            int nthRow = rows / rowSamples;
+            int nthCol = cols / colSamples;
+            
+            RGBColor[] output = new RGBColor[rowSamples * colSamples];
+
+            int pos = 0;
+            for (int row = 0; row < rows; row += nthRow)
+            {
+                for (int col = 0; col < cols; col += nthCol)
+                {
+                    if (pos == output.Length)
+                    {
+                        return output;
+                    }
+
+                    output[pos] = colors[row, col];
+                    pos++;
+                }
+            }
+
+            return output;
         }
     }
 }

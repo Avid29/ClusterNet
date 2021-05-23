@@ -1,9 +1,12 @@
 ﻿// Adam Dernis © 2021
 
+using ClusterNet.Helpers;
 using ClusterNet.Kernels;
 using ClusterNet.Shapes;
 using Microsoft.Collections.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClusterNet.MeanShift
 {
@@ -84,8 +87,6 @@ namespace ClusterNet.MeanShift
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
-            TShape shape = default;
-
             // Remove explict duplicate values.
             DictionarySlim<T, int> mergedCentroidsMap = new DictionarySlim<T, int>();
             foreach (var cluster in clusters)
@@ -93,56 +94,20 @@ namespace ClusterNet.MeanShift
                 mergedCentroidsMap.GetOrAddValueRef(cluster)++;
             }
 
-            // Sometimes clusters can be very similar due to the nature of discrete computation.
-            // This is inaccurate, merge clusters with in too similar of a range.
-            // TODO: Investigate better convergence to elimate this.
-            int fullyUnqiueClusterCount = mergedCentroidsMap.Count;
+            // Connected componenents merge.
+            // Because convergence may be imperfect, a minimum difference can be used to merge similar clusters.
+
+            // Convert Dictionary to tuple list.
+            (T, int)[] mergedCentroids = new (T, int)[mergedCentroidsMap.Count];
             int i = 0;
-            foreach (var entry in mergedCentroidsMap)
+            foreach (var value in mergedCentroidsMap)
             {
-                // This entry has been merged, skip it
-                if (entry.Value == 0)
-                {
-                    i++;
-                    continue;
-                }
-
-                int j = 0;
-                foreach (var otherEntry in mergedCentroidsMap)
-                {
-                    // The comparison has already been made, or they are the same item.
-                    if (j <= i)
-                    {
-                        j++;
-                        continue;
-                    }
-
-                    // Merge clusters if they're with in the kernel's WindowSize
-                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < kernel.WindowSize)
-                    {
-                        ref int otherValue = ref mergedCentroidsMap.GetOrAddValueRef(otherEntry.Key);
-                        mergedCentroidsMap.GetOrAddValueRef(entry.Key) += otherValue;
-                        otherValue = 0;
-                        fullyUnqiueClusterCount--;
-                    }
-
-                    j++;
-                }
-
+                mergedCentroids[i] = (value.Key, value.Value);
                 i++;
             }
 
-            // TODO: Investigate issues allowing fullyUnqiueClusterCount to be negative
-            (T, int)[] mergedCentroids = new (T, int)[fullyUnqiueClusterCount];
-            i = 0; // Reuse i as an iter again.
-            foreach (var entry in mergedCentroidsMap)
-            {
-                if (entry.Value != 0)
-                {
-                    mergedCentroids[i] = (entry.Key, entry.Value);
-                    i++;
-                }
-            }
+            // Apply Connect Components
+            mergedCentroids = ConnectedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
 
             Array.Sort(
                 mergedCentroids,
@@ -172,8 +137,6 @@ namespace ClusterNet.MeanShift
             where TShape : struct, IPoint<T>
             where TKernel : struct, IKernel
         {
-            TShape shape = default;
-
             // Remove explict duplicate values.
             DictionarySlim<T, int> mergedCentroidsMap = new DictionarySlim<T, int>();
             foreach (var cluster in clusters)
@@ -181,51 +144,20 @@ namespace ClusterNet.MeanShift
                 mergedCentroidsMap.GetOrAddValueRef(cluster.Item1) += cluster.Item2;
             }
 
-            int fullyUnqiueClusterCount = mergedCentroidsMap.Count;
+            // Connected componenents merge.
+            // Because convergence may be imperfect, a minimum difference can be used to merge similar clusters.
+
+            // Convert Dictionary to tuple list.
+            (T, int)[] mergedCentroids = new (T, int)[mergedCentroidsMap.Count];
             int i = 0;
-            foreach (var entry in mergedCentroidsMap)
+            foreach (var value in mergedCentroidsMap)
             {
-                // This entry has been merged, skip it
-                if (entry.Value == 0)
-                {
-                    i++;
-                    continue;
-                }
-
-                int j = 0;
-                foreach (var otherEntry in mergedCentroidsMap)
-                {
-                    // The comparison has already been made, or they are the same item.
-                    if (j <= i)
-                    {
-                        j++;
-                        continue;
-                    }
-
-                    if (shape.FindDistanceSquared(otherEntry.Key, entry.Key) < kernel.WindowSize)
-                    {
-                        ref int otherValue = ref mergedCentroidsMap.GetOrAddValueRef(otherEntry.Key);
-                        mergedCentroidsMap.GetOrAddValueRef(entry.Key) += otherValue;
-                        otherValue = 0;
-                        fullyUnqiueClusterCount--;
-                    }
-
-                    j++;
-                }
-
+                mergedCentroids[i] = (value.Key, value.Value);
                 i++;
             }
 
-            (T, int)[] mergedCentroids = new (T, int)[fullyUnqiueClusterCount];
-            i = 0; // Reuse i as an iter again.
-            foreach (var entry in mergedCentroidsMap)
-            {
-                if (entry.Value != 0)
-                {
-                    mergedCentroids[i] = (entry.Key, entry.Value);
-                    i++;
-                }
-            }
+            // Apply Connect Components
+            mergedCentroids = ConnectedComponents.ConnectComponents<T, TShape, TKernel>(mergedCentroids, kernel);
 
             Array.Sort(
                 mergedCentroids,
