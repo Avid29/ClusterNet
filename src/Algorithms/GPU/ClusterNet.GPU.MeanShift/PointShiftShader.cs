@@ -1,8 +1,9 @@
 ﻿// Adam Dernis © 2021
 
 using ClusterNet.Kernels;
+using ColorExtractor.ColorSpaces;
+using ColorExtractor.Shapes;
 using ComputeSharp;
-using System.Numerics;
 
 namespace ClusterNet.GPU.MeanShift
 {
@@ -19,12 +20,12 @@ namespace ClusterNet.GPU.MeanShift
         /// <summary>
         /// The cluster being shifted towards the points.
         /// </summary>
-        public readonly Vector3 _cluster;
+        public readonly RGBColor _cluster;
 
         /// <summary>
         /// The original points to shift around.
         /// </summary>
-        public readonly ReadOnlyBuffer<Vector3> _pointBuffer;
+        public readonly ReadOnlyBuffer<RGBColor> _pointBuffer;
 
         /// <summary>
         /// A buffer to write the resulting weighted distances from points to the cluster.
@@ -40,9 +41,9 @@ namespace ClusterNet.GPU.MeanShift
         public void Execute()
         {
             int offset = ThreadIds.X;
-            Vector3 point = _pointBuffer[offset];
+            RGBColor point = _pointBuffer[offset];
 
-            Vector3Shape shape = default;
+            RGBShape shape = default;
             double weight = shape.FindDistanceSquared(point, _cluster);
 
             weight = _kernel.WeightDistance(weight);

@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\samples\Color\ColorExtractor\ColorExtractor.csproj" />
+    <ProjectReference Include="..\..\src\ClusterNet.GPU\ClusterNet.GPU.csproj" />
     <ProjectReference Include="..\..\src\ClusterNet\ClusterNet.csproj" />
   </ItemGroup>
 

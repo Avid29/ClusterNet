@@ -1,6 +1,8 @@
 ﻿// Adam Dernis © 2021
 
 using ClusterNet.Kernels;
+using ColorExtractor.ColorSpaces;
+using ColorExtractor.Shapes;
 using ComputeSharp;
 using System.Numerics;
 
@@ -19,17 +21,17 @@ namespace ClusterNet.GPU.MeanShift
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="weights">The buffer to save point weights to.</param>
         /// <returns>The fully converged position for <paramref name="cluster"/>.</returns>
-        public static Vector3 MeanShiftPoint(
-            Vector3 cluster,
-            ReadOnlyBuffer<Vector3> points,
+        public static RGBColor MeanShiftPoint(
+            RGBColor cluster,
+            ReadOnlyBuffer<RGBColor> points,
             GaussianKernel kernel,
             ReadWriteBuffer<double> weights)
         {
-            Vector3Shape shape = default;
+            RGBShape shape = default;
 
             // Shift the cluster until it does not shift.
             bool changed = true;
-            Vector3 newCluster = default;
+            RGBColor newCluster = default;
             while (changed)
             {
                 newCluster = Shift(cluster, points, kernel, weights);
@@ -48,13 +50,13 @@ namespace ClusterNet.GPU.MeanShift
         /// <param name="kernel">The kernel used to weight the a points effect on the cluster.</param>
         /// <param name="weights">The buffer to save point weights to.</param>
         /// <returns>The new cluster from the cluster being shifted.</returns>
-        public static Vector3 Shift(
-            Vector3 p,
-            ReadOnlyBuffer<Vector3> points,
+        public static RGBColor Shift(
+            RGBColor p,
+            ReadOnlyBuffer<RGBColor> points,
             GaussianKernel kernel,
             ReadWriteBuffer<double> weights)
         {
-            // Vector3Shape shape = default;
+            // RGBShape shape = default;
             Gpu.Default.For(points.Length, new PointShiftShader(p, points, weights, kernel));
 
             // TODO: Convert results to tuple array

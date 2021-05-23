@@ -2,7 +2,7 @@
 
 using ClusterNet.GPU.MeanShift;
 using ClusterNet.Kernels;
-using ComputeSharp;
+using ColorExtractor.ColorSpaces;
 using System;
 using System.Numerics;
 
@@ -14,8 +14,8 @@ namespace ClusterNet.GPU
     public static partial class ClusterAlgorithms
     {
         /// <inheritdoc cref="Run.MeanShiftGPU(ReadOnlySpan{Vector3}, GaussianKernel)"/>
-        public static (Vector3, int)[] MeanShiftGPU(
-            ReadOnlySpan<Vector3> points,
+        public static (RGBColor, int)[] MeanShiftGPU(
+            ReadOnlySpan<RGBColor> points,
             GaussianKernel kernel)
         {
             return Run.MeanShiftGPU(points, kernel);

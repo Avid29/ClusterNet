@@ -13,10 +13,16 @@ namespace ClusterNet.GPU.MeanShift
     /// </remarks>
     internal struct Vector3Shape : IPoint<Vector3>
     {
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPoint{T}.AreEqual(T, T, double)"/>
         public bool AreEqual(Vector3 it1, Vector3 it2)
         {
             return it1 == it2;
+        }
+
+        /// <inheritdoc/>
+        public bool AreEqual(Vector3 it1, Vector3 it2, double error = 0)
+        {
+            return FindDistanceSquared(it1, it2) <= error;
         }
 
         /// <inheritdoc/>

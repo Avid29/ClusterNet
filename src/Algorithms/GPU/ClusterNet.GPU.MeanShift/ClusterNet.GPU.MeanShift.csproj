@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\samples\Color\ColorExtractor\ColorExtractor.csproj" />
     <ProjectReference Include="..\..\..\ClusterNet.Common\ClusterNet.Common.csproj" />
     <ProjectReference Include="..\..\ClusterNet.MeanShift\ClusterNet.MeanShift.csproj" />
   </ItemGroup>
