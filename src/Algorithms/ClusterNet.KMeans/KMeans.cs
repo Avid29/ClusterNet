@@ -64,15 +64,15 @@ namespace ClusterNet.KMeans
                 }
             }
 
-            (T, int)[] weightedColors = new (T, int)[clusters.Length];
+            (T, int)[] weightedPoints = new (T, int)[clusters.Length];
             for (int i = 0; i < clusters.Length; i++)
             {
                 var cluster = clusters[i];
-                weightedColors[i] = (cluster.Centroid, cluster.Count);
+                weightedPoints[i] = (cluster.Centroid, cluster.Count);
             }
 
             Array.Sort(
-                weightedColors,
+                weightedPoints,
                 delegate (
                     (T, int) clus1,
                     (T, int) clus2)
@@ -80,7 +80,7 @@ namespace ClusterNet.KMeans
                     return clus2.Item2.CompareTo(clus1.Item2);
                 });
 
-            return weightedColors;
+            return weightedPoints;
         }
 
         /// <summary>
